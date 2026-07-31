@@ -377,3 +377,24 @@ Stage Summary:
 - Dock: modern centered floating bar with prominent cart button. VLM 8/10.
 - Zero Sparkles icons — replaced with BrainCircuit (AI), Flower2 (aroma), Wheat (grain).
 - Premium logo generated and deployed across all surfaces.
+
+---
+Task ID: brand-logo-update
+Agent: main (Z.ai Code)
+Task: Update the app with the user's actual brand logo professionally.
+
+Work Log:
+- Analyzed the uploaded brand logo via VLM: a sophisticated circular seal emblem with laurel wreath, rice stalks, lotus on water waves (referencing "Neer" = water), and "NEER RICE DEPO" text. Embossed 3D relief style in bronze/gold tones on cream background. High quality, heritage feel.
+- Installed the logo as public/neer-logo-premium.png (replacing the AI-generated one).
+- Updated logo presentation across 3 surfaces for professional display:
+  - HEADER: Changed from rounded-circle crop to rounded-xl container with object-contain (preserves full logo), dark bg (#0a1209) behind it, gold border, slightly larger (w-10/w-12), alt text "Neer Rice Depo".
+  - HERO GLASS PANEL: Changed from object-cover to object-contain with cream bg (#faf8f5) behind it (matches the logo's parchment background), proper alt text.
+  - FOOTER: Changed from rounded-circle crop to rounded-xl with dark bg, object-contain, proper alt text.
+  - LAYOUT: Favicon already pointing to /neer-logo-premium.png.
+- Verified: lint clean, all routes 200, no errors. VLM: header logo 9/10 ("crisp, well-sized, properly integrated"), desktop 9/10 ("prominently displayed, consistent"), footer 9/10 ("prominently displayed, clear hierarchy, well-integrated").
+
+Stage Summary:
+- User's actual brand logo installed and professionally displayed across header, hero, footer, and favicon.
+- Object-contain (not object-cover) preserves the full circular seal design.
+- Dark backgrounds + gold borders frame the logo consistently with the cinematic design language.
+- VLM 9/10 across all surfaces.

@@ -332,8 +332,8 @@ function HeroGlassPanel({
           <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-white/95 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-stone-900/5 shadow-lg">
             <img
               src="/neer-logo-premium.png"
-              alt=""
-              className="w-8 h-8 rounded-full object-cover border border-[#1f431e]/20"
+              alt="Neer Rice Depo certified seal"
+              className="w-8 h-8 rounded-full object-contain border border-[#1f431e]/20 bg-[#faf8f5]"
             />
             <div>
               <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#1f431e] block leading-none">

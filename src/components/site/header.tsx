@@ -115,11 +115,11 @@ export function Header({
               className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
               aria-label="Neer Rice Depo home"
             >
-              <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/5 p-0.5 overflow-hidden border border-[#d4a373]/30 group-hover:border-[#d4a373]/60 transition-colors duration-300">
+              <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[#d4a373]/25 group-hover:border-[#d4a373]/50 transition-colors duration-300 shrink-0 bg-[#0a1209]">
                 <img
                   src="/neer-logo-premium.png"
-                  alt=""
-                  className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
+                  alt="Neer Rice Depo"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-0.5"
                 />
               </div>
               <div className="text-left">
