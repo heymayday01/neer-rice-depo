@@ -120,37 +120,30 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden min-h-[100svh]">
-      {/* ===== Full-bleed cinematic background image ===== */}
+      {/* ===== Full-bleed cinematic background — clean atmospheric image ===== */}
       <motion.div
         style={{ y: reduced ? 0 : bgY, scale: reduced ? 1.05 : bgScale }}
         className="absolute inset-0 z-0"
       >
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={rec.image}
-            src={rec.image}
-            alt=""
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: EASE.out }}
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-        </AnimatePresence>
-        {/* Cinematic color grade + depth gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/40 via-[#0a1209]/30 to-[#0a1209]/85" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/70 via-transparent to-[#0a1209]/40" />
-        {/* Warm tint */}
+        <img
+          src="/hero-bg-clean.jpg"
+          alt=""
+          className="w-full h-full object-cover"
+          loading="eager"
+        />
+        {/* Strong depth gradients for text readability (mobile-first) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/80 via-[#0a1209]/55 to-[#0a1209]/95" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/85 via-[#0a1209]/40 to-[#0a1209]/60" />
+        {/* Warm radial tint for atmosphere */}
         <div
-          className="absolute inset-0 opacity-30 mix-blend-overlay"
-          style={{ background: "radial-gradient(ellipse at 30% 40%, rgba(212,163,115,0.4), transparent 60%)" }}
+          className="absolute inset-0 opacity-25 mix-blend-overlay"
+          style={{ background: "radial-gradient(ellipse at 25% 35%, rgba(212,163,115,0.5), transparent 65%)" }}
         />
       </motion.div>
 
-      {/* Subtle noise texture overlay for filmic depth */}
+      {/* Subtle noise texture for filmic depth */}
       <div
-        className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",

@@ -257,3 +257,22 @@ Stage Summary:
 - Full app unified to cinematic dark luxury language matching the $100k hero.
 - Consistent tokens: #0a1209 surfaces, #d4a373 gold accents, white/10 hairlines, serif headlines, ghost pills, monospace meta, wide-tracked eyebrows.
 - VLM 9/10 continuity across all sections on mobile and desktop.
+
+---
+Task ID: meaningful-touches-nav-dock-footer-hero
+Agent: main (Z.ai Code)
+Task: Improve dock, navbar, hero bg (mobile visual issues), footer (cluttered), make every touch meaningful.
+
+Work Log:
+- HERO BACKGROUND FIX: VLM identified the rice product images (with "BASMATI" watermarks, spices, busy texture) as full-bleed backgrounds caused severe readability failure. Generated a dedicated clean atmospheric background (dark macro rice grains, no text/watermark). Strengthened depth gradients (from /80 via /55 to /95 — much darker for text legability). Removed the animated image swap on the bg (now static clean image). VLM: 9/10 "clean, highly readable, premium".
+- NAVBAR REDESIGN: dark glass bar (bg-[#0a1209]/60-85), brand logo in white/5 container with gold border, serif white brand name (not uppercase brand font), search input dark (white/5 bg, white/10 border, gold focus ring), ghost-pill desktop actions (Matrix/Orders/AI Sommelier all border-only with gold accents), mobile menu/cart as ghost buttons with gold border, category bar ghost pills with gold dot active state. All icons strokeWidth 1.5 for jewelry feel. VLM: 9/10 "exceptionally premium and intentional".
+- MOBILE DOCK REDESIGN: dark glass (rgba(10,18,9,0.75) + blur), white/10 hairline border, gold active state (bg-[#d4a373]/10 border-[#d4a373]/25), gold active icons (text-[#d4a373] strokeWidth 2.2), gold cart badge on dark, removed the iOS top indicator bar (cleaner), gold press ripple. VLM: 9/10 "exceptionally clean, premium, intentional".
+- FOOTER REDESIGN: decluttered from 4 columns + upper segment + bottom bar → clean 3-part layout (brand+CTA / 3 columns / minimal bottom). Removed: emoji, emerald badge (broke palette), excessive icons, "Certified Organic Supply Chain" pill, heart decoration. Added: editorial brand block, sommelier CTA as a bordered card with arrow, 3 clean columns (Explore/Contact/Vision) with gold eyebrow labels, minimal copyright + leaf accent. VLM: 8/10 "significantly cleaner, more cohesive, decluttered".
+- Verified: lint clean, all routes 200, no errors. VLM: hero bg 9/10, navbar 9/10, dock 9/10, footer 8/10, desktop navbar 9/10.
+
+Stage Summary:
+- Hero background: clean atmospheric image (no watermarks), strong readability gradients.
+- Navbar: cinematic dark glass, ghost pills, gold accents, serif brand.
+- Dock: dark glass, gold active state, intentional design.
+- Footer: decluttered 3-part layout, clean columns, minimal bottom.
+- Every touch now feels meaningful and cohesive — no half-baked elements.

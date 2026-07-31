@@ -92,16 +92,16 @@ export function Header({
         </div>
       </div>
 
-      {/* Main frosted bar */}
+      {/* Main bar — cinematic dark glass */}
       <div
-        className={`refract-edge border-b transition-all duration-300 ${
+        className={`border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#fdfcfb]/80 border-stone-200/60 shadow-[0_8px_32px_-12px_rgba(45,90,39,0.14)]"
-            : "bg-[#fdfcfb]/65 border-stone-200/40"
+            ? "bg-[#0a1209]/85 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
+            : "bg-[#0a1209]/60 border-white/5"
         }`}
         style={{
-          backdropFilter: "blur(24px) saturate(180%)",
-          WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          backdropFilter: "blur(24px) saturate(160%)",
+          WebkitBackdropFilter: "blur(24px) saturate(160%)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -115,7 +115,7 @@ export function Header({
               className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
               aria-label="Neer Rice Depo home"
             >
-              <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-full bg-stone-100 flex items-center justify-center p-0.5 shadow-sm overflow-hidden border border-stone-200 group-hover:border-[#d4a373] transition-colors duration-300">
+              <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/5 p-0.5 overflow-hidden border border-[#d4a373]/30 group-hover:border-[#d4a373]/60 transition-colors duration-300">
                 <img
                   src="/neer-logo.jpg"
                   alt=""
@@ -123,12 +123,12 @@ export function Header({
                 />
               </div>
               <div className="text-left">
-                <span className="text-sm md:text-xl font-brand font-black tracking-[0.12em] text-[#1f431e] uppercase block leading-none">
+                <span className="text-sm md:text-lg font-serif font-bold text-white tracking-tight block leading-none">
                   <span className="md:hidden">Neer Rice</span>
                   <span className="hidden md:inline">Neer Rice Depo</span>
                 </span>
-                <span className="text-[9px] text-stone-400 font-extrabold uppercase tracking-[0.18em] hidden md:block mt-1">
-                  Farm Direct · Heirloom Grains
+                <span className="text-[9px] text-[#d4a373] font-bold uppercase tracking-[0.2em] hidden md:block mt-1">
+                  Farm Direct · Heirloom
                 </span>
               </div>
             </button>
@@ -140,13 +140,13 @@ export function Header({
                 placeholder="Search grains, regions, dishes…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-9 py-2.5 bg-white/70 backdrop-blur-md hover:bg-white/90 focus:bg-white border border-white/60 focus:border-[#1f431e]/30 rounded-full text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/10 transition-all font-semibold shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.8),0_2px_8px_-2px_rgba(45,90,39,0.1)]"
+                className="w-full pl-10 pr-9 py-2.5 bg-white/5 border border-white/10 focus:border-[#d4a373]/40 rounded-full text-xs text-white placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#d4a373]/20 transition-all font-medium"
               />
-              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-stone-400 pointer-events-none" />
+              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-stone-500 pointer-events-none" strokeWidth={1.5} />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-2.5 text-stone-500 hover:text-stone-800 bg-stone-200/70 hover:bg-stone-200 p-1 rounded-full cursor-pointer transition-colors"
+                  className="absolute right-2.5 top-2.5 text-stone-500 hover:text-white bg-white/5 hover:bg-white/10 p-1 rounded-full cursor-pointer transition-colors"
                   aria-label="Clear search"
                 >
                   <X className="w-3 h-3" />
@@ -154,31 +154,31 @@ export function Header({
               )}
             </div>
 
-            {/* Mobile: menu + cart (44px tap targets) */}
+            {/* Mobile: menu + cart */}
             <div className="flex sm:hidden items-center gap-2">
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenMobileMenu}
-                className="pill p-2.5 text-stone-700 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2.5 text-stone-300 hover:text-white border border-white/10 hover:border-white/25 rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
                 aria-label="Open menu"
               >
-                <Menu className="w-5 h-5" />
+                <Menu className="w-5 h-5" strokeWidth={1.5} />
               </motion.button>
               <motion.button
                 whileTap={tapPress}
                 onClick={onOpenCart}
-                className="relative p-2.5 bg-[#1f431e] text-white rounded-full shadow-md cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="relative p-2.5 bg-[#d4a373]/10 border border-[#d4a373]/30 text-[#d4a373] rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/20"
                 aria-label={`Cart with ${count} items`}
               >
-                <ShoppingBag className="w-5 h-5 text-[#e9c496]" />
+                <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
                 {count > 0 && (
                   <motion.span
                     key={count}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="absolute -top-1 -right-1 bg-[#d4a373] text-stone-900 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white"
+                    className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a1209] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0a1209]"
                   >
                     {count}
                   </motion.span>
@@ -186,23 +186,23 @@ export function Header({
               </motion.button>
             </div>
 
-            {/* Desktop actions — uniform pill buttons */}
+            {/* Desktop actions — ghost pills */}
             <div className="hidden sm:flex items-center gap-1.5">
               <button
                 onClick={onOpenComparison}
                 title="Compare Grains"
-                className="pill px-3.5 py-2.5 text-stone-600 hover:text-[#1f431e] text-xs font-bold cursor-pointer hidden lg:flex items-center gap-2"
+                className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden lg:flex items-center gap-2 rounded-full transition-colors"
               >
-                <BarChart2 className="w-4 h-4 text-[#1f431e]" />
+                <BarChart2 className="w-4 h-4" strokeWidth={1.5} />
                 <span className="hidden xl:inline tracking-tight">Matrix</span>
               </button>
 
               <button
                 onClick={onOpenOrders}
                 title="Track Orders"
-                className="pill px-3.5 py-2.5 text-stone-600 hover:text-[#1f431e] text-xs font-bold cursor-pointer hidden md:flex items-center gap-2"
+                className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden md:flex items-center gap-2 rounded-full transition-colors"
               >
-                <Package className="w-4 h-4 text-[#1f431e]" />
+                <Package className="w-4 h-4" strokeWidth={1.5} />
                 <span className="hidden lg:inline tracking-tight">Orders</span>
               </button>
 
@@ -210,9 +210,9 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="pill px-4 py-2.5 text-[#1f431e] text-xs font-bold tracking-tight cursor-pointer flex items-center gap-2"
+                className="px-4 py-2.5 text-[#d4a373] border border-[#d4a373]/30 hover:bg-[#d4a373]/10 text-xs font-bold tracking-tight cursor-pointer flex items-center gap-2 rounded-full transition-colors"
               >
-                <Sparkles className="w-4 h-4 text-[#c88a4a]" />
+                <Sparkles className="w-4 h-4" strokeWidth={1.5} />
                 <span>AI Sommelier</span>
               </motion.button>
 
@@ -220,9 +220,9 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenCart}
-                className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full text-xs font-bold shadow-md shadow-[#1f431e]/15 transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full text-xs font-bold transition-all cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
+                <ShoppingBag className="w-4 h-4 text-[#e9c496]" strokeWidth={1.5} />
                 <span className="hidden md:inline">Cart</span>
                 {count > 0 && (
                   <motion.span
@@ -230,7 +230,7 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="bg-[#d4a373] text-stone-900 text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    className="bg-[#d4a373] text-[#0a1209] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
                     {count}
                   </motion.span>
@@ -244,8 +244,8 @@ export function Header({
             </div>
           </div>
 
-          {/* Desktop category bar — uniform pill chips */}
-          <nav className="hidden md:flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar border-t border-stone-100/70">
+          {/* Desktop category bar — ghost pills */}
+          <nav className="hidden md:flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar border-t border-white/5">
             {CATEGORIES.map((cat) => {
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;
@@ -257,23 +257,16 @@ export function Header({
                   transition={SPRING.dock}
                   className={`relative px-4 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${
                     selected
-                      ? "text-white"
-                      : "text-stone-500 hover:text-stone-900 hover:bg-white/60"
+                      ? "text-white border border-[#d4a373]/50 bg-[#d4a373]/10"
+                      : "text-stone-400 hover:text-white border border-white/10 hover:border-white/25"
                   }`}
                 >
-                  {selected && (
-                    <motion.span
-                      layoutId="cat-pill"
-                      transition={SPRING.dock}
-                      className="absolute inset-0 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] rounded-full shadow-md shadow-[#1f431e]/20"
-                    />
-                  )}
+                  {selected && <span className="w-1 h-1 rounded-full bg-[#d4a373]" />}
                   <Icon
-                    className={`relative z-10 w-3.5 h-3.5 transition-colors ${
-                      selected ? "text-[#d4a373]" : "text-stone-400"
-                    }`}
+                    className={`w-3.5 h-3.5 ${selected ? "text-[#d4a373]" : "text-stone-500"}`}
+                    strokeWidth={1.5}
                   />
-                  <span className="relative z-10 tracking-tight">{cat.label}</span>
+                  <span className="tracking-tight">{cat.label}</span>
                 </motion.button>
               );
             })}
