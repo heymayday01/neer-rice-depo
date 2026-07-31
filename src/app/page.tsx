@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { Header } from "@/components/site/header";
 import { Hero } from "@/components/site/hero";
 import { ProductCatalog } from "@/components/site/product-catalog";
@@ -8,6 +9,7 @@ import { GrainWisdomHub } from "@/components/site/grain-wisdom";
 import { Footer } from "@/components/site/footer";
 import { MobileDock } from "@/components/site/mobile-dock";
 import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
+import { Onboarding } from "@/components/site/onboarding";
 import { ProductDetailModal } from "@/components/site/modals/product-detail-modal";
 import { CartDrawer } from "@/components/site/modals/cart-drawer";
 import { CheckoutModal } from "@/components/site/modals/checkout-modal";
@@ -32,6 +34,26 @@ export default function Home() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pendingTrackingId, setPendingTrackingId] = useState<string | null>(null);
+
+  // Onboarding — show on first visit (localStorage flag). Lazy init avoids
+  // setState-in-effect; SSR-safe via typeof guard.
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return !localStorage.getItem("neer-onboarding-seen");
+    } catch {
+      return false;
+    }
+  });
+
+  const dismissOnboarding = () => {
+    try {
+      localStorage.setItem("neer-onboarding-seen", "1");
+    } catch {
+      /* noop */
+    }
+    setShowOnboarding(false);
+  };
 
   const addOrder = useOrders((s) => s.add);
 
@@ -151,6 +173,13 @@ export default function Home() {
       />
       <AISommelierModal open={aiOpen} onClose={() => setAiOpen(false)} />
       <ComparisonModal open={compareOpen} onClose={() => setCompareOpen(false)} />
+
+      {/* Onboarding overlay — first visit only */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <Onboarding onComplete={dismissOnboarding} onSkip={dismissOnboarding} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

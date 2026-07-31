@@ -180,9 +180,11 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               </span>
             </div>
 
-            {/* Headline — GSAP staggered line reveal */}
-            <h1 className="font-brand font-black text-[#1f431e] leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
-              <span className="hero-headline-line block">Neer Rice Depo</span>
+            {/* Headline — GSAP staggered line reveal with gradient text fill */}
+            <h1 className="font-brand font-black leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
+              <span className="hero-headline-line block text-transparent bg-clip-text bg-gradient-to-br from-[#1f431e] via-[#c88a4a] to-[#1f431e]">
+                Neer Rice Depo
+              </span>
               <span className="hero-headline-line block font-serif italic text-stone-800 font-semibold text-xl xs:text-2xl sm:text-4xl lg:text-5xl tracking-normal normal-case mt-3 sm:mt-4 mb-1">
                 Pristine Indian Organic{" "}
                 <span className="text-gold-shimmer">&amp; Heirloom Grains</span>
@@ -272,7 +274,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="hero-cta shine-on-hover px-5 sm:px-6 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm shadow-md shadow-[#1f431e]/15 transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="hero-cta btn-primary-glow shine-on-hover px-5 sm:px-6 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm transition-all flex items-center gap-2.5 group cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" />
                 <span className="hidden xs:inline">Ask AI Grain Sommelier</span>

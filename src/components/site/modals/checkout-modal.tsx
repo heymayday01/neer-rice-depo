@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
 import { SPRING, hoverLift, tapPress } from "@/lib/motion";
 
 interface Props {
@@ -107,6 +108,37 @@ export function CheckoutModal({
       setDone(data.trackingId);
       clear();
       toast.success("Order placed successfully!");
+      // Celebration confetti burst — 60 particles, gravity 1.2, 800ms
+      const colors = ["#1f431e", "#d4a373", "#f5d9b0", "#2d5a27"];
+      confetti({
+        particleCount: 60,
+        spread: 70,
+        origin: { y: 0.6 },
+        gravity: 1.2,
+        colors,
+        scalar: 0.9,
+        disableForReducedMotion: true,
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 30,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.7 },
+          gravity: 1.2,
+          colors,
+          disableForReducedMotion: true,
+        });
+        confetti({
+          particleCount: 30,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.7 },
+          gravity: 1.2,
+          colors,
+          disableForReducedMotion: true,
+        });
+      }, 200);
     } catch {
       toast.error("Could not place order. Please try again.");
     } finally {
@@ -294,7 +326,7 @@ export function CheckoutModal({
               whileTap={tapPress}
               onClick={placeOrder}
               disabled={placing}
-              className="shine-on-hover w-full py-3.5 bg-[#1f431e] hover:bg-[#16331a] disabled:opacity-70 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="btn-primary-glow shine-on-hover w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] disabled:opacity-[0.38] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               {placing ? (
                 <>

@@ -117,3 +117,25 @@ Stage Summary:
 - Dock: ripple effect, press feedback, haptic, smooth active pill slide.
 - Navbar: category pill slides with precise spring, tap feedback.
 - Cart: spring quantity buttons, bouncy number, smooth slide.
+
+---
+Task ID: onboarding-2026-components
+Agent: main (Z.ai Code)
+Task: Redesign hero for better visuals, build 3-step onboarding flow, 2026-grade component specs (buttons, confetti, gradient text).
+
+Work Log:
+- Installed canvas-confetti for success celebrations.
+- Built 3-step Onboarding component: split-screen layout (top ~55% full-bleed rice visual with gradient fade, bottom ~45% content), gradient text headlines (bg-clip-text gold gradient on accent word), segmented progress bar (3 spring-filled sections), floating stat pill per step, Skip ghost button top-right, fixed CTA at bottom with safe-area-inset-bottom, keyboard nav (ArrowRight/Escape), haptic feedback (light on step advance, medium on completion).
+- Celebration micro-animation: self-drawing SVG checkmark (pathLength animation) + 24-particle radial burst + button pulse ring on final step. AnimatePresence transitions between steps (image scale/opacity, content y/blur).
+- Wired onboarding into page.tsx with lazy useState initializer (SSR-safe localStorage check, no setState-in-effect lint violation). Shows on first visit, sets "neer-onboarding-seen" flag on complete/skip.
+- Hero headline: gradient text fill (bg-clip-text, green→gold→green) — VLM confirmed 9/10 premium. Kept GSAP timeline entrance + Lenis parallax.
+- Buttons: added .btn-primary-glow CSS utility (inset highlights + outer glow, active state darkens inset for tactile press). Applied to hero CTA, product card add, checkout place-order. Added .skeleton-loading shimmer utility (no spinners per 2026 spec). Checkout disabled state at 38% opacity (not grayed).
+- Confetti on order success: 60-particle burst (gravity 1.2) + 2 side cannons (30 each) with brand colors, disableForReducedMotion respected.
+- Verified: lint clean, all routes 200, no runtime errors. Agent Browser: onboarding 3 steps advance correctly, celebration triggers, main app loads. VLM: onboarding step 1 8/10 (split-screen clean, gradient text premium, progress bar visible), hero gradient 9/10.
+
+Stage Summary:
+- 3-step onboarding flow with split-screen, gradient text, segmented progress, celebration checkmark + particle burst, haptics, skip, keyboard nav.
+- Hero gradient text headline (green→gold→green, 9/10 premium).
+- Primary buttons with inner-glow + active inset darkening (2026 spec).
+- Confetti celebration on order completion (60 particles, gravity 1.2, reduced-motion safe).
+- Skeleton shimmer loading utility (no spinners).

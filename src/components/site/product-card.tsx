@@ -208,7 +208,7 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
           whileHover={hoverLift}
           whileTap={tapPress}
           onClick={handleAdd}
-          className={`shine-on-hover w-full py-3 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer min-h-[44px] ${
+          className={`btn-primary-glow shine-on-hover w-full py-3 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer min-h-[44px] ${
             added
               ? "bg-[#2d5a27] text-white"
               : "bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white shadow-md shadow-[#1f431e]/15"
