@@ -23,6 +23,7 @@ import {
   SPRING,
   fadeUp,
   fadeRise,
+  blurReveal,
   staggerContainer,
   hoverLift,
   tapPress,
@@ -104,7 +105,7 @@ export function ProductCatalog({
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-6">
-      {/* Mobile category strip */}
+      {/* Mobile category strip — uniform pills */}
       <div className="md:hidden flex gap-2 overflow-x-auto pb-2 px-1 no-scrollbar -mx-4 sm:-mx-6">
         {CATEGORIES.map((cat) => {
           const Icon = CAT_ICONS[cat.id] ?? Sprout;
@@ -113,73 +114,85 @@ export function ProductCatalog({
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap flex items-center gap-2 shrink-0 transition-all duration-200 border cursor-pointer ${
+              aria-pressed={selected}
+              className={`relative px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shrink-0 cursor-pointer overflow-hidden min-h-[40px] ${
                 selected
-                  ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm font-extrabold"
-                  : "bg-white text-stone-600 border-stone-200/60 hover:bg-stone-50"
+                  ? "text-white"
+                  : "bg-white/70 text-stone-600 border border-stone-200/60 hover:bg-white"
               }`}
             >
+              {selected && (
+                <motion.span
+                  layoutId="mobile-cat-pill"
+                  transition={SPRING.snappy}
+                  className="absolute inset-0 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] shadow-md shadow-[#1f431e]/20"
+                />
+              )}
               <Icon
-                className={`w-3.5 h-3.5 ${
+                className={`relative z-10 w-3.5 h-3.5 ${
                   selected ? "text-[#d4a373]" : "text-stone-400"
                 }`}
               />
-              {cat.short}
+              <span className="relative z-10">{cat.short}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Filter bar */}
+      {/* Filter bar — frosted refractive */}
       <motion.div
-        variants={fadeUp}
+        variants={blurReveal}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-stone-200/90 shadow-luxe"
+        className="glass refract-edge flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-3xl"
       >
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-serif text-stone-800 flex items-center gap-2">
-            <Sprout className="w-5 h-5 text-[#1f431e]" />
-            <span>{TITLES[activeCategory] ?? "All Grain Varieties"}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <h2 className="text-lg sm:text-xl font-serif text-stone-800 flex items-center gap-2 truncate">
+            <Sprout className="w-5 h-5 text-[#1f431e] shrink-0" />
+            <span className="truncate">{TITLES[activeCategory] ?? "All Grain Varieties"}</span>
           </h2>
-          <span className="text-xs bg-[#1f431e]/10 text-[#1f431e] px-2.5 py-0.5 rounded-full font-bold">
+          <span className="text-xs bg-[#1f431e]/10 text-[#1f431e] px-2.5 py-0.5 rounded-full font-bold shrink-0">
             {sorted.length} Items
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={onOpenComparison}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-[#c88a4a]/15 hover:bg-[#c88a4a]/25 text-stone-900 border border-[#c88a4a]/30 cursor-pointer"
+            className="pill px-3.5 py-2 text-xs font-bold flex items-center gap-1.5 bg-[#c88a4a]/15 hover:bg-[#c88a4a]/25 text-stone-900 cursor-pointer min-h-[36px]"
           >
             <BarChart2 className="w-3.5 h-3.5 text-[#1f431e]" />
-            Compare Matrix
+            <span className="hidden sm:inline">Compare Matrix</span>
+            <span className="sm:hidden">Compare</span>
           </button>
 
           <button
             onClick={() => setGiFilter(giFilter === "low" ? "all" : "low")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+            aria-pressed={giFilter === "low"}
+            className={`px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer min-h-[36px] transition-all ${
               giFilter === "low"
-                ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                : "bg-[#1f431e]/5 text-[#1f431E] border-[#1f431e]/20 hover:bg-[#1f431e]/10"
+                ? "bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white shadow-md shadow-[#1f431e]/20"
+                : "pill text-[#1f431e]"
             }`}
           >
             <Filter className="w-3.5 h-3.5" />
-            Diabetic Friendly (Low GI)
+            <span className="hidden sm:inline">Diabetic Friendly (Low GI)</span>
+            <span className="sm:hidden">Low GI</span>
           </button>
 
-          <div className="flex items-center gap-1.5 bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-800">
+          <div className="pill flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-800 min-h-[36px]">
             <ArrowUpDown className="w-3.5 h-3.5 text-[#1f431e]" />
             <span className="hidden sm:inline">Sort:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
               className="bg-transparent font-bold text-[#1f431e] focus:outline-none cursor-pointer"
+              aria-label="Sort products"
             >
-              <option value="featured">Featured / Best Seller</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low → High</option>
+              <option value="price-high">Price: High → Low</option>
               <option value="rating">Customer Rating</option>
             </select>
           </div>
@@ -188,7 +201,7 @@ export function ProductCatalog({
 
       {/* Grid */}
       {sorted.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-stone-200 p-8 space-y-4">
+        <div className="text-center py-16 glass refract-edge rounded-3xl p-8 space-y-4">
           <div className="w-16 h-16 rounded-full bg-[#1f431e]/10 flex items-center justify-center mx-auto text-[#1f431e]">
             <Search className="w-8 h-8" />
           </div>
@@ -201,7 +214,7 @@ export function ProductCatalog({
           </p>
           <button
             onClick={reset}
-            className="px-4 py-2 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#16331a] cursor-pointer"
+            className="px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white rounded-full text-xs font-bold hover:from-[#16331a] cursor-pointer min-h-[40px]"
           >
             Reset Catalog Filters
           </button>
@@ -209,14 +222,14 @@ export function ProductCatalog({
       ) : (
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
         >
           <AnimatePresence mode="popLayout">
             {sorted.map((product) => (
               <motion.div
                 key={product.id}
                 layout
-                variants={fadeRise}
+                variants={blurReveal}
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, y: -16, transition: { duration: DURATION.fast, ease: EASE.io } }}
@@ -227,14 +240,14 @@ export function ProductCatalog({
             ))}
           </AnimatePresence>
 
-          {/* Promo card to balance the grid */}
+          {/* Promo card — frosted dark glass */}
           <motion.div
-            variants={fadeRise}
+            variants={blurReveal}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             transition={SPRING.gentle}
-            className="relative overflow-hidden rounded-2xl border border-[#1f431e]/30 bg-gradient-to-br from-[#1f431e] to-[#0a1209] text-white p-6 flex flex-col justify-between min-h-[420px] shadow-luxe"
+            className="glass-dark refract-edge-gold refract-edge relative overflow-hidden rounded-3xl text-white p-6 flex flex-col justify-between min-h-[420px]"
           >
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#d4a373]/15 rounded-full blur-3xl pointer-events-none" />
             <div className="relative z-10 space-y-3">
@@ -264,7 +277,7 @@ export function ProductCatalog({
               ))}
               <button
                 onClick={onOpenComparison}
-                className="mt-3 w-full py-2.5 bg-[#d4a373] hover:bg-[#c59464] text-stone-950 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
+                className="mt-3 w-full py-2.5 bg-[#d4a373] hover:bg-[#c59464] text-stone-950 rounded-full text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 min-h-[40px]"
               >
                 <BarChart2 className="w-3.5 h-3.5" />
                 Compare All Grains

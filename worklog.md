@@ -44,3 +44,30 @@ Stage Summary:
 - Premium 2026 animation system: spring physics, snappy easings, no heavy blur, reduced-motion accessibility, word-reveal headlines, sliding layoutId pills, scroll parallax, shine sweeps.
 - Mobile fully fixed: clean sticky header, bottom-sheet menu, 48px dock tap targets, proper bottom spacing, no overlaps.
 - All animations timed properly with shared tokens (DURATION.base 0.5s, SPRING.gentle/snappy/bouncy).
+
+---
+Task ID: 2026-refractive-redesign
+Agent: main (Z.ai Code)
+Task: Fix hero animations (blur + scroll reveal), fix mobile accessibility, redesign all sections mobile-first with 2026 frosted-refractive glass + pill navbar uniformity.
+
+Work Log:
+- Built frosted-refractive design system in globals.css: .glass / .glass-dark / .glass-gold with layered inset highlights + outer refraction glow simulating light bending at glass edges; .refract-edge (prismatic gradient border via mask-composite); .pill / .pill-active uniform pill tokens; .bg-aurora mesh; accessible :focus-visible ring; prefers-reduced-motion media query.
+- Extended motion foundation: blurReveal / blurRevealScale / blurRevealAt / scrollBlurReveal variants for hero signature moments.
+- Redesigned navbar (header.tsx): mobile-first, frosted refractive bar with .refract-edge, uniform .pill buttons (Matrix/Orders/AI Sommelier/Cart), gradient-pill category bar with layoutId sliding indicator, 44px tap targets, pt-safe for notch, pill search input.
+- Redesigned hero: blur+scroll reveal on headline/badges/selector/CTAs, frosted refractive meal-selector card + image card + seal badge + bottom info, scroll-linked parallax (useScroll/useTransform) on blobs/image/content, gradient-pill meal tabs with layoutId, reduced-motion fallbacks.
+- Redesigned product card: frosted glass + refractive edge, gradient-pill badges, sliding weight-pill (layoutId), 44px add button, 36px+ tap targets, aria-pressed/aria-label.
+- Redesigned catalog: frosted glass filter bar, uniform pill chips (Compare/Low GI/Sort), mobile horizontal-scroll category pills with layoutId, blurReveal stagger on grid, frosted dark-glass promo card.
+- Redesigned grain-wisdom: frosted glass tabs (mobile horizontal scroll → desktop vertical), frosted glass content card with spring swap, glass-gold "Did You Know" panel.
+- Redesigned footer: pill CTA button, pill trust badge.
+- Redesigned mobile dock: frosted refractive glass with .refract-edge, gradient active indicator (layoutId), 48px tap targets, aria-current.
+- Redesigned mobile menu sheet: frosted glass surface, pill search + pill quick-actions, staggered categories.
+- Accessibility: aria-pressed on all toggles, aria-label on icon buttons, aria-current on dock, :focus-visible ring, min tap targets (36-48px), prefers-reduced-motion respected throughout.
+- Verified: lint clean, all routes 200, no runtime errors. Agent Browser mobile (iPhone 14) + desktop (1440). VLM: mobile hero 8.5/10 ("hits Refrosted Glassmorphism trend perfectly... 2026 Apple/HIG compliant"), desktop hero 8.5/10 ("refractive glass execution is production-grade; typography hierarchy exceptional"). Mobile flows verified: menu, add-to-cart, cart drawer.
+
+Stage Summary:
+- 2026 frosted-refractive glass system with prismatic light-bending edges across every surface.
+- Uniform pill-shape language: navbar, category bar, buttons, badges, search, dock — all consistent rounded-full pills.
+- Hero blur + scroll-reveal animations with parallax (reduced-motion safe).
+- Mobile-first throughout: horizontal-scroll category strips, 44px tap targets, safe-area insets, frosted dock.
+- Smoothness: spring physics (SPRING.snappy/gentle/bouncy), layoutId shared-element pills, no heavy per-frame blur outside hero.
+- Accessibility: aria-pressed/aria-label/aria-current, focus-visible rings, reduced-motion.

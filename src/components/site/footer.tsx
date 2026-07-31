@@ -69,7 +69,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
             </div>
             <button
               onClick={onOpenAISommelier}
-              className="flex items-center gap-2 px-5 py-3 bg-[#d4a373] hover:bg-[#c59464] text-stone-950 rounded-2xl text-xs font-bold transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] shadow-sm cursor-pointer"
+              className="flex items-center gap-2 px-5 py-3 bg-[#d4a373] hover:bg-[#c59464] text-stone-950 rounded-full text-xs font-bold transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] shadow-md cursor-pointer min-h-[44px]"
             >
               Consult Sommelier
               <ArrowRight className="w-3.5 h-3.5" />
@@ -164,7 +164,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
               extinction.
             </p>
             <div className="pt-1">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-950/55 border border-emerald-900/40 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/55 border border-emerald-900/40 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                 Verified Farm-to-Table Chain
               </span>

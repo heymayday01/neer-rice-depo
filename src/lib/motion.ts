@@ -120,3 +120,51 @@ export const tapPress = {
   scale: 0.97,
   transition: SPRING.snappy,
 };
+
+/* ============================================================
+   BLUR REVEAL VARIANTS — for hero & signature sections.
+   Animated filter:blur is GPU-heavier, so use sparingly and
+   only on hero/signature moments (per user request).
+   ============================================================ */
+
+/** Blur + rise — the signature hero reveal. */
+export const blurReveal: Variants = {
+  hidden: { opacity: 0, y: 28, filter: "blur(14px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 1, ease: EASE.out },
+  },
+};
+
+/** Blur + rise + scale — for hero images / feature cards. */
+export const blurRevealScale: Variants = {
+  hidden: { opacity: 0, y: 32, scale: 0.96, filter: "blur(16px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { duration: 1.1, ease: EASE.out },
+  },
+};
+
+/** Blur reveal with delay helper */
+export const blurRevealAt = (delay = 0): Variants => ({
+  hidden: { opacity: 0, y: 28, filter: "blur(14px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 1, delay, ease: EASE.out },
+  },
+});
+
+/** Scroll-triggered blur reveal (whileInView) variant config */
+export const scrollBlurReveal = (delay = 0) => ({
+  variants: blurRevealAt(delay),
+  initial: "hidden" as const,
+  whileInView: "visible" as const,
+  viewport: { once: true, margin: "-80px" },
+});

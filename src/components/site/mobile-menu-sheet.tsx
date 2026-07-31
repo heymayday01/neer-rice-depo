@@ -52,7 +52,7 @@ export function MobileMenuSheet({
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="bottom" className="p-0 rounded-t-3xl max-h-[88vh] overflow-y-auto">
+      <SheetContent side="bottom" className="p-0 rounded-t-[1.75rem] max-h-[88vh] overflow-y-auto glass refract-edge border-stone-200/60">
         <SheetHeader className="px-5 pt-5 pb-3">
           <SheetTitle className="font-serif text-lg">Browse Grains</SheetTitle>
           <SheetDescription className="text-xs">
@@ -61,8 +61,8 @@ export function MobileMenuSheet({
         </SheetHeader>
 
         <div className="px-5 pb-6 space-y-5">
-          {/* Search */}
-          <div className="flex items-center gap-2 bg-stone-100 rounded-xl px-3">
+          {/* Search — pill */}
+          <div className="pill flex items-center gap-2 px-4">
             <Search className="w-4 h-4 text-stone-400" />
             <input
               type="text"
@@ -70,19 +70,20 @@ export function MobileMenuSheet({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 bg-transparent py-3 text-sm font-semibold focus:outline-none placeholder-stone-400"
+              aria-label="Search grains"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
                 className="text-stone-500 hover:text-stone-800 p-1 cursor-pointer"
-                aria-label="Clear"
+                aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
           </div>
 
-          {/* Quick actions */}
+          {/* Quick actions — frosted pills */}
           <div className="grid grid-cols-3 gap-2">
             {[
               { label: "AI Sommelier", icon: Sparkles, action: () => { onOpenAISommelier(); onClose(); } },
@@ -92,7 +93,7 @@ export function MobileMenuSheet({
               <button
                 key={a.label}
                 onClick={a.action}
-                className="flex flex-col items-center gap-1.5 bg-[#1f431e]/6 hover:bg-[#1f431e]/10 text-[#1f431e] rounded-2xl py-3 transition-colors cursor-pointer"
+                className="pill flex flex-col items-center gap-1.5 text-[#1f431e] py-3 cursor-pointer min-h-[64px] justify-center"
               >
                 <a.icon className="w-5 h-5 text-[#c88a4a]" />
                 <span className="text-[10px] font-bold">{a.label}</span>

@@ -120,10 +120,10 @@ export function GrainWisdomHub() {
   const TopicIcon = current.icon;
 
   return (
-    <section className="bg-gradient-to-b from-[#f5f2ed] to-[#faf8f5] border-t border-stone-200/60 py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <section className="bg-gradient-to-b from-[#f5f2ed] to-[#faf8f5] border-t border-stone-200/60 py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         <Reveal className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1f431e]/10 text-[#1f431e] text-xs font-bold uppercase tracking-wider">
+          <span className="pill inline-flex items-center gap-1.5 px-3 py-1.5 text-[#1f431e] text-xs font-bold uppercase tracking-wider">
             <Sprout className="w-3.5 h-3.5" />
             Grain Science & Culinary Wisdom
           </span>
@@ -137,9 +137,9 @@ export function GrainWisdomHub() {
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Tabs */}
-          <Reveal className="lg:col-span-4 space-y-2.5 flex flex-col w-full" delay={0.1}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
+          {/* Tabs — mobile: horizontal scroll, desktop: vertical */}
+          <Reveal className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar pb-1 lg:pb-0 w-full" delay={0.1}>
             {TOPICS.map((topic, idx) => {
               const Icon = topic.icon;
               const selected = active === topic.id;
@@ -147,10 +147,11 @@ export function GrainWisdomHub() {
                 <button
                   key={topic.id}
                   onClick={() => setActive(topic.id)}
-                  className={`p-4 rounded-2xl text-left border transition-all flex items-center justify-between cursor-pointer ${
+                  aria-pressed={selected}
+                  className={`relative p-4 rounded-2xl text-left cursor-pointer flex items-center justify-between shrink-0 lg:w-full min-h-[56px] transition-colors ${
                     selected
-                      ? "bg-white border-[#2d5a27] text-[#2d5a27] shadow-luxe font-bold"
-                      : "bg-white/40 hover:bg-white border-stone-200 text-stone-700 hover:border-stone-300"
+                      ? "glass refract-edge text-[#1f431e] font-bold"
+                      : "bg-white/40 hover:bg-white/70 border border-stone-200/60 text-stone-700"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -163,20 +164,18 @@ export function GrainWisdomHub() {
                     >
                       <Icon className="w-4 h-4" />
                     </div>
-                    <div>
-                      <span className="text-xs text-stone-400 block font-bold uppercase tracking-wider text-[9px]">
+                    <div className="min-w-0">
+                      <span className="text-[9px] text-stone-400 block font-bold uppercase tracking-wider">
                         Topic {idx + 1}
                       </span>
-                      <span className="text-sm font-semibold block tracking-tight">
+                      <span className="text-sm font-semibold block tracking-tight whitespace-nowrap lg:whitespace-normal">
                         {topic.shortLabel}
                       </span>
                     </div>
                   </div>
                   <ChevronRight
-                    className={`w-4 h-4 transition-transform ${
-                      selected
-                        ? "text-[#2d5a27] translate-x-0.5"
-                        : "text-stone-400"
+                    className={`w-4 h-4 transition-transform shrink-0 ${
+                      selected ? "text-[#2d5a27] translate-x-0.5" : "text-stone-400"
                     }`}
                   />
                 </button>
@@ -184,7 +183,7 @@ export function GrainWisdomHub() {
             })}
           </Reveal>
 
-          {/* Content */}
+          {/* Content — frosted glass */}
           <Reveal className="lg:col-span-8" delay={0.18}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -192,23 +191,20 @@ export function GrainWisdomHub() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}
                 exit={{ opacity: 0, y: -14, transition: { duration: DURATION.fast, ease: EASE.io } }}
-                className="bg-white rounded-3xl border border-stone-200/90 shadow-luxe p-6 sm:p-8 space-y-6"
+                className="glass refract-edge rounded-3xl p-5 sm:p-8 space-y-6"
               >
-                <div className="flex items-center gap-4 border-b border-stone-100 pb-5">
+                <div className="flex items-center gap-4 border-b border-stone-200/60 pb-5">
                   <div
-                    className="p-3.5 rounded-2xl text-white flex items-center justify-center border shadow-sm"
-                    style={{
-                      backgroundColor: current.color,
-                      borderColor: current.color,
-                    }}
+                    className="p-3.5 rounded-2xl text-white flex items-center justify-center shadow-md shrink-0"
+                    style={{ backgroundColor: current.color }}
                   >
                     <TopicIcon className="w-6 h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#c88a4a]">
                       Deep-Dive Exploration
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-stone-900 mt-0.5">
+                    <h3 className="text-lg sm:text-2xl font-serif font-bold text-stone-900 mt-0.5">
                       {current.title}
                     </h3>
                   </div>
@@ -221,7 +217,7 @@ export function GrainWisdomHub() {
                 <div className="space-y-4 pt-2">
                   {current.bullets.map((b, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#1f431e]/10 text-[#1f431e] font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
                         {i + 1}
                       </div>
                       <div className="space-y-1">
@@ -236,7 +232,7 @@ export function GrainWisdomHub() {
                   ))}
                 </div>
 
-                <div className="bg-[#faf8f5] rounded-2xl p-4 sm:p-5 border border-stone-200/80 flex items-start gap-3">
+                <div className="glass-gold refract-edge rounded-2xl p-4 sm:p-5 flex items-start gap-3">
                   <div className="p-2 bg-white rounded-xl border border-stone-200 text-[#1f431e] shrink-0 mt-0.5">
                     <Award className="w-4 h-4 text-[#c88a4a]" />
                   </div>
