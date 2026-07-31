@@ -98,10 +98,15 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* App feel: no tap highlight, optimized touch */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
   }
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* App feel: prevent overscroll bounce */
+    overscroll-behavior: none;
   }
   body {
     background-color: var(--cream);
@@ -111,6 +116,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* App feel: momentum scroll + prevent pull-to-refresh */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    touch-action: pan-y pan-x;
   }
   h1, h2, h3, h4, .font-serif {
     font-family: var(--font-playfair), Georgia, serif;
@@ -126,31 +135,62 @@
     background: rgba(212, 163, 115, 0.32);
     color: #1f431e;
   }
+  /* App feel: prevent text selection on buttons/nav (allow on content) */
+  button,
+  nav,
+  [role="button"],
+  .pill,
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
   /* Accessible focus ring for keyboard users */
   :focus-visible {
     outline: 2px solid var(--gold);
     outline-offset: 2px;
     border-radius: 6px;
   }
+  /* App feel: smooth scroll restoration */
+  html {
+    scroll-padding-top: 5rem;
+  }
 }
 
-/* ---------- Luxury scrollbar ---------- */
+/* ---------- App-grade: no scrollbars anywhere (clean app feel) ---------- */
+/* WebKit / Chromium / Safari */
+*::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 0;
+  height: 0;
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
-::-webkit-scrollbar-track {
-  background: #f5f2ed;
+/* Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #d4a373, #c88a4a);
-  border-radius: 9999px;
-  border: 2px solid #f5f2ed;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #2d5a27, #1f431e);
+/* IE / Legacy Edge */
+html {
+  -ms-overflow-style: none;
 }
 
+/* Momentum scrolling — iOS app feel */
+html,
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none; /* prevent bounce/chain scroll */
+  scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scroll from layout overflow */
+body {
+  overflow-x: hidden;
+}
+
+/* Utility kept for explicit opt-in (already global now) */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

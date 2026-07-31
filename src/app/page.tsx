@@ -10,6 +10,7 @@ import { Footer } from "@/components/site/footer";
 import { MobileDock } from "@/components/site/mobile-dock";
 import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
 import { Onboarding } from "@/components/site/onboarding";
+import { ScrollProgress } from "@/components/site/scroll-progress";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
 
@@ -142,6 +143,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f5] font-sans text-stone-900 antialiased">
+      <ScrollProgress />
       <Header
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

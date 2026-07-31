@@ -162,3 +162,22 @@ Stage Summary:
 - Responsive across mobile/tablet/desktop.
 - All nav + dock + menu interactions verified working.
 - Lint clean, all routes 200, no errors.
+
+---
+Task ID: app-feel-award-winning-2026
+Agent: main (Z.ai Code)
+Task: Remove scrollbars everywhere, make the website feel like an award-winning 2026 app.
+
+Work Log:
+- Removed ALL scrollbars globally (cross-browser): `*::-webkit-scrollbar { width:0; height:0; display:none }`, `* { scrollbar-width: none }`, `-ms-overflow-style: none`. No visible scrollbars anywhere on any element — clean app shell.
+- App-grade base CSS: `-webkit-tap-highlight-color: transparent` (no grey tap flash), `-webkit-touch-callout: none` (no iOS callout), `overscroll-behavior: none` (no bounce/chain scroll), `-webkit-overflow-scrolling: touch` (momentum scroll), `touch-action: pan-y pan-x` (smooth gesture), `overflow-x: hidden` (no horizontal scroll). User-select disabled on buttons/nav/pills (app feel, still allows text selection in content).
+- Viewport export: `viewportFit: "cover"` (safe-area insets), `maximumScale: 1, userScalable: false` (no pinch zoom — true app feel), `themeColor: "#faf8f5"`. Apple web app metadata: `capable: true, statusBarStyle: "black-translucent"`.
+- Scroll progress indicator: thin 3px gradient line (forest→gold→light-gold) fixed at top, fills via framer-motion useScroll + useSpring (stiffness 120, damping 24). Invisible at top, fills as you scroll — signature 2026 app feature.
+- Verified: lint clean, all routes 200, no errors. Agent Browser mobile + desktop: VLM confirmed "no visible scrollbars", "native app-like feel", scroll progress line visible when scrolled. All interactions (menu, dock, cart) still work.
+
+Stage Summary:
+- Zero scrollbars anywhere (cross-browser, all elements).
+- Full app-grade touch: no tap highlight, no bounce, momentum scroll, no pinch zoom, safe areas.
+- Scroll progress indicator (gradient, spring-filled).
+- App metadata: theme color, apple web app, viewport-fit cover.
+- Award-winning 2026 app feel confirmed by VLM.

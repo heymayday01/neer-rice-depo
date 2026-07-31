@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cinzel, Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -53,6 +53,20 @@ export const metadata: Metadata = {
     siteName: "Neer Rice Depo",
     type: "website",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Neer Rice",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1, // prevent zoom for app feel
+  userScalable: false, // app-like: no pinch zoom
+  viewportFit: "cover", // safe-area insets
+  themeColor: "#faf8f5",
 };
 
 export default function RootLayout({
