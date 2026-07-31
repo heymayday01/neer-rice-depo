@@ -1,0 +1,744 @@
+     1→import React, { useState, useEffect, useRef } from 'react';
+     2→import Lenis from 'lenis';
+     3→import gsap from 'gsap';
+     4→import { ScrollTrigger } from 'gsap/ScrollTrigger';
+     5→import { motion } from 'motion/react';
+     6→import { Header } from './components/Header';
+     7→import { HeroBanner } from './components/HeroBanner';
+     8→import { ProductCard } from './components/ProductCard';
+     9→import { ProductDetailModal } from './components/ProductDetailModal';
+    10→import { CartDrawer } from './components/CartDrawer';
+    11→import { CheckoutModal } from './components/CheckoutModal';
+    12→import { OrderTrackerModal } from './components/OrderTrackerModal';
+    13→import { AISommelierModal } from './components/AISommelierModal';
+    14→import { GoogleSheetsModal } from './components/GoogleSheetsModal';
+    15→import { RiceComparisonModal } from './components/RiceComparisonModal';
+    16→import { ProductSkeleton } from './components/ProductSkeleton';
+    17→import { GrainWisdomHub } from './components/GrainWisdomHub';
+    18→import { Footer } from './components/Footer';
+    19→import { RiceProduct, CartItem, Order } from './types';
+    20→import { RICE_PRODUCTS } from './data/riceProducts';
+    21→import { Sparkles, SlidersHorizontal, ArrowUpDown, Filter, Sprout, CheckCircle2, BarChart2, Home, ShoppingBag, Package, Search, Layers, HeartHandshake } from 'lucide-react';
+    22→
+    23→gsap.registerPlugin(ScrollTrigger);
+    24→
+    25→export default function App() {
+    26→  const [products, setProducts] = useState<RiceProduct[]>(RICE_PRODUCTS);
+    27→  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    28→  const [activeCategory, setActiveCategory] = useState<string>('all');
+    29→  const [searchQuery, setSearchQuery] = useState<string>('');
+    30→  const [giFilter, setGiFilter] = useState<string>('all');
+    31→  const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
+    32→  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+    33→  const [isLoading, setIsLoading] = useState<boolean>(false);
+    34→
+    35→  // Smooth skeleton loading effect on filter or search change
+    36→  useEffect(() => {
+    37→    setIsLoading(true);
+    38→    const timer = setTimeout(() => {
+    39→      setIsLoading(false);
+    40→    }, 280);
+    41→    return () => clearTimeout(timer);
+    42→  }, [activeCategory, giFilter, searchQuery, sortBy]);
+    43→
+    44→  // Modals state
+    45→  const [selectedProductDetail, setSelectedProductDetail] = useState<RiceProduct | null>(null);
+    46→  const [cartOpen, setCartOpen] = useState<boolean>(false);
+    47→  const [checkoutOpen, setCheckoutOpen] = useState<boolean>(false);
+    48→  const [appliedCoupon, setAppliedCoupon] = useState<string>('');
+    49→  const [ordersOpen, setOrdersOpen] = useState<boolean>(false);
+    50→  const [aiSommelierOpen, setAiSommelierOpen] = useState<boolean>(false);
+    51→  const [sheetsModalOpen, setSheetsModalOpen] = useState<boolean>(false);
+    52→  const [comparisonModalOpen, setComparisonModalOpen] = useState<boolean>(false);
+    53→  const [googleSheetId, setGoogleSheetId] = useState<string>('');
+    54→
+    55→  const gridRef = useRef<HTMLDivElement>(null);
+    56→  const catalogRef = useRef<HTMLElement>(null);
+    57→
+    58→  // Sound feedback helper using Web Audio API
+    59→  const playClickSound = () => {
+    60→    if (!soundEnabled) return;
+    61→    try {
+    62→      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    63→      const osc = audioCtx.createOscillator();
+    64→      const gain = audioCtx.createGain();
+    65→      osc.type = 'sine';
+    66→      osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+    67→      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+    68→      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    69→      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    70→      osc.connect(gain);
+    71→      gain.connect(audioCtx.destination);
+    72→      osc.start();
+    73→      osc.stop(audioCtx.currentTime + 0.08);
+    74→    } catch (e) {
+    75→      // Audio context fallback
+    76→    }
+    77→  };
+    78→
+    79→  const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
+    80→
+    81→  // Initialize Lenis Smooth Scroll (desktop only to prevent mobile scroll and gesture conflicts)
+    82→  useEffect(() => {
+    83→    const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    84→    if (isMobile) {
+    85→      return;
+    86→    }
+    87→
+    88→    const lenis = new Lenis({
+    89→      duration: 1.1,
+    90→      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    91→      orientation: 'vertical',
+    92→      gestureOrientation: 'vertical',
+    93→      smoothWheel: true,
+    94→    });
+    95→    setLenisInstance(lenis);
+    96→
+    97→    lenis.on('scroll', ScrollTrigger.update);
+    98→
+    99→    const tickHandler = (time: number) => {
+   100→      lenis.raf(time * 1000);
+   101→    };
+   102→    gsap.ticker.add(tickHandler);
+   103→    gsap.ticker.lagSmoothing(0);
+   104→
+   105→    return () => {
+   106→      lenis.off('scroll', ScrollTrigger.update);
+   107→      gsap.ticker.remove(tickHandler);
+   108→      lenis.destroy();
+   109→    };
+   110→  }, []);
+   111→
+   112→  // Lock document body scroll and stop Lenis scroll when any modal or drawer is active
+   113→  const isAnyModalOpen =
+   114→    Boolean(selectedProductDetail) ||
+   115→    cartOpen ||
+   116→    checkoutOpen ||
+   117→    ordersOpen ||
+   118→    aiSommelierOpen ||
+   119→    sheetsModalOpen ||
+   120→    comparisonModalOpen;
+   121→
+   122→  useEffect(() => {
+   123→    if (isAnyModalOpen) {
+   124→      document.body.style.overflow = 'hidden';
+   125→      lenisInstance?.stop();
+   126→    } else {
+   127→      document.body.style.overflow = '';
+   128→      lenisInstance?.start();
+   129→    }
+   130→    return () => {
+   131→      document.body.style.overflow = '';
+   132→      lenisInstance?.start();
+   133→    };
+   134→  }, [isAnyModalOpen, lenisInstance]);
+   135→
+   136→  // Fetch live products from backend on mount
+   137→  useEffect(() => {
+   138→    fetch('/api/products')
+   139→      .then((res) => res.json())
+   140→      .then((data) => {
+   141→        if (data.products && data.products.length > 0) {
+   142→          setProducts(data.products);
+   143→        }
+   144→      })
+   145→      .catch((err) => console.warn('Using local catalog fallback:', err));
+   146→  }, []);
+   147→
+   148→  // Catalog section entrance animation
+   149→  useEffect(() => {
+   150→    if (catalogRef.current) {
+   151→      gsap.fromTo(
+   152→        catalogRef.current,
+   153→        { opacity: 0, y: 30 },
+   154→        {
+   155→          opacity: 1,
+   156→          y: 0,
+   157→          duration: 0.8,
+   158→          ease: 'power3.out',
+   159→          scrollTrigger: {
+   160→            trigger: catalogRef.current,
+   161→            start: 'top 85%',
+   162→          },
+   163→        }
+   164→      );
+   165→    }
+   166→  }, []);
+   167→
+   168→  // Cart operations
+   169→  const handleAddToCart = (product: RiceProduct, weightKg: number) => {
+   170→    playClickSound();
+   171→    setCartItems((prev) => {
+   172→      const existingIndex = prev.findIndex(
+   173→        (item) => item.productId === product.id && item.selectedWeightKg === weightKg
+   174→      );
+   175→
+   176→      const basePrice = product.discountedPricePerKg || product.pricePerKg;
+   177→      let bulkMultiplier = 1;
+   178→      if (weightKg === 10) bulkMultiplier = 0.95;
+   179→      if (weightKg === 25) bulkMultiplier = 0.90;
+   180→
+   181→      const unitPricePerKg = Math.round(basePrice * bulkMultiplier);
+   182→
+   183→      if (existingIndex > -1) {
+   184→        const updated = [...prev];
+   185→        const item = updated[existingIndex];
+   186→        const newQty = item.quantity + 1;
+   187→        updated[existingIndex] = {
+   188→          ...item,
+   189→          quantity: newQty,
+   190→          totalPrice: unitPricePerKg * weightKg * newQty,
+   191→        };
+   192→        return updated;
+   193→      } else {
+   194→        return [
+   195→          ...prev,
+   196→          {
+   197→            productId: product.id,
+   198→            product,
+   199→            selectedWeightKg: weightKg,
+   200→            quantity: 1,
+   201→            unitPricePerKg,
+   202→            totalPrice: unitPricePerKg * weightKg,
+   203→          },
+   204→        ];
+   205→      }
+   206→    });
+   207→  };
+   208→
+   209→  const handleUpdateCartQuantity = (productId: string, weightKg: number, newQty: number) => {
+   210→    playClickSound();
+   211→    if (newQty <= 0) {
+   212→      handleRemoveCartItem(productId, weightKg);
+   213→      return;
+   214→    }
+   215→
+   216→    setCartItems((prev) =>
+   217→      prev.map((item) => {
+   218→        if (item.productId === productId && item.selectedWeightKg === weightKg) {
+   219→          return {
+   220→            ...item,
+   221→            quantity: newQty,
+   222→            totalPrice: item.unitPricePerKg * weightKg * newQty,
+   223→          };
+   224→        }
+   225→        return item;
+   226→      })
+   227→    );
+   228→  };
+   229→
+   230→  const handleRemoveCartItem = (productId: string, weightKg: number) => {
+   231→    playClickSound();
+   232→    setCartItems((prev) =>
+   233→      prev.filter((item) => !(item.productId === productId && item.selectedWeightKg === weightKg))
+   234→    );
+   235→  };
+   236→
+   237→  const handleOrderSuccess = (order: Order) => {
+   238→    setCartItems([]);
+   239→  };
+   240→
+   241→  // Filter & Sort Logic
+   242→  const filteredProducts = products.filter((p) => {
+   243→    // Category check
+   244→    if (activeCategory !== 'all' && p.category !== activeCategory) {
+   245→      return false;
+   246→    }
+   247→
+   248→    // GI Index check
+   249→    if (giFilter === 'low' && !p.giIndex.includes('Low')) {
+   250→      return false;
+   251→    }
+   252→
+   253→    // Search query
+   254→    if (searchQuery.trim()) {
+   255→      const q = searchQuery.toLowerCase();
+   256→      const matchName = p.name.toLowerCase().includes(q);
+   257→      const matchTag = p.tagline.toLowerCase().includes(q);
+   258→      const matchOrigin = p.originRegion.toLowerCase().includes(q);
+   259→      const matchDish = p.bestFor.some((d) => d.toLowerCase().includes(q));
+   260→
+   261→      if (!matchName && !matchTag && !matchOrigin && !matchDish) {
+   262→        return false;
+   263→      }
+   264→    }
+   265→
+   266→    return true;
+   267→  });
+   268→
+   269→  // Sorting
+   270→  const sortedProducts = [...filteredProducts].sort((a, b) => {
+   271→    const priceA = a.discountedPricePerKg || a.pricePerKg;
+   272→    const priceB = b.discountedPricePerKg || b.pricePerKg;
+   273→
+   274→    if (sortBy === 'price-low') return priceA - priceB;
+   275→    if (sortBy === 'price-high') return priceB - priceA;
+   276→    if (sortBy === 'rating') return b.rating - a.rating;
+   277→    return 0; // featured default
+   278→  });
+   279→
+   280→  // Dynamic GSAP ScrollTrigger entrance animations for the product grid and filters
+   281→  useEffect(() => {
+   282→    // 1. Filter Bar Reveal Animation
+   283→    const filterTrigger = ScrollTrigger.create({
+   284→      trigger: '.catalog-filter-bar',
+   285→      start: 'top 90%',
+   286→      onEnter: () => {
+   287→        gsap.fromTo(
+   288→          '.catalog-filter-bar',
+   289→          { opacity: 0, y: 30, scale: 0.98 },
+   290→          { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'power4.out', overwrite: 'auto' }
+   291→        );
+   292→      },
+   293→      once: true,
+   294→    });
+   295→
+   296→    // 2. Category Strip Reveal (if present)
+   297→    const categoryTrigger = ScrollTrigger.create({
+   298→      trigger: '.catalog-category-strip',
+   299→      start: 'top 92%',
+   300→      onEnter: () => {
+   301→        gsap.fromTo(
+   302→          '.catalog-category-strip',
+   303→          { opacity: 0, y: 20 },
+   304→          { opacity: 1, y: 0, duration: 0.75, ease: 'power4.out', overwrite: 'auto' }
+   305→        );
+   306→      },
+   307→      once: true,
+   308→    });
+   309→
+   310→    // 3. Grid Cards Entrance Animation
+   311→    let batch: any[] = [];
+   312→    if (!isLoading && gridRef.current) {
+   313→      const cards = Array.from(gridRef.current.children) as HTMLElement[];
+   314→      if (cards.length > 0) {
+   315→        gsap.killTweensOf(cards);
+   316→        gsap.set(cards, { opacity: 0, y: 40, scale: 0.96 });
+   317→
+   318→        batch = ScrollTrigger.batch(cards, {
+   319→          start: 'top 95%',
+   320→          onEnter: (batchElements) => {
+   321→            gsap.to(batchElements, {
+   322→              opacity: 1,
+   323→              y: 0,
+   324→              scale: 1,
+   325→              duration: 0.85,
+   326→              ease: 'power4.out',
+   327→              stagger: 0.06,
+   328→              overwrite: 'auto',
+   329→            });
+   330→          },
+   331→          once: true,
+   332→        });
+   333→      }
+   334→    }
+   335→
+   336→    return () => {
+   337→      filterTrigger.kill();
+   338→      categoryTrigger.kill();
+   339→      batch.forEach((st) => st.kill());
+   340→    };
+   341→  }, [sortedProducts, isLoading]);
+   342→
+   343→  return (
+   344→    <div className="min-h-screen flex flex-col bg-[#FAF8F5] font-sans text-stone-900 antialiased selection:bg-[#D4A373]/30 pb-28 md:pb-0">
+   345→      {/* Navbar */}
+   346→      <Header
+   347→        cartItems={cartItems}
+   348→        onOpenCart={() => {
+   349→          playClickSound();
+   350→          setCartOpen(true);
+   351→        }}
+   352→        onOpenAISommelier={() => {
+   353→          playClickSound();
+   354→          setAiSommelierOpen(true);
+   355→        }}
+   356→        onOpenOrders={() => {
+   357→          playClickSound();
+   358→          setOrdersOpen(true);
+   359→        }}
+   360→        onOpenSheetsModal={() => {
+   361→          playClickSound();
+   362→          setSheetsModalOpen(true);
+   363→        }}
+   364→        onOpenComparison={() => {
+   365→          playClickSound();
+   366→          setComparisonModalOpen(true);
+   367→        }}
+   368→        searchQuery={searchQuery}
+   369→        setSearchQuery={setSearchQuery}
+   370→        activeCategory={activeCategory}
+   371→        setActiveCategory={(cat) => {
+   372→          playClickSound();
+   373→          setActiveCategory(cat);
+   374→        }}
+   375→        soundEnabled={soundEnabled}
+   376→        setSoundEnabled={setSoundEnabled}
+   377→      />
+   378→
+   379→      {/* Main Content Area */}
+   380→      <main className="flex-1 max-md:pt-[82px] md:pt-0">
+   381→        {/* Hero Section */}
+   382→        <HeroBanner
+   383→          onOpenAISommelier={() => {
+   384→            playClickSound();
+   385→            setAiSommelierOpen(true);
+   386→          }}
+   387→          onSelectCategory={(cat) => {
+   388→            playClickSound();
+   389→            setActiveCategory(cat);
+   390→          }}
+   391→          onOpenComparison={() => {
+   392→            playClickSound();
+   393→            setComparisonModalOpen(true);
+   394→          }}
+   395→        />
+   396→
+   397→        {/* Product Catalog Section */}
+   398→        <section ref={catalogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+   399→          {/* Mobile-Only Horizontal Category Strip (Scrolling naturally with the page instead of fixed at top, solving vertical viewport congestion) */}
+   400→          <div className="md:hidden flex gap-2 overflow-x-auto pb-2 px-1 no-scrollbar -mx-4 sm:-mx-6 px-4 sm:px-6 catalog-category-strip">
+   401→            {[
+   402→              { id: 'all', label: 'All Varieties', icon: Sprout },
+   403→              { id: 'daily', label: 'Daily Staples', icon: Layers },
+   404→              { id: 'heritage', label: 'Heritage & Unpolished', icon: Sprout },
+   405→              { id: 'aromatic', label: 'Aromatic & Basmati', icon: Sparkles },
+   406→              { id: 'superfood', label: 'Diabetic & Low GI', icon: HeartHandshake },
+   407→              { id: 'combos', label: 'Value Bundles', icon: Package },
+   408→            ].map((cat) => {
+   409→              const Icon = cat.icon;
+   410→              const isSelected = activeCategory === cat.id;
+   411→              return (
+   412→                <button
+   413→                  key={cat.id}
+   414→                  onClick={() => {
+   415→                    playClickSound();
+   416→                    setActiveCategory(cat.id);
+   417→                  }}
+   418→                  className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap flex items-center gap-2 shrink-0 transition-all duration-200 border cursor-pointer ${
+   419→                    isSelected
+   420→                      ? 'bg-[#1F431E] text-white border-[#1F431E] shadow-xs font-extrabold'
+   421→                      : 'bg-white text-stone-600 border-stone-200/60 hover:bg-stone-50'
+   422→                  }`}
+   423→                >
+   424→                  <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-[#D4A373]' : 'text-stone-400'}`} />
+   425→                  <span>{cat.label}</span>
+   426→                </button>
+   427→              );
+   428→            })}
+   429→          </div>
+   430→
+   431→          {/* Catalog Filter Bar */}
+   432→          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-stone-200/90 shadow-xs catalog-filter-bar">
+   433→            <div>
+   434→              <h2 className="text-xl font-serif text-stone-800 flex items-center gap-2">
+   435→                <Sprout className="w-5 h-5 text-[#1F431E]" />
+   436→                <span>
+   437→                  {activeCategory === 'all'
+   438→                    ? 'All Grain Varieties'
+   439→                    : activeCategory === 'daily'
+   440→                    ? 'Daily Staple Grains'
+   441→                    : activeCategory === 'heritage'
+   442→                    ? 'Heritage & Unpolished Grains'
+   443→                    : activeCategory === 'aromatic'
+   444→                    ? 'Aromatic & Basmati'
+   445→                    : activeCategory === 'superfood'
+   446→                    ? 'Low GI & Superfood Grains'
+   447→                    : 'Value Bundle Combos'}
+   448→                </span>
+   449→                <span className="text-xs bg-[#1F431E]/10 text-[#1F431E] px-2.5 py-0.5 rounded-full font-bold font-sans">
+   450→                  {sortedProducts.length} Items
+   451→                </span>
+   452→              </h2>
+   453→            </div>
+   454→
+   455→            {/* Controls Right */}
+   456→            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+   457→              {/* Compare Matrix Trigger */}
+   458→              <button
+   459→                onClick={() => {
+   460→                  playClickSound();
+   461→                  setComparisonModalOpen(true);
+   462→                }}
+   463→                className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-[#C88A4A]/15 hover:bg-[#C88A4A]/25 text-stone-900 border border-[#C88A4A]/30 cursor-pointer"
+   464→              >
+   465→                <BarChart2 className="w-3.5 h-3.5 text-[#1F431E]" />
+   466→                <span>Compare Matrix</span>
+   467→              </button>
+   468→
+   469→              {/* Low GI Toggle */}
+   470→              <button
+   471→                onClick={() => {
+   472→                  playClickSound();
+   473→                  setGiFilter(giFilter === 'low' ? 'all' : 'low');
+   474→                }}
+   475→                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+   476→                  giFilter === 'low'
+   477→                    ? 'bg-[#1F431E] text-white border-[#1F431E] shadow-xs'
+   478→                    : 'bg-[#1F431E]/5 text-[#1F431E] border-[#1F431E]/20 hover:bg-[#1F431E]/10'
+   479→                }`}
+   480→              >
+   481→                <Filter className="w-3.5 h-3.5" />
+   482→                <span>Diabetic Friendly (Low GI)</span>
+   483→              </button>
+   484→
+   485→              {/* Sort Dropdown */}
+   486→              <div className="flex items-center gap-1.5 bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-800">
+   487→                <ArrowUpDown className="w-3.5 h-3.5 text-[#1F431E]" />
+   488→                <span>Sort By:</span>
+   489→                <select
+   490→                  value={sortBy}
+   491→                  onChange={(e) => {
+   492→                    playClickSound();
+   493→                    setSortBy(e.target.value as any);
+   494→                  }}
+   495→                  className="bg-transparent font-bold text-[#1F431E] focus:outline-hidden cursor-pointer"
+   496→                >
+   497→                  <option value="featured">Featured / Best Seller</option>
+   498→                  <option value="price-low">Price: Low to High</option>
+   499→                  <option value="price-high">Price: High to Low</option>
+   500→                  <option value="rating">Customer Rating</option>
+   501→                </select>
+   502→              </div>
+   503→            </div>
+   504→          </div>
+   505→
+   506→          {/* Product Grid */}
+   507→          {isLoading ? (
+   508→            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   509→              <ProductSkeleton count={6} />
+   510→            </div>
+   511→          ) : sortedProducts.length === 0 ? (
+   512→            <div className="text-center py-16 bg-white rounded-2xl border border-stone-200 p-8 space-y-4">
+   513→              <div className="w-16 h-16 rounded-full bg-[#2D5A27]/10 flex items-center justify-center mx-auto text-[#2D5A27]">
+   514→                <Sprout className="w-8 h-8" />
+   515→              </div>
+   516→              <h3 className="text-lg font-serif text-stone-800">No matching rice grains found</h3>
+   517→              <p className="text-xs text-stone-500 max-w-sm mx-auto">
+   518→                Try clearing your search query or reset filters to view all available organic grains.
+   519→              </p>
+   520→              <button
+   521→                onClick={() => {
+   522→                  playClickSound();
+   523→                  setSearchQuery('');
+   524→                  setActiveCategory('all');
+   525→                  setGiFilter('all');
+   526→                }}
+   527→                className="px-4 py-2 bg-[#2D5A27] text-white rounded-xl text-xs font-bold hover:bg-[#23471e]"
+   528→              >
+   529→                Reset Catalog Filters
+   530→              </button>
+   531→            </div>
+   532→          ) : (
+   533→            <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   534→              {sortedProducts.map((product) => (
+   535→                <ProductCard
+   536→                  key={product.id}
+   537→                  product={product}
+   538→                  onAddToCart={handleAddToCart}
+   539→                  onOpenDetail={(p) => {
+   540→                    playClickSound();
+   541→                    setSelectedProductDetail(p);
+   542→                  }}
+   543→                />
+   544→              ))}
+   545→            </div>
+   546→          )}
+   547→        </section>
+   548→
+   549→        {/* Grain Wisdom & Organic Heritage Hub */}
+   550→        <GrainWisdomHub />
+   551→      </main>
+   552→
+   553→      {/* Footer */}
+   554→      <Footer
+   555→        onOpenSheetsModal={() => {
+   556→          playClickSound();
+   557→          setSheetsModalOpen(true);
+   558→        }}
+   559→        onOpenAISommelier={() => {
+   560→          playClickSound();
+   561→          setAiSommelierOpen(true);
+   562→        }}
+   563→      />
+   564→
+   565→      {/* Product Detail Modal */}
+   566→      <ProductDetailModal
+   567→        product={selectedProductDetail}
+   568→        onClose={() => setSelectedProductDetail(null)}
+   569→        onAddToCart={handleAddToCart}
+   570→      />
+   571→
+   572→      {/* Cart Drawer */}
+   573→      <CartDrawer
+   574→        isOpen={cartOpen}
+   575→        onClose={() => setCartOpen(false)}
+   576→        cartItems={cartItems}
+   577→        onUpdateQuantity={handleUpdateCartQuantity}
+   578→        onRemoveItem={handleRemoveCartItem}
+   579→        onQuickAddToCart={handleAddToCart}
+   580→        onProceedToCheckout={(coupon) => {
+   581→          setAppliedCoupon(coupon);
+   582→          setCartOpen(false);
+   583→          setCheckoutOpen(true);
+   584→        }}
+   585→      />
+   586→
+   587→      {/* Checkout Modal */}
+   588→      <CheckoutModal
+   589→        isOpen={checkoutOpen}
+   590→        onClose={() => setCheckoutOpen(false)}
+   591→        cartItems={cartItems}
+   592→        appliedCoupon={appliedCoupon}
+   593→        onOrderSuccess={handleOrderSuccess}
+   594→        googleSheetId={googleSheetId}
+   595→        onOpenOrderTracker={() => setOrdersOpen(true)}
+   596→      />
+   597→
+   598→      {/* Order Tracker Modal */}
+   599→      <OrderTrackerModal
+   600→        isOpen={ordersOpen}
+   601→        onClose={() => setOrdersOpen(false)}
+   602→      />
+   603→
+   604→      {/* AI Sommelier Advisor Modal */}
+   605→      <AISommelierModal
+   606→        isOpen={aiSommelierOpen}
+   607→        onClose={() => setAiSommelierOpen(false)}
+   608→        onAddToCart={handleAddToCart}
+   609→      />
+   610→
+   611→      {/* Google Sheets Sync Modal */}
+   612→      <GoogleSheetsModal
+   613→        isOpen={sheetsModalOpen}
+   614→        onClose={() => setSheetsModalOpen(false)}
+   615→        googleSheetId={googleSheetId}
+   616→        setGoogleSheetId={setGoogleSheetId}
+   617→      />
+   618→
+   619→      {/* Rice Comparison Matrix Modal */}
+   620→      <RiceComparisonModal
+   621→        isOpen={comparisonModalOpen}
+   622→        onClose={() => setComparisonModalOpen(false)}
+   623→        onAddToCart={handleAddToCart}
+   624→      />
+   625→
+   626→      {/* Floating Mobile Dock Navigation Bar */}
+   627→      <div className="md:hidden fixed bottom-5 left-4 right-4 z-45 bg-[#FCFAF7]/95 backdrop-blur-xl border border-stone-200/80 px-2 py-2.5 rounded-3xl shadow-[0_12px_36px_rgba(45,90,39,0.12)] flex items-center justify-around">
+   628→        {(() => {
+   629→          const activeTab = aiSommelierOpen
+   630→            ? 'ai'
+   631→            : comparisonModalOpen
+   632→            ? 'matrix'
+   633→            : ordersOpen
+   634→            ? 'orders'
+   635→            : cartOpen
+   636→            ? 'cart'
+   637→            : 'home';
+   638→
+   639→          const tabs = [
+   640→            {
+   641→              id: 'home',
+   642→              label: 'Explore',
+   643→              icon: Home,
+   644→              action: () => {
+   645→                setAiSommelierOpen(false);
+   646→                setComparisonModalOpen(false);
+   647→                setOrdersOpen(false);
+   648→                setCartOpen(false);
+   649→                window.scrollTo({ top: 0, behavior: 'smooth' });
+   650→              },
+   651→            },
+   652→            {
+   653→              id: 'ai',
+   654→              label: 'AI Advisor',
+   655→              icon: Sparkles,
+   656→              action: () => {
+   657→                setComparisonModalOpen(false);
+   658→                setOrdersOpen(false);
+   659→                setCartOpen(false);
+   660→                setAiSommelierOpen(true);
+   661→              },
+   662→            },
+   663→            {
+   664→              id: 'matrix',
+   665→              label: 'Matrix',
+   666→              icon: BarChart2,
+   667→              action: () => {
+   668→                setAiSommelierOpen(false);
+   669→                setOrdersOpen(false);
+   670→                setCartOpen(false);
+   671→                setComparisonModalOpen(true);
+   672→              },
+   673→            },
+   674→            {
+   675→              id: 'orders',
+   676→              label: 'Orders',
+   677→              icon: Package,
+   678→              action: () => {
+   679→                setAiSommelierOpen(false);
+   680→                setComparisonModalOpen(false);
+   681→                setCartOpen(false);
+   682→                setOrdersOpen(true);
+   683→              },
+   684→            },
+   685→            {
+   686→              id: 'cart',
+   687→              label: 'Basket',
+   688→              icon: ShoppingBag,
+   689→              action: () => {
+   690→                setAiSommelierOpen(false);
+   691→                setComparisonModalOpen(false);
+   692→                setOrdersOpen(false);
+   693→                setCartOpen(true);
+   694→              },
+   695→              hasBadge: true,
+   696→            },
+   697→          ];
+   698→
+   699→          return tabs.map((tab) => {
+   700→            const Icon = tab.icon;
+   701→            const isSelected = activeTab === tab.id;
+   702→            return (
+   703→              <motion.button
+   704→                key={tab.id}
+   705→                whileTap={{ scale: 0.90 }}
+   706→                onClick={() => {
+   707→                  playClickSound();
+   708→                  tab.action();
+   709→                }}
+   710→                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all duration-200 cursor-pointer min-w-[64px] relative ${
+   711→                  isSelected
+   712→                    ? 'text-[#2D5A27]'
+   713→                    : 'text-stone-400 hover:text-stone-600'
+   714→                }`}
+   715→              >
+   716→                <div className="relative z-10 flex flex-col items-center">
+   717→                  <div className={`p-1 rounded-lg transition-colors ${isSelected ? 'bg-[#2D5A27]/10' : ''}`}>
+   718→                    <Icon
+   719→                      className={`w-5 h-5 transition-transform duration-200 ${
+   720→                        isSelected ? 'scale-110 text-[#2D5A27]' : 'text-stone-400'
+   721→                      }`}
+   722→                    />
+   723→                  </div>
+   724→                  {tab.hasBadge && cartItems.length > 0 && (
+   725→                    <span className="absolute -top-1.5 -right-2 bg-[#D4A373] text-stone-900 text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-[#FCFAF7] shadow-xs">
+   726→                      {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+   727→                    </span>
+   728→                  )}
+   729→                </div>
+   730→                <span className={`text-[9px] tracking-tight transition-all duration-200 ${
+   731→                  isSelected ? 'font-black text-[#2D5A27]' : 'font-semibold text-stone-500'
+   732→                }`}>
+   733→                  {tab.label}
+   734→                </span>
+   735→              </motion.button>
+   736→            );
+   737→          });
+   738→        })()}
+   739→      </div>
+   740→    </div>
+   741→  );
+   742→}
+   743→
+   744→

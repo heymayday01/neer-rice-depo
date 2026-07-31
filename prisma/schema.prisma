@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  trackingId  String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customerName String
+  email        String
+  phone        String
+  address      String
+  city         String
+  state        String
+  pincode      String
+
+  itemsJson    String // serialized cart items
+  subtotal     Float
+  discount     Float
+  deliveryFee  Float
+  total        Float
+
+  paymentMethod   String
+  paymentStatus   String @default("PENDING")
+  orderStatus     String @default("placed")
+}
