@@ -55,7 +55,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
           } as React.CSSProperties
         }
       >
-        <SheetHeader className="px-5 py-4 border-b border-stone-200 bg-white">
+        <SheetHeader className="px-5 py-4 border-b border-white/8 bg-[#0a1209]">
           <SheetTitle className="font-serif text-lg flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-[#1f431e]" />
             Your Grain Basket
@@ -72,7 +72,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
               <ShoppingBag className="w-9 h-9 text-[#1f431e]/50" />
             </div>
             <div>
-              <h3 className="text-lg font-serif text-stone-800">
+              <h3 className="text-lg font-serif text-stone-300">
                 Your basket is empty
               </h3>
               <p className="text-xs text-stone-500 mt-1 max-w-[16rem]">
@@ -89,7 +89,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-[#faf8f5]">
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-[#0a1209]">
               <AnimatePresence initial={false}>
                 {items.map((item) => (
                   <motion.div
@@ -98,7 +98,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                     initial={{ opacity: 0, x: 40, scale: 0.96 }}
                     animate={{ opacity: 1, x: 0, scale: 1, transition: SPRING.gentle }}
                     exit={{ opacity: 0, x: 60, scale: 0.96, transition: { duration: DURATION.fast, ease: EASE.io } }}
-                    className="bg-white rounded-2xl border border-stone-200/90 p-3 flex gap-3 shadow-sm"
+                    className="bg-white/[0.03] rounded-2xl border border-white/8 p-3 flex gap-3 shadow-sm"
                   >
                     <img
                       src={item.product.image}
@@ -106,7 +106,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                       className="w-16 h-16 rounded-xl object-cover shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-bold text-stone-900 line-clamp-1">
+                      <h4 className="text-xs font-bold text-white line-clamp-1">
                         {item.product.name}
                       </h4>
                       <p className="text-[10px] text-stone-500 font-medium">
@@ -114,7 +114,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                       </p>
                       <div className="flex items-center justify-between mt-2">
                         <motion.div
-                          className="flex items-center gap-1 bg-stone-100 rounded-full p-0.5"
+                          className="flex items-center gap-1 bg-white/5 rounded-full p-0.5"
                           initial={false}
                         >
                           <motion.button
@@ -127,7 +127,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                                 item.quantity - 1
                               )
                             }
-                            className="p-1.5 rounded-full hover:bg-white cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+                            className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="w-3 h-3 text-stone-600" />
@@ -151,7 +151,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                                 item.quantity + 1
                               )
                             }
-                            className="p-1.5 rounded-full hover:bg-white cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+                            className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
                             aria-label="Increase"
                           >
                             <Plus className="w-3 h-3 text-stone-600" />
@@ -177,10 +177,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
             </div>
 
             {/* Summary */}
-            <div className="border-t border-stone-200 bg-white px-5 py-4 space-y-3">
+            <div className="border-t border-white/8 bg-[#0a1209] px-5 py-4 space-y-3">
               {/* Coupon */}
               <div className="flex gap-2">
-                <div className="flex-1 flex items-center gap-2 bg-stone-100 rounded-xl px-3">
+                <div className="flex-1 flex items-center gap-2 bg-white/5 rounded-xl px-3">
                   <Tag className="w-3.5 h-3.5 text-stone-400" />
                   <input
                     value={coupon}
@@ -205,7 +205,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between text-stone-600">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-stone-900">₹{subtotal}</span>
+                  <span className="font-semibold text-white">₹{subtotal}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-[#1f431e]">
@@ -215,7 +215,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                 )}
                 <div className="flex justify-between text-stone-600">
                   <span>Delivery</span>
-                  <span className="font-semibold text-stone-900">
+                  <span className="font-semibold text-white">
                     {deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`}
                   </span>
                 </div>
@@ -226,8 +226,8 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                 )}
               </div>
 
-              <div className="flex justify-between items-baseline pt-2 border-t border-stone-100">
-                <span className="text-sm font-bold text-stone-900">Total</span>
+              <div className="flex justify-between items-baseline pt-2 border-t border-white/5">
+                <span className="text-sm font-bold text-white">Total</span>
                 <span className="text-2xl font-black font-serif text-[#1f431e]">
                   ₹{total}
                 </span>

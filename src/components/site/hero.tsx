@@ -328,18 +328,20 @@ function HeroGlassPanel({
           </AnimatePresence>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209]/80 via-transparent to-[#0a1209]/20" />
 
-          {/* Floating official seal — hairline border, sticker-like */}
-          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-white/95 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-stone-900/5 shadow-lg">
-            <img
-              src="/neer-logo-premium.png"
-              alt="Neer Rice Depo certified seal"
-              className="w-8 h-8 rounded-full object-contain border border-[#1f431e]/20 bg-[#faf8f5]"
-            />
+          {/* Floating official seal — dark glass sticker */}
+          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#0a1209]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#1a2818] to-[#0a1209] border border-[#d4a373]/15">
+              <img
+                src="/neer-logo-premium.png"
+                alt="Neer Rice Depo certified seal"
+                className="w-full h-full object-contain p-0.5"
+              />
+            </div>
             <div>
-              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#1f431e] block leading-none">
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#d4a373] block leading-none">
                 Certified
               </span>
-              <p className="text-[11px] font-bold font-serif text-stone-900 leading-tight">
+              <p className="text-[11px] font-bold font-serif text-white leading-tight">
                 Organic Depo
               </p>
             </div>

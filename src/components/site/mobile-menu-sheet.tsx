@@ -54,31 +54,31 @@ export function MobileMenuSheet({
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent
         side="bottom"
-        className="p-0 rounded-t-[1.75rem] max-h-[88vh] overflow-y-auto bg-[#fdfcfb] border-stone-200/80 shadow-2xl"
+        className="p-0 rounded-t-[1.75rem] max-h-[88vh] overflow-y-auto bg-[#0a1209] border-white/10 shadow-2xl"
       >
         <SheetHeader className="px-5 pt-5 pb-3">
-          <SheetTitle className="font-serif text-lg">Browse Grains</SheetTitle>
-          <SheetDescription className="text-xs">
+          <SheetTitle className="font-serif text-lg text-white">Browse Grains</SheetTitle>
+          <SheetDescription className="text-xs text-stone-400">
             Search and filter the organic heirloom catalog
           </SheetDescription>
         </SheetHeader>
 
         <div className="px-5 pb-6 space-y-5">
-          {/* Search — pill */}
-          <div className="pill flex items-center gap-2 px-4">
-            <Search className="w-4 h-4 text-stone-400" />
+          {/* Search */}
+          <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4">
+            <Search className="w-4 h-4 text-stone-500" strokeWidth={1.5} />
             <input
               type="text"
               placeholder="Search grains, regions, dishes…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent py-3 text-sm font-semibold focus:outline-none placeholder-stone-400"
+              className="flex-1 bg-transparent py-3 text-sm font-medium text-white focus:outline-none placeholder-stone-500"
               aria-label="Search grains"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="text-stone-500 hover:text-stone-800 p-1 cursor-pointer"
+                className="text-stone-500 hover:text-white p-1 cursor-pointer"
                 aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -86,19 +86,19 @@ export function MobileMenuSheet({
             )}
           </div>
 
-          {/* Quick actions — frosted pills */}
+          {/* Quick actions */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "AI Sommelier", icon: BrainCircuit, Flower2, action: () => { onOpenAISommelier(); onClose(); } },
+              { label: "AI Sommelier", icon: BrainCircuit, action: () => { onOpenAISommelier(); onClose(); } },
               { label: "Grain Matrix", icon: BarChart2, action: () => { onOpenComparison(); onClose(); } },
               { label: "My Orders", icon: Package, action: () => { onOpenOrders(); onClose(); } },
             ].map((a) => (
               <button
                 key={a.label}
                 onClick={a.action}
-                className="pill flex flex-col items-center gap-1.5 text-[#1f431e] py-3 cursor-pointer min-h-[64px] justify-center"
+                className="flex flex-col items-center gap-1.5 text-[#d4a373] py-3 cursor-pointer min-h-[64px] justify-center border border-white/10 hover:border-[#d4a373]/30 rounded-2xl transition-colors"
               >
-                <a.icon className="w-5 h-5 text-[#c88a4a]" />
+                <a.icon className="w-5 h-5" strokeWidth={1.5} />
                 <span className="text-[10px] font-bold">{a.label}</span>
               </button>
             ))}
@@ -120,20 +120,21 @@ export function MobileMenuSheet({
                     onClick={() => selectCat(cat.id)}
                     className={`w-full flex items-center justify-between p-3.5 rounded-2xl border transition-colors cursor-pointer ${
                       selected
-                        ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                        : "bg-white text-stone-700 border-stone-200 hover:border-stone-300"
+                        ? "bg-[#d4a373]/10 text-white border-[#d4a373]/40"
+                        : "bg-white/[0.03] text-stone-400 border-white/8 hover:border-white/20"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-xl ${
-                          selected ? "bg-white/15" : "bg-stone-100"
+                        className={`p-2 rounded-xl border ${
+                          selected
+                            ? "border-[#d4a373]/30 text-[#d4a373]"
+                            : "border-white/10 text-stone-500"
                         }`}
                       >
                         <Icon
-                          className={`w-4 h-4 ${
-                            selected ? "text-[#d4a373]" : "text-stone-500"
-                          }`}
+                          className={`w-4 h-4`}
+                          strokeWidth={1.5}
                         />
                       </div>
                       <span className="text-sm font-bold">{cat.label}</span>

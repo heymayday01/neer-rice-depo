@@ -71,8 +71,8 @@ export function ComparisonModal({ open, onClose }: Props) {
                 <tr
                   key={p.id}
                   className={`${
-                    i % 2 ? "bg-[#faf8f5]" : "bg-white"
-                  } hover:bg-[#c88a4a]/8 transition-colors border-b border-stone-200/60`}
+                    i % 2 ? "bg-white/[0.03]" : "bg-white"
+                  } hover:bg-[#c88a4a]/8 transition-colors border-b border-white/8`}
                 >
                   <td className="p-3">
                     <div className="flex items-center gap-2">
@@ -82,7 +82,7 @@ export function ComparisonModal({ open, onClose }: Props) {
                         className="w-9 h-9 rounded-lg object-cover shrink-0"
                       />
                       <div className="min-w-0">
-                        <div className="font-bold text-stone-900 line-clamp-1">
+                        <div className="font-bold text-white line-clamp-1">
                           {p.name}
                         </div>
                         <div className="text-[10px] text-stone-500 line-clamp-1">
@@ -91,10 +91,10 @@ export function ComparisonModal({ open, onClose }: Props) {
                       </div>
                     </div>
                   </td>
-                  <td className="text-center p-3 text-stone-600 font-medium">
+                  <td className="text-center p-3 text-stone-500 font-medium">
                     {p.grainType}
                   </td>
-                  <td className="text-center p-3 text-stone-600 font-medium">
+                  <td className="text-center p-3 text-stone-500 font-medium">
                     {p.processing}
                   </td>
                   <td className="text-center p-3">
@@ -102,7 +102,7 @@ export function ComparisonModal({ open, onClose }: Props) {
                       className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
                         p.giIndex.includes("Low")
                           ? "bg-[#1f431e]/10 text-[#1f431e]"
-                          : "bg-stone-100 text-stone-600"
+                          : "bg-stone-100 text-stone-500"
                       }`}
                     >
                       {p.giIndex.split(" ")[0]}
@@ -120,10 +120,10 @@ export function ComparisonModal({ open, onClose }: Props) {
                       ))}
                     </div>
                   </td>
-                  <td className="text-center p-3 text-stone-600 font-medium">
+                  <td className="text-center p-3 text-stone-500 font-medium">
                     {p.agingMonths}m
                   </td>
-                  <td className="text-center p-3 text-stone-600 font-medium font-mono">
+                  <td className="text-center p-3 text-stone-500 font-medium font-mono">
                     {p.waterRatio}
                   </td>
                   <td className="text-right p-3">

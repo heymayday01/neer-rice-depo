@@ -187,14 +187,14 @@ export function CheckoutModal({
               <CheckCircle2 className="w-11 h-11 text-[#1f431e]" />
             </motion.div>
             <div>
-              <h3 className="text-xl font-serif font-bold text-stone-900">
+              <h3 className="text-xl font-serif font-bold text-white">
                 Thank you for your order!
               </h3>
               <p className="text-sm text-stone-500 mt-1">
                 A confirmation has been sent. Track your grains below.
               </p>
             </div>
-            <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80 inline-block">
+            <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/8 inline-block">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block">
                 Tracking ID
               </span>
@@ -216,7 +216,7 @@ export function CheckoutModal({
               </button>
               <button
                 onClick={close}
-                className="px-5 py-2.5 bg-white border border-stone-200 text-stone-700 rounded-xl text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                className="px-5 py-2.5 bg-white border border-white/10 text-stone-400 rounded-xl text-xs font-bold hover:bg-white/5 cursor-pointer"
               >
                 Continue Shopping
               </button>
@@ -225,7 +225,7 @@ export function CheckoutModal({
         ) : (
           <div className="px-6 pb-6 space-y-5">
             {/* Items summary */}
-            <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80 space-y-2">
+            <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/8 space-y-2">
               {items.map((i) => (
                 <div
                   key={`${i.productId}-${i.selectedWeightKg}`}
@@ -234,11 +234,11 @@ export function CheckoutModal({
                   <span className="text-stone-600">
                     {i.quantity}× {i.product.name} ({i.selectedWeightKg}kg)
                   </span>
-                  <span className="font-bold text-stone-900">₹{i.totalPrice}</span>
+                  <span className="font-bold text-white">₹{i.totalPrice}</span>
                 </div>
               ))}
-              <div className="pt-2 border-t border-stone-200 flex justify-between items-baseline">
-                <span className="text-sm font-bold text-stone-900">Total</span>
+              <div className="pt-2 border-t border-white/10 flex justify-between items-baseline">
+                <span className="text-sm font-bold text-white">Total</span>
                 <span className="text-xl font-black font-serif text-[#1f431e]">
                   ₹{total}
                 </span>
@@ -310,7 +310,7 @@ export function CheckoutModal({
                       className={`p-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                         sel
                           ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                          : "bg-white text-stone-600 border-stone-200 hover:border-stone-300"
+                          : "bg-white text-stone-600 border-white/10 hover:border-white/25"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -373,7 +373,7 @@ function Field({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/10 focus:border-[#1f431e]/30 focus:bg-white transition-all"
+        className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-semibold text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 focus:bg-white/10 transition-all"
       />
     </label>
   );

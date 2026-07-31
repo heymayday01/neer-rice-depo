@@ -20,7 +20,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
         <Reveal className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-14 border-b border-white/8">
           <div className="lg:col-span-7 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-[#0a1209] p-1 border border-[#d4a373]/25 overflow-hidden shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#1a2818] to-[#0a1209] p-1.5 border border-[#d4a373]/20 overflow-hidden shrink-0 shadow-sm">
                 <img
                   src="/neer-logo-premium.png"
                   alt="Neer Rice Depo"

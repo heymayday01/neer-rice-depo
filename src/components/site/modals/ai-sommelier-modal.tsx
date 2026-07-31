@@ -167,8 +167,8 @@ export function AISommelierModal({ open, onClose }: Props) {
               animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}
               className="space-y-4"
             >
-              <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80">
-                <p className="text-sm text-stone-700 leading-relaxed font-serif italic">
+              <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/8">
+                <p className="text-sm text-stone-400 leading-relaxed font-serif italic">
                   &ldquo;{rec.summary}&rdquo;
                 </p>
               </div>
@@ -181,7 +181,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                   {recommended.map((p) => (
                     <div
                       key={p.id}
-                      className="flex gap-3 bg-white rounded-2xl border border-stone-200/90 p-3 items-center shadow-sm"
+                      className="flex gap-3 bg-white rounded-2xl border border-white/10/90 p-3 items-center shadow-sm"
                     >
                       <img
                         src={p.image}
@@ -189,7 +189,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                         className="w-14 h-14 rounded-xl object-cover shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs font-bold text-stone-900 line-clamp-1">
+                        <h4 className="text-xs font-bold text-white line-clamp-1">
                           {p.name}
                         </h4>
                         <p className="text-[10px] text-stone-500">
@@ -243,7 +243,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                   setRec(null);
                   setPrompt("");
                 }}
-                className="w-full py-2.5 bg-white border border-stone-200 text-stone-700 rounded-xl text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                className="w-full py-2.5 bg-white border border-white/10 text-stone-400 rounded-xl text-xs font-bold hover:bg-white/5 cursor-pointer"
               >
                 Ask Another Question
               </button>
@@ -265,14 +265,14 @@ function InfoCard({
   text: string;
 }) {
   return (
-    <div className="bg-[#faf8f5] rounded-2xl p-3.5 border border-stone-200/80 space-y-1.5">
+    <div className="bg-white/[0.03] rounded-2xl p-3.5 border border-white/8 space-y-1.5">
       <div className="flex items-center gap-1.5 text-[#1f431e]">
         <Icon className="w-3.5 h-3.5 text-[#c88a4a]" />
         <span className="text-[10px] font-extrabold uppercase tracking-widest">
           {title}
         </span>
       </div>
-      <p className="text-[11px] text-stone-600 leading-relaxed">{text}</p>
+      <p className="text-[11px] text-stone-500 leading-relaxed">{text}</p>
     </div>
   );
 }

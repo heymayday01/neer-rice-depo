@@ -65,7 +65,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-white/90 hover:bg-white rounded-full border border-stone-200 shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2 bg-[#0a1209]/90 hover:bg-[#0a1209] rounded-full border border-white/10 shadow-sm cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -73,7 +73,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Image side */}
-          <div className="relative h-64 md:h-full min-h-[320px] bg-[#f5f2ed]">
+          <div className="relative h-64 md:h-full min-h-[320px] bg-[#0a1209]">
             <img
               src={product.image}
               alt={product.name}
@@ -97,14 +97,14 @@ export function ProductDetailModal({ product, onClose }: Props) {
             variants={staggerContainer(0.05, 0.05)}
             initial="hidden"
             animate="visible"
-            className="p-6 sm:p-7 space-y-5 bg-white"
+            className="p-6 sm:p-7 space-y-5"
           >
           <StaggerItem>
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#c88a4a]">
                 {product.originRegion}
               </span>
-              <h2 className="text-2xl font-serif font-bold text-stone-900 mt-1">
+              <h2 className="text-2xl font-serif font-bold text-white mt-1">
                 {product.name}
               </h2>
               {product.nativeName && (
@@ -118,21 +118,21 @@ export function ProductDetailModal({ product, onClose }: Props) {
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1 text-amber-600">
                 <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-                <span className="font-bold text-stone-900">{product.rating}</span>
+                <span className="font-bold text-white">{product.rating}</span>
                 <span className="text-stone-400">({product.reviewsCount})</span>
               </div>
               <span className="text-stone-300">|</span>
-              <span className="text-stone-600 font-medium flex items-center gap-1">
+              <span className="text-stone-500 font-medium flex items-center gap-1">
                 <Flower2 className="w-3.5 h-3.5 text-[#c88a4a]" strokeWidth={1.5} /> Aroma{" "}
-                <strong className="text-stone-900">{product.aromaLevel}/5</strong>
+                <strong className="text-white">{product.aromaLevel}/5</strong>
               </span>
               <span className="text-stone-300">|</span>
-              <span className="text-stone-600 font-medium">
+              <span className="text-stone-500 font-medium">
                 {product.giIndex}
               </span>
             </div>
 
-            <p className="text-sm text-stone-600 leading-relaxed">
+            <p className="text-sm text-stone-500 leading-relaxed">
               {product.description}
             </p>
 
@@ -146,13 +146,13 @@ export function ProductDetailModal({ product, onClose }: Props) {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="bg-[#faf8f5] rounded-xl p-3 border border-stone-200/80 text-center"
+                  className="bg-white/[0.03] rounded-xl p-3 border border-white/10/80 text-center"
                 >
                   <s.icon className="w-4 h-4 text-[#1f431e] mx-auto mb-1" />
                   <div className="text-[9px] uppercase tracking-wider text-stone-400 font-bold">
                     {s.label}
                   </div>
-                  <div className="text-xs font-bold text-stone-900">{s.value}</div>
+                  <div className="text-xs font-bold text-white">{s.value}</div>
                 </div>
               ))}
             </div>
@@ -175,7 +175,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
             </div>
 
             {/* Nutrition */}
-            <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80">
+            <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/10/80">
               <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 mb-2.5 flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5 text-[#c88a4a]" />
                 Nutrition Facts (per 100g)
@@ -183,23 +183,23 @@ export function ProductDetailModal({ product, onClose }: Props) {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-xs">
                 <div className="flex justify-between">
                   <span className="text-stone-500">Calories</span>
-                  <span className="font-bold text-stone-900">{n.caloriesPer100g}</span>
+                  <span className="font-bold text-white">{n.caloriesPer100g}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-stone-500">Carbs</span>
-                  <span className="font-bold text-stone-900">{n.carbsGrams}g</span>
+                  <span className="font-bold text-white">{n.carbsGrams}g</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-stone-500">Protein</span>
-                  <span className="font-bold text-stone-900">{n.proteinGrams}g</span>
+                  <span className="font-bold text-white">{n.proteinGrams}g</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-stone-500">Fiber</span>
-                  <span className="font-bold text-stone-900">{n.fiberGrams}g</span>
+                  <span className="font-bold text-white">{n.fiberGrams}g</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-stone-500">GI Value</span>
-                  <span className="font-bold text-stone-900">{n.glycemicIndexValue}</span>
+                  <span className="font-bold text-white">{n.glycemicIndexValue}</span>
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
             {/* Weight + add */}
             <div className="space-y-3 pt-1">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-extrabold text-stone-700">
+                <span className="text-xs font-extrabold text-stone-400">
                   Select Bag Weight
                 </span>
                 {weight >= 10 && (
@@ -226,7 +226,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                       className={`relative py-2 rounded-lg text-xs font-bold transition-colors border cursor-pointer overflow-hidden ${
                         selected
                           ? "text-white border-[#1f431e]"
-                          : "bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100"
+                          : "bg-white/5 text-stone-400 border-white/10 hover:bg-white/10"
                       }`}
                     >
                       {selected && (

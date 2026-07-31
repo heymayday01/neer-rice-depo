@@ -132,7 +132,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-5"
             >
-              <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80">
+              <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/8">
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block">
@@ -146,7 +146,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block">
                       Total
                     </span>
-                    <span className="text-lg font-black font-serif text-stone-900">
+                    <span className="text-lg font-black font-serif text-white">
                       ₹{result.total}
                     </span>
                   </div>
@@ -169,7 +169,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                           className={`w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all ${
                             done
                               ? "bg-[#1f431e] border-[#1f431e] text-white"
-                              : "bg-white border-stone-200 text-stone-300"
+                              : "bg-white border-white/10 text-stone-300"
                           }`}
                         >
                           <Icon className="w-4 h-4" />
@@ -184,7 +184,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                       </div>
                       <span
                         className={`text-xs font-bold ${
-                          done ? "text-stone-900" : "text-stone-400"
+                          done ? "text-white" : "text-stone-400"
                         }`}
                       >
                         {step.label}
@@ -195,7 +195,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
               </div>
 
               {result.items?.length > 0 && (
-                <div className="bg-white rounded-2xl border border-stone-200/80 p-3 space-y-1.5">
+                <div className="bg-white/[0.03] rounded-2xl border border-white/8 p-3 space-y-1.5">
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500">
                     Items
                   </span>
