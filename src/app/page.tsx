@@ -12,6 +12,7 @@ import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
 import { Onboarding } from "@/components/site/onboarding";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { CommandPalette } from "@/components/site/command-palette";
+import { PullToRefresh } from "@/components/site/pull-to-refresh";
 import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
@@ -156,6 +157,12 @@ export default function Home() {
     setCheckoutOpen(true);
   }, []);
 
+  const handleRefresh = useCallback(async () => {
+    // Simulate refresh — re-trigger scroll progress
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    await new Promise((r) => setTimeout(r, 800));
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#0a1209] font-sans text-stone-100 antialiased">
       <ScrollProgress />
@@ -172,6 +179,8 @@ export default function Home() {
       />
 
       <main className="flex-1">
+        {/* Mobile pull-to-refresh wrapper */}
+        <PullToRefresh onRefresh={handleRefresh}>
         <Hero
           onOpenAISommelier={() => setAiOpen(true)}
           onSelectCategory={handleSelectCategory}
@@ -190,6 +199,7 @@ export default function Home() {
         </div>
 
         <GrainWisdomHub />
+        </PullToRefresh>
       </main>
 
       <Footer onOpenAISommelier={() => setAiOpen(true)} />

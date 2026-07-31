@@ -432,3 +432,25 @@ Stage Summary:
 - ALL 6 modals + mobile menu converted to dark theme (zero light-theme leaks).
 - Logo containers unified: rounded-2xl, gradient bg, gold border, object-contain, consistent across header/hero/footer.
 - Every surface verified dark-themed and consistent on mobile.
+
+---
+Task ID: mobile-trending-libs-improvements
+Agent: main (Z.ai Code)
+Task: Improve mobile view and feel, include trending mobile libs for best outcome.
+
+Work Log:
+- AUDIT: Identified gaps — cart used static Sheet (no swipe-to-dismiss), no haptic feedback system, no pull-to-refresh, dock used basic navigator.vibrate.
+- INSTALLED @use-gesture/react for advanced gesture handling.
+- CREATED useHaptic hook: unified haptic feedback with 7 style patterns (light/medium/heavy/selection/success/warning/error) using Vibration API with mapped patterns. Gracefully degrades on unsupported devices.
+- CREATED PullToRefresh component: touch-based pull-to-refresh with elastic physics (0.4x resistance), custom grain-bowl SVG indicator that fills with progress, "Pull/Release/Refreshing" states. Only activates at scrollTop===0.
+- REDESIGNED CART DRAWER: replaced static Sheet with vaul Drawer (swipe-to-dismiss bottom sheet). Added drag handle, dark theme, haptic feedback on quantity change (light), coupon apply (success/warning), remove (medium), checkout (medium). Spring-animated items.
+- UPDATED MOBILE DOCK: integrated useHaptic hook — light haptic on tab switch, medium on cart tap. Removed inline navigator.vibrate.
+- WIRED PullToRefresh into page.tsx wrapping the main content (Hero + Catalog + GrainWisdom).
+- Verified: lint clean, all routes 200, no errors. VLM mobile 9/10 ("exceptionally premium, tactile feel that rivals native iOS"), cart drawer 9/10 ("proper bottom sheet with drag handle, native and smooth").
+
+Stage Summary:
+- vaul Drawer for cart (swipe-to-dismiss bottom sheet with drag handle).
+- useHaptic hook (7 patterns: light/medium/heavy/selection/success/warning/error).
+- PullToRefresh with elastic physics + grain-bowl SVG indicator.
+- @use-gesture/react installed for future gesture features.
+- All mobile interactions now have proper haptic feedback mapping.

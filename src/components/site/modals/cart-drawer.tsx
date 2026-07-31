@@ -1,17 +1,18 @@
 "use client";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, X } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useState } from "react";
-import { SPRING, DURATION, EASE, swapUp, hoverLift, tapPress } from "@/lib/motion";
+import { SPRING, swapUp, hoverLift, tapPress } from "@/lib/motion";
+import { useHaptic } from "@/hooks/use-haptic";
 
 interface Props {
   open: boolean;
@@ -32,6 +33,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
   const subtotal = useCart((s) => s.subtotal());
   const [coupon, setCoupon] = useState("");
   const [applied, setApplied] = useState<string | null>(null);
+  const haptic = useHaptic();
 
   const discountRate = applied ? COUPONS[applied] ?? 0 : 0;
   const discount = Math.round(subtotal * discountRate);
@@ -40,56 +42,62 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
 
   const applyCoupon = () => {
     const code = coupon.trim().toUpperCase();
-    if (COUPONS[code]) setApplied(code);
-    else setApplied(null);
+    if (COUPONS[code]) {
+      setApplied(code);
+      haptic("success");
+    } else {
+      setApplied(null);
+      haptic("warning");
+    }
+  };
+
+  const handleUpdateQty = (productId: string, weightKg: number, newQty: number) => {
+    haptic("light");
+    update(productId, weightKg, newQty);
+  };
+
+  const handleRemove = (productId: string, weightKg: number) => {
+    haptic("medium");
+    remove(productId, weightKg);
+  };
+
+  const handleCheckout = () => {
+    haptic("medium");
+    onCheckout(applied ?? "");
   };
 
   return (
-    <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent
-        className="w-full sm:max-w-md p-0 flex flex-col rounded-l-3xl"
-        style={
-          {
-            // Refined slide timing — smoother than default
-            "--tw-enter-opacity": "1",
-          } as React.CSSProperties
-        }
-      >
-        <SheetHeader className="px-5 py-4 border-b border-white/8 bg-[#0a1209]">
-          <SheetTitle className="font-serif text-lg flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-[#1f431e]" />
+    <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
+      <DrawerContent className="bg-[#0a1209] border-t border-white/10 max-h-[88vh] rounded-t-3xl">
+        {/* Drag handle */}
+        <div className="mx-auto mt-3 mb-1 w-10 h-1 rounded-full bg-white/15 shrink-0" />
+
+        <DrawerHeader className="px-5 pb-3">
+          <DrawerTitle className="font-serif text-lg text-white flex items-center gap-2">
+            <ShoppingBag className="w-5 h-5 text-[#d4a373]" strokeWidth={1.5} />
             Your Grain Basket
-          </SheetTitle>
-          <SheetDescription className="text-xs">
-            {items.length} {items.length === 1 ? "item" : "items"} ready for
-            farm-direct delivery
-          </SheetDescription>
-        </SheetHeader>
+          </DrawerTitle>
+          <DrawerDescription className="text-xs text-stone-400">
+            {items.length} {items.length === 1 ? "item" : "items"} ready for farm-direct delivery
+          </DrawerDescription>
+        </DrawerHeader>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-4">
-            <div className="w-20 h-20 rounded-full bg-[#1f431e]/8 flex items-center justify-center">
-              <ShoppingBag className="w-9 h-9 text-[#1f431e]/50" />
+            <div className="w-20 h-20 rounded-full border border-[#d4a373]/20 flex items-center justify-center">
+              <ShoppingBag className="w-9 h-9 text-[#d4a373]/40" strokeWidth={1} />
             </div>
             <div>
-              <h3 className="text-lg font-serif text-stone-300">
-                Your basket is empty
-              </h3>
+              <h3 className="text-lg font-serif text-white">Your basket is empty</h3>
               <p className="text-xs text-stone-500 mt-1 max-w-[16rem]">
-                Add some organic heirloom grains to get started on your wellness
-                journey.
+                Add some organic heirloom grains to get started on your wellness journey.
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="px-5 py-2.5 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#16331a] cursor-pointer"
-            >
-              Browse Grains
-            </button>
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-[#0a1209]">
+            {/* Scrollable items */}
+            <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3">
               <AnimatePresence initial={false}>
                 {items.map((item) => (
                   <motion.div
@@ -97,8 +105,8 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                     layout
                     initial={{ opacity: 0, x: 40, scale: 0.96 }}
                     animate={{ opacity: 1, x: 0, scale: 1, transition: SPRING.gentle }}
-                    exit={{ opacity: 0, x: 60, scale: 0.96, transition: { duration: DURATION.fast, ease: EASE.io } }}
-                    className="bg-white/[0.03] rounded-2xl border border-white/8 p-3 flex gap-3 shadow-sm"
+                    exit={{ opacity: 0, x: 60, scale: 0.96, transition: { duration: 0.28 } }}
+                    className="bg-white/[0.03] rounded-2xl border border-white/8 p-3 flex gap-3"
                   >
                     <img
                       src={item.product.image}
@@ -109,55 +117,40 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                       <h4 className="text-xs font-bold text-white line-clamp-1">
                         {item.product.name}
                       </h4>
-                      <p className="text-[10px] text-stone-500 font-medium">
-                        {item.selectedWeightKg}kg bag · ₹{item.unitPricePerKg}/kg
+                      <p className="text-[10px] text-stone-500 font-medium data-mono">
+                        {item.selectedWeightKg}kg · ₹{item.unitPricePerKg}/kg
                       </p>
                       <div className="flex items-center justify-between mt-2">
-                        <motion.div
-                          className="flex items-center gap-1 bg-white/5 rounded-full p-0.5"
-                          initial={false}
-                        >
+                        <div className="flex items-center gap-1 bg-white/5 rounded-full p-0.5">
                           <motion.button
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
-                            onClick={() =>
-                              update(
-                                item.productId,
-                                item.selectedWeightKg,
-                                item.quantity - 1
-                              )
-                            }
+                            onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity - 1)}
                             className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
                             aria-label="Decrease quantity"
                           >
-                            <Minus className="w-3 h-3 text-stone-600" />
+                            <Minus className="w-3 h-3 text-stone-400" />
                           </motion.button>
                           <motion.span
                             key={item.quantity}
                             initial={{ scale: 0.6, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={SPRING.bouncy}
-                            className="text-xs font-bold w-5 text-center"
+                            className="text-xs font-bold w-5 text-center text-white data-mono"
                           >
                             {item.quantity}
                           </motion.span>
                           <motion.button
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
-                            onClick={() =>
-                              update(
-                                item.productId,
-                                item.selectedWeightKg,
-                                item.quantity + 1
-                              )
-                            }
+                            onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity + 1)}
                             className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
-                            aria-label="Increase"
+                            aria-label="Increase quantity"
                           >
-                            <Plus className="w-3 h-3 text-stone-600" />
+                            <Plus className="w-3 h-3 text-stone-400" />
                           </motion.button>
-                        </motion.div>
-                        <span className="text-sm font-black font-serif text-[#1f431e]">
+                        </div>
+                        <span className="text-sm font-black font-serif text-[#d4a373]">
                           ₹{item.totalPrice}
                         </span>
                       </div>
@@ -165,8 +158,8 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                     <motion.button
                       whileTap={{ scale: 0.85 }}
                       transition={SPRING.dock}
-                      onClick={() => remove(item.productId, item.selectedWeightKg)}
-                      className="self-start p-1.5 text-stone-400 hover:text-red-500 transition-colors cursor-pointer"
+                      onClick={() => handleRemove(item.productId, item.selectedWeightKg)}
+                      className="self-start p-1.5 text-stone-600 hover:text-red-400 transition-colors cursor-pointer"
                       aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -177,50 +170,50 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
             </div>
 
             {/* Summary */}
-            <div className="border-t border-white/8 bg-[#0a1209] px-5 py-4 space-y-3">
+            <div className="border-t border-white/8 px-5 py-4 space-y-3">
               {/* Coupon */}
               <div className="flex gap-2">
-                <div className="flex-1 flex items-center gap-2 bg-white/5 rounded-xl px-3">
-                  <Tag className="w-3.5 h-3.5 text-stone-400" />
+                <div className="flex-1 flex items-center gap-2 bg-white/5 rounded-xl px-3 border border-white/8">
+                  <Tag className="w-3.5 h-3.5 text-stone-500" strokeWidth={1.5} />
                   <input
                     value={coupon}
                     onChange={(e) => setCoupon(e.target.value)}
                     placeholder="Coupon (try NEER10)"
-                    className="flex-1 bg-transparent py-2 text-xs font-semibold focus:outline-none placeholder-stone-400 uppercase"
+                    className="flex-1 bg-transparent py-2 text-xs font-semibold text-white focus:outline-none placeholder-stone-500 uppercase"
                   />
                   {applied && (
-                    <span className="text-[10px] font-bold text-[#1f431e] bg-[#1f431e]/10 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-[#d4a373] bg-[#d4a373]/10 px-2 py-0.5 rounded-full">
                       -{Math.round(COUPONS[applied] * 100)}%
                     </span>
                   )}
                 </div>
                 <button
                   onClick={applyCoupon}
-                  className="px-3 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold hover:bg-stone-800 cursor-pointer"
+                  className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
                 >
                   Apply
                 </button>
               </div>
 
               <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between text-stone-600">
+                <div className="flex justify-between text-stone-400">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-white">₹{subtotal}</span>
+                  <span className="font-semibold text-white data-mono">₹{subtotal}</span>
                 </div>
                 {discount > 0 && (
-                  <div className="flex justify-between text-[#1f431e]">
+                  <div className="flex justify-between text-[#d4a373]">
                     <span>Discount ({applied})</span>
-                    <span className="font-semibold">-₹{discount}</span>
+                    <span className="font-semibold data-mono">-₹{discount}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-stone-600">
+                <div className="flex justify-between text-stone-400">
                   <span>Delivery</span>
-                  <span className="font-semibold text-white">
+                  <span className="font-semibold text-white data-mono">
                     {deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`}
                   </span>
                 </div>
                 {subtotal < 999 && subtotal > 0 && (
-                  <p className="text-[10px] text-stone-400">
+                  <p className="text-[10px] text-stone-500">
                     Add ₹{999 - subtotal} more for free delivery
                   </p>
                 )}
@@ -228,7 +221,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
 
               <div className="flex justify-between items-baseline pt-2 border-t border-white/5">
                 <span className="text-sm font-bold text-white">Total</span>
-                <span className="text-2xl font-black font-serif text-[#1f431e]">
+                <span className="text-2xl font-black font-serif text-[#d4a373] data-mono">
                   ₹{total}
                 </span>
               </div>
@@ -236,16 +229,16 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
-                onClick={() => onCheckout(applied ?? "")}
-                className="shine-on-hover w-full py-3 bg-[#1f431e] hover:bg-[#16331a] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                onClick={handleCheckout}
+                className="btn-primary-glow shine-on-hover w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 Proceed to Checkout
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-[#e9c496]" />
               </motion.button>
             </div>
           </>
         )}
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 }
