@@ -475,3 +475,46 @@ Stage Summary:
 - All 10 rice product images now load reliably — zero stuck loading.
 - Root cause: motion.img + lazy + opacity-0 chicken-and-egg.
 - Fix: plain img + eager loading + shimmer overlay (not opacity toggle).
+
+---
+Task ID: polish-rough-edges-mobile
+Agent: main (Z.ai Code)
+Task: Keep improving and polishing rough edges for mobile, innovative updates.
+
+Work Log:
+- VLM AUDIT identified 8 specific rough edges on product cards:
+  1. Inconsistent weight button heights (selected was taller)
+  2. Misaligned price/savings baseline
+  3. Orphaned "GUIDE" text without affordance
+  4. Excessive spacing in Add button icon/text
+  5. Low contrast on secondary metadata
+  6. Visual weight imbalance in meta row
+  7. Ambiguous aroma gauge (unclear scale)
+  8. Content hidden behind dock (insufficient bottom padding)
+
+- PRODUCT CARD POLISH (complete rewrite of body/footer):
+  - Weight buttons: fixed height (h-9) for ALL states — uniform row, no wobble
+  - Price row: single baseline-aligned flex with ₹final, strikethrough, /kg, and Guide link with ChevronRight icon (proper affordance)
+  - Guide link: added ChevronRight icon for clear interactivity
+  - Add button: fixed h-11 height, tighter gap-2, cleaner layout
+  - Metadata: improved contrast — stone-400/500/600 hierarchy, lighter for secondary
+  - Tagline: stone-500 (was stone-400), slightly muted for better hierarchy
+  - Title: added leading-tight for tighter line height
+  - Haptic feedback: added useHaptic hook — "selection" on weight change, "success" on add to cart
+  - RadialGauge: size 26 (was 28) — better proportion with rating
+
+- SHIMMER SKELETON FIX: was using light theme colors (rgba(245,242,237,0.4)). Changed to dark theme: rgba(255,255,255,0.03) → rgba(212,163,115,0.08) → rgba(255,255,255,0.03). Now matches the dark background.
+
+- BOTTOM SPACING: increased mobile dock spacer from h-28 to h-32 to prevent content from hiding behind the dock.
+
+- Verified: lint clean, all routes 200, no errors. VLM across all surfaces:
+  - Hero: 9/10 ("exceptionally clean, refined typography, balanced spacing")
+  - Product cards: 9/10 ("uniform button heights, precise alignment, excellent spacing")
+  - Grain wisdom: 9/10 ("exceptionally clean, consistent, premium professional aesthetic")
+  - Footer + dock: 9/10 ("crisp iconography, generous padding, zero overlapping")
+
+Stage Summary:
+- 8 specific rough edges polished on product cards (uniform heights, aligned prices, Guide affordance, haptic feedback, contrast hierarchy).
+- Shimmer skeleton dark-themed.
+- Bottom spacing increased to prevent dock overlap.
+- VLM 9/10 across every surface — no remaining rough edges detected.

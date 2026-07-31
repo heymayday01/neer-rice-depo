@@ -219,7 +219,7 @@ export default function Home() {
       />
 
       {/* Spacer so content isn't hidden behind the mobile dock */}
-      <div className="sm:hidden h-28" aria-hidden />
+      <div className="sm:hidden h-32" aria-hidden />
 
       {/* Mobile menu */}
       <MobileMenuSheet
