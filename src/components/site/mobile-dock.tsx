@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, ShoppingBag, Sparkles, Package, BarChart2 } from "lucide-react";
+import { Home, ShoppingBag, BrainCircuit, Package, BarChart2 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, EASE } from "@/lib/motion";
 import { useCallback, useState } from "react";
@@ -45,18 +45,18 @@ export function MobileDock({
     label: string;
     icon: typeof Home;
     action: () => void;
+    isCart?: boolean;
   }[] = [
-    { id: "home", label: "Explore", icon: Home, action: onHome },
-    { id: "ai", label: "Advisor", icon: Sparkles, action: onOpenAISommelier },
-    { id: "matrix", label: "Matrix", icon: BarChart2, action: onOpenComparison },
+    { id: "home", label: "Home", icon: Home, action: onHome },
+    { id: "ai", label: "AI", icon: BrainCircuit, action: onOpenAISommelier },
+    { id: "matrix", label: "Compare", icon: BarChart2, action: onOpenComparison },
     { id: "orders", label: "Orders", icon: Package, action: onOpenOrders },
-    { id: "cart", label: "Basket", icon: ShoppingBag, action: onOpenCart },
+    { id: "cart", label: "Cart", icon: ShoppingBag, action: onOpenCart, isCart: true },
   ];
 
   const handleTap = (id: TabId, action: () => void) => {
     haptic();
     setPressedId(id);
-    // Brief delay so the press animation is visible before the modal opens
     setTimeout(() => {
       action();
       setPressedId(null);
@@ -67,42 +67,50 @@ export function MobileDock({
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ y: 140, opacity: 0 }}
+          initial={{ y: 120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 140, opacity: 0 }}
-          transition={{ ...SPRING.drawer, duration: 0.45 }}
-          className="sm:hidden fixed bottom-3 left-3 right-3 z-40"
+          exit={{ y: 120, opacity: 0 }}
+          transition={{ ...SPRING.drawer, duration: 0.4 }}
+          className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40"
         >
+          {/* Refined glass bar */}
           <div
-            className="rounded-[1.5rem] flex items-center justify-around pb-safe border border-white/10 shadow-2xl"
+            className="flex items-center gap-1 rounded-full px-2 py-2 pb-safe border border-white/10"
             style={{
-              background: "rgba(10, 18, 9, 0.75)",
-              backdropFilter: "blur(28px) saturate(160%)",
-              WebkitBackdropFilter: "blur(28px) saturate(160%)",
+              background: "rgba(10, 18, 9, 0.8)",
+              backdropFilter: "blur(32px) saturate(150%)",
+              WebkitBackdropFilter: "blur(32px) saturate(150%)",
+              boxShadow:
+                "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 32px -4px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3)",
             }}
           >
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = active === tab.id;
               const isPressed = pressedId === tab.id;
+              const isCart = tab.isCart;
+
               return (
                 <motion.button
                   key={tab.id}
                   onClick={() => handleTap(tab.id, tab.action)}
                   whileTap={{ scale: 0.88 }}
-                  whileHover={{ scale: 1.04 }}
                   transition={SPRING.dock}
                   animate={isPressed ? { scale: 0.88 } : { scale: 1 }}
-                  className="relative flex flex-col items-center gap-1 py-2 px-3 rounded-2xl cursor-pointer min-w-[52px] min-h-[48px] justify-center select-none"
+                  className={`relative flex items-center justify-center rounded-full cursor-pointer select-none transition-colors ${
+                    isCart
+                      ? "w-12 h-12 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] border border-[#d4a373]/20"
+                      : "w-11 h-11"
+                  }`}
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {/* Active background — subtle gold tint */}
-                  {isActive && (
+                  {/* Active indicator — sliding capsule */}
+                  {isActive && !isCart && (
                     <motion.span
                       layoutId="dock-active"
                       transition={SPRING.dock}
-                      className="absolute inset-0 rounded-2xl bg-[#d4a373]/10 border border-[#d4a373]/25"
+                      className="absolute inset-0 rounded-full bg-[#d4a373]/12 border border-[#d4a373]/20"
                     />
                   )}
 
@@ -110,38 +118,35 @@ export function MobileDock({
                   {isPressed && (
                     <motion.span
                       initial={{ scale: 0, opacity: 0.3 }}
-                      animate={{ scale: 1.6, opacity: 0 }}
+                      animate={{ scale: 1.8, opacity: 0 }}
                       transition={{ duration: 0.5, ease: EASE.out }}
-                      className="absolute inset-0 rounded-2xl bg-[#d4a373]/15"
+                      className="absolute inset-0 rounded-full bg-[#d4a373]/15"
                     />
                   )}
 
-                  <div className="relative flex flex-col items-center">
-                    <Icon
-                      className={`w-[1.15rem] h-[1.15rem] transition-colors duration-200 ${
-                        isActive ? "text-[#d4a373]" : "text-stone-500"
-                      }`}
-                      strokeWidth={isActive ? 2.2 : 1.5}
-                    />
-                    {tab.id === "cart" && count > 0 && (
-                      <motion.span
-                        key={count}
-                        initial={{ scale: 0, rotate: -30 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={SPRING.bouncy}
-                        className="absolute -top-2 -right-2.5 bg-[#d4a373] text-[#0a1209] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-[#0a1209] shadow-sm"
-                      >
-                        {count}
-                      </motion.span>
-                    )}
-                  </div>
-                  <span
-                    className={`relative text-[9px] tracking-tight transition-colors duration-200 ${
-                      isActive ? "text-[#d4a373] font-bold" : "text-stone-500 font-medium"
+                  <Icon
+                    className={`relative z-10 transition-colors duration-200 ${
+                      isCart
+                        ? "w-5 h-5 text-[#e9c496]"
+                        : isActive
+                          ? "w-[1.2rem] h-[1.2rem] text-[#d4a373]"
+                          : "w-[1.15rem] h-[1.15rem] text-stone-500"
                     }`}
-                  >
-                    {tab.label}
-                  </span>
+                    strokeWidth={isActive || isCart ? 2 : 1.5}
+                  />
+
+                  {/* Cart badge */}
+                  {isCart && count > 0 && (
+                    <motion.span
+                      key={count}
+                      initial={{ scale: 0, rotate: -30 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={SPRING.bouncy}
+                      className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a1209] text-[9px] font-black w-4.5 h-4.5 min-w-[18px] h-[18px] rounded-full flex items-center justify-center border-2 border-[#0a1209]"
+                    >
+                      {count}
+                    </motion.span>
+                  )}
                 </motion.button>
               );
             })}

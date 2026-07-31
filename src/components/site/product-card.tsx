@@ -2,7 +2,7 @@
 
 import { useState, memo } from "react";
 import { motion } from "framer-motion";
-import { Star, ShoppingBag, Eye, Check, Sparkles } from "lucide-react";
+import { Star, ShoppingBag, Eye, Check } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sprout,
   Layers,
-  Sparkles,
+  Flower2,
   HeartHandshake,
   Package,
   Filter,
@@ -39,7 +39,7 @@ const CAT_ICONS: Record<string, typeof Sprout> = {
   all: Sprout,
   daily: Layers,
   heritage: Sprout,
-  aromatic: Sparkles,
+  aromatic: Flower2,
   superfood: HeartHandshake,
   combos: Package,
 };

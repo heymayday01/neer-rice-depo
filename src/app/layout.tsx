@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Neer Rice Depo" }],
   icons: {
-    icon: "/neer-logo.jpg",
+    icon: "/neer-logo-premium.png",
   },
   openGraph: {
     title: "Neer Rice Depo · Farm-Direct Organic & Heirloom Grains",

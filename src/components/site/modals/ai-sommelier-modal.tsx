@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import {
-  Sparkles,
+  BrainCircuit,
   Loader2,
   Send,
   ShoppingBag,
@@ -96,7 +96,7 @@ export function AISommelierModal({ open, onClose }: Props) {
       <DialogContent className="max-w-2xl p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-3xl">
         <DialogHeader className="px-6 pt-6 pb-3 bg-gradient-to-br from-[#1f431e] to-[#0a1209] text-white">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-[#e9c496]" />
+            <BrainCircuit className="w-5 h-5 text-[#e9c496]" strokeWidth={1.5} />
             AI Grain Sommelier
           </DialogTitle>
           <DialogDescription className="text-stone-300 text-xs">
@@ -109,7 +109,7 @@ export function AISommelierModal({ open, onClose }: Props) {
           {/* Input */}
           <div className="flex gap-2">
             <div className="flex-1 flex items-center gap-2 bg-stone-100 rounded-xl px-3">
-              <Sparkles className="w-4 h-4 text-[#c88a4a]" />
+              <BrainCircuit className="w-4 h-4 text-[#c88a4a]" strokeWidth={1.5} />
               <input
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}

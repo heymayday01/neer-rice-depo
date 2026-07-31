@@ -4,7 +4,7 @@ import { useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import {
-  Sparkles,
+  Wheat, BrainCircuit,
   ShieldCheck,
   Truck,
   Sprout,
@@ -105,74 +105,32 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
     return () => ctx.revert();
   }, [reduced]);
 
-  // Scroll parallax
+  // Scroll-linked content fade (lightweight — no parallax transforms to avoid jank)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 40]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 24]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const parallax = (mv: typeof imageY) => (reduced ? 0 : mv);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden min-h-[100svh]">
-      {/* ===== Full-bleed cinematic background — clean atmospheric image ===== */}
-      <motion.div
-        style={{ y: reduced ? 0 : bgY, scale: reduced ? 1.05 : bgScale }}
-        className="absolute inset-0 z-0"
-      >
+      {/* ===== Static cinematic background (no parallax — prevents jello jank) ===== */}
+      <div className="absolute inset-0 z-0">
         <img
           src="/hero-bg-clean.jpg"
           alt=""
           className="w-full h-full object-cover"
           loading="eager"
         />
-        {/* Strong depth gradients for text readability (mobile-first) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/80 via-[#0a1209]/55 to-[#0a1209]/95" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/85 via-[#0a1209]/40 to-[#0a1209]/60" />
-        {/* Warm radial tint for atmosphere */}
-        <div
-          className="absolute inset-0 opacity-25 mix-blend-overlay"
-          style={{ background: "radial-gradient(ellipse at 25% 35%, rgba(212,163,115,0.5), transparent 65%)" }}
-        />
-      </motion.div>
-
-      {/* Subtle noise texture for filmic depth */}
-      <div
-        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        }}
-      />
-
-      {/* Atmospheric grain particles — "living" 2026 feel */}
-      {!reduced && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <span
-              key={i}
-              className="grain-particle"
-              style={{
-                left: `${(i * 8.3 + 5) % 100}%`,
-                top: `${(i * 17 + 10) % 100}%`,
-                ["--dx" as string]: `${(i % 3) * 20 - 20}px`,
-                ["--dy" as string]: `${-40 - (i % 4) * 15}px`,
-                ["--dur" as string]: `${6 + (i % 4) * 2}s`,
-                ["--delay" as string]: `${i * 0.7}s`,
-              }}
-            />
-          ))}
-        </div>
-      )}
+        {/* Strong depth gradients for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/85 via-[#0a1209]/65 to-[#0a1209]/97" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/90 via-[#0a1209]/50 to-[#0a1209]/70" />
+      </div>
 
       {/* ===== Content layer ===== */}
       <motion.div
         ref={heroRootRef}
-        style={{ y: reduced ? 0 : contentY, opacity: reduced ? 1 : contentOpacity }}
+        style={{ opacity: reduced ? 1 : contentOpacity }}
         className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
@@ -204,7 +162,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             {/* Meal selector — minimal, jewelry-like */}
             <div className="hero-selector space-y-3">
               <div className="flex items-center gap-3">
-                <Sparkles className="w-3.5 h-3.5 text-[#d4a373]" />
+                <Wheat className="w-3.5 h-3.5 text-[#d4a373]" strokeWidth={1.5} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">
                   Select your grain
                 </span>
@@ -285,7 +243,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 onClick={onOpenAISommelier}
                 className="btn-primary-glow shine-on-hover px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" />
+                <BrainCircuit className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
                 Ask AI Grain Sommelier
                 <ArrowRight className="w-4 h-4 text-[#e9c496] group-hover:translate-x-1 transition-transform" />
               </motion.button>
@@ -304,7 +262,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
           {/* Right — floating glass info card (desktop) */}
           <div className="hidden lg:block lg:col-span-5">
-            <HeroGlassPanel rec={rec} reduced={reduced} imageY={imageY} />
+            <HeroGlassPanel rec={rec} reduced={reduced} />
           </div>
         </div>
 
@@ -347,17 +305,12 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 function HeroGlassPanel({
   rec,
   reduced,
-  imageY,
 }: {
   rec: { riceName: string; tagline: string; water: string; image: string };
   reduced: boolean;
-  imageY: import("framer-motion").MotionValue<number>;
 }) {
   return (
-    <motion.div
-      style={{ y: reduced ? 0 : imageY }}
-      className="hero-image-card relative"
-    >
+    <div className="hero-image-card relative">
       <div className="relative rounded-[1.5rem] overflow-hidden shadow-2xl border border-white/15 backdrop-blur-2xl bg-white/5">
         {/* Image */}
         <div className="relative h-[420px] overflow-hidden">
@@ -378,7 +331,7 @@ function HeroGlassPanel({
           {/* Floating official seal — hairline border, sticker-like */}
           <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-white/95 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-stone-900/5 shadow-lg">
             <img
-              src="/neer-logo.jpg"
+              src="/neer-logo-premium.png"
               alt=""
               className="w-8 h-8 rounded-full object-cover border border-[#1f431e]/20"
             />
@@ -413,7 +366,7 @@ function HeroGlassPanel({
       >
         <Leaf className="w-6 h-6 text-[#e9c496]" />
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 

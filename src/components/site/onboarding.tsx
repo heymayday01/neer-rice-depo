@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sprout,
-  Sparkles,
+  BrainCircuit,
   Truck,
   Check,
   ArrowRight,
@@ -49,7 +49,7 @@ const STEPS: Step[] = [
     description:
       "Every grain is aged 9–24 months in temperature-controlled granaries, then lab-tested for purity — pesticide-free, unpolished, nutrient-dense.",
     image: "/rice/basmati-1121.jpg",
-    icon: Sparkles,
+    icon: BrainCircuit,
     stat: { value: "24mo", label: "maximum aging" },
   },
   {

@@ -353,3 +353,27 @@ Stage Summary:
 - Monospace data typography — distinguishes data from storytelling
 - Glass-float depth — multi-layer floating cards
 - All 2026 gaps addressed with meaningful, continuous design.
+
+---
+Task ID: hero-jank-dock-logo-sparkles
+Agent: main (Z.ai Code)
+Task: Fix hero jank, redesign dock, improve logos, remove sparkle icon (lame).
+
+Work Log:
+- HERO JANK FIXED: Root causes identified via VLM — (1) background parallax (bgY/bgScale transforms) causing "jello scroll" on mobile, (2) 12 grain particles looking like "dead pixels", (3) noise texture overlay adding GPU work, (4) content Y-parallax adding more scroll transforms. Fixed by: removing ALL parallax transforms (static background), removing particles entirely, removing noise texture, keeping only a lightweight opacity fade on scroll. Strengthened gradient overlays (from /85 via /65 to /97) for better text readability. VLM: 9/10 "smooth, clean, highly readable, no remaining jank".
+- DOCK REDESIGNED: New centered floating bar design — refined glass with layered shadows (inset highlight + depth), prominent cart button (green gradient circle that stands out), sliding active capsule indicator, icon-only design (no text labels except active state), better proportions (w-11 regular tabs, w-12 cart), cleaner visual hierarchy. VLM: 8/10 "modern, visually attractive, cart button stands out nicely".
+- ALL SPARKLES REMOVED (user: "it's so lame"): Replaced across 9 files with meaningful alternatives:
+  - AI Sommelier: Sparkles → BrainCircuit (intelligence/AI)
+  - Aromatic category: Sparkles → Flower2 (fragrance)
+  - Grain selector label: Sparkles → Wheat (grain)
+  - Product card: Sparkles removed entirely (RadialGauge replaces it)
+  - Product detail aroma: Sparkles → Flower2
+  - Onboarding step 2: Sparkles → BrainCircuit
+  - 0 Sparkles icons remaining (verified via DOM query).
+- PREMIUM LOGO GENERATED: Clean minimal luxury logo mark (single rice grain icon in gold on dark, app-icon style). Updated all references (header, hero glass panel, footer) + favicon in layout.tsx. All 3 instances verified loaded (1024px, complete).
+
+Stage Summary:
+- Hero: zero jank (no parallax, no particles, static background, strong gradients). VLM 9/10.
+- Dock: modern centered floating bar with prominent cart button. VLM 8/10.
+- Zero Sparkles icons — replaced with BrainCircuit (AI), Flower2 (aroma), Wheat (grain).
+- Premium logo generated and deployed across all surfaces.

@@ -22,7 +22,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-full bg-white/5 p-0.5 border border-[#d4a373]/30 overflow-hidden">
                 <img
-                  src="/neer-logo.jpg"
+                  src="/neer-logo-premium.png"
                   alt=""
                   className="w-full h-full object-cover rounded-full"
                 />

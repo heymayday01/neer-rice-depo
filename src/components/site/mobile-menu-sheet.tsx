@@ -8,7 +8,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
-import { Search, X, Sparkles, Package, BarChart2, Sprout } from "lucide-react";
+import { Search, X, BrainCircuit, Flower2, Package, BarChart2, Sprout } from "lucide-react";
 import { CATEGORIES } from "@/lib/rice-products";
 import { SPRING, staggerContainer } from "@/lib/motion";
 import { StaggerItem } from "./reveal";
@@ -29,7 +29,7 @@ const CAT_ICONS: Record<string, typeof Sprout> = {
   all: Sprout,
   daily: Sprout,
   heritage: Sprout,
-  aromatic: Sparkles,
+  aromatic: BrainCircuit, Flower2,
   superfood: Package,
   combos: Package,
 };
@@ -89,7 +89,7 @@ export function MobileMenuSheet({
           {/* Quick actions — frosted pills */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "AI Sommelier", icon: Sparkles, action: () => { onOpenAISommelier(); onClose(); } },
+              { label: "AI Sommelier", icon: BrainCircuit, Flower2, action: () => { onOpenAISommelier(); onClose(); } },
               { label: "Grain Matrix", icon: BarChart2, action: () => { onOpenComparison(); onClose(); } },
               { label: "My Orders", icon: Package, action: () => { onOpenOrders(); onClose(); } },
             ].map((a) => (

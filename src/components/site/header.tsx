@@ -5,7 +5,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   ShoppingBag,
   Search,
-  Sparkles,
+  BrainCircuit, Flower2,
   Package,
   Sprout,
   Layers,
@@ -35,7 +35,7 @@ const CAT_ICONS: Record<string, typeof Sprout> = {
   all: Sprout,
   daily: Layers,
   heritage: Sprout,
-  aromatic: Sparkles,
+  aromatic: BrainCircuit, Flower2,
   superfood: HeartHandshake,
   combos: Package,
 };
@@ -117,7 +117,7 @@ export function Header({
             >
               <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/5 p-0.5 overflow-hidden border border-[#d4a373]/30 group-hover:border-[#d4a373]/60 transition-colors duration-300">
                 <img
-                  src="/neer-logo.jpg"
+                  src="/neer-logo-premium.png"
                   alt=""
                   className="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
                 />
@@ -217,7 +217,7 @@ export function Header({
                 onClick={onOpenAISommelier}
                 className="px-4 py-2.5 text-[#d4a373] border border-[#d4a373]/30 hover:bg-[#d4a373]/10 text-xs font-bold tracking-tight cursor-pointer flex items-center gap-2 rounded-full transition-colors"
               >
-                <Sparkles className="w-4 h-4" strokeWidth={1.5} />
+                <BrainCircuit className="w-4 h-4" strokeWidth={1.5} />
                 <span>AI Sommelier</span>
               </motion.button>
 

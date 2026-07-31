@@ -13,7 +13,7 @@ import {
   Star,
   ShoppingBag,
   Check,
-  Sparkles,
+  Flower2,
   Droplets,
   MapPin,
   Timer,
@@ -123,7 +123,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
               </div>
               <span className="text-stone-300">|</span>
               <span className="text-stone-600 font-medium flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#c88a4a]" /> Aroma{" "}
+                <Flower2 className="w-3.5 h-3.5 text-[#c88a4a]" strokeWidth={1.5} /> Aroma{" "}
                 <strong className="text-stone-900">{product.aromaLevel}/5</strong>
               </span>
               <span className="text-stone-300">|</span>
