@@ -71,3 +71,25 @@ Stage Summary:
 - Mobile-first throughout: horizontal-scroll category strips, 44px tap targets, safe-area insets, frosted dock.
 - Smoothness: spring physics (SPRING.snappy/gentle/bouncy), layoutId shared-element pills, no heavy per-frame blur outside hero.
 - Accessibility: aria-pressed/aria-label/aria-current, focus-visible rings, reduced-motion.
+
+---
+Task ID: images-dock-enhance
+Agent: main (Z.ai Code)
+Task: Fix all visuals, replace rice images with proper AI-generated food photography, enhance bottom dock with smooth mobile animations, fix all dock option clicks, best app with stunning visuals.
+
+Work Log:
+- Generated 10 proper AI rice product images via z-ai-web-dev-sdk (scripts/gen-rice-images.ts) with tailored editorial food-photography prompts per variety (sona-masoori, indrayani, basmati-1121, black-kavuni, rajamudi, matta-red, gobindobhog, wada-kolam, ambemohar, trio-combo). Each: overhead flat-lay on cream linen, soft daylight, premium organic branding.
+- Fixed MIME issue: images were JPEG data saved as .png → renamed to .jpg and updated all 15 references in rice-products.ts + hero.tsx.
+- Created SmartImage component with shimmer-skeleton placeholder + graceful error fallback + fade-in on load. Used in product cards for smooth image loading.
+- Enhanced mobile dock: AnimatePresence enter/exit (slides up/down with spring), haptic vibration feedback (navigator.vibrate), 90ms press-confirm delay so tap animation is visible before modal opens, iOS-style top indicator bar, gradient active pill (layoutId), bouncy cart badge with rotate, stroke-width emphasis on active icon, whileTap scale 0.86 for tactile feel.
+- Fixed dock visibility: now uses `visible` prop with AnimatePresence instead of conditional unmount → smooth slide in/out transitions when modals open/close.
+- Fixed dock "Explore" action: now resets category to "all" + scrolls to top (was only scrolling).
+- Verified all 5 dock options work on mobile: Explore (scroll), Advisor (AI sommelier modal), Matrix (comparison modal), Orders (order tracker modal), Basket (cart drawer with badge).
+- Agent Browser verification: mobile (iPhone 14) + desktop (1440). VLM: mobile catalog 8.5/10 (rice images 9/10, frosted glass 9/10, pill uniformity 9/10), desktop hero 8/10 (rice image 9/10). All dock flows functional, cart badge shows correctly.
+
+Stage Summary:
+- 10 proper AI-generated rice product images replacing Unsplash stock photos.
+- SmartImage with shimmer loading + error fallback for smooth image UX.
+- Enhanced mobile dock: spring slide transitions, haptic feedback, press-confirm delay, iOS-style indicator, gradient active pill, bouncy badge.
+- All 5 dock options verified working on mobile with smooth animations.
+- Frosted-refractive glass + pill uniformity maintained throughout.

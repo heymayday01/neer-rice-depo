@@ -45,7 +45,7 @@ const MEALS: Record<
     water: "1 : 2.0",
     catId: "aromatic",
     image:
-      "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=900",
+      "/rice/basmati-1121.jpg",
   },
   curry: {
     riceName: "Single-Origin Unpolished Sona Masoori",
@@ -53,7 +53,7 @@ const MEALS: Record<
     water: "1 : 2.5",
     catId: "daily",
     image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=900",
+      "/rice/sona-masoori.jpg",
   },
   diabetic: {
     riceName: "Karuppu Kavuni Organic Black Rice",
@@ -61,7 +61,7 @@ const MEALS: Record<
     water: "1 : 3.0",
     catId: "superfood",
     image:
-      "https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?auto=format&fit=crop&q=80&w=900",
+      "/rice/black-kavuni.jpg",
   },
   khichdi: {
     riceName: "Organic Maval Indrayani Rice",
@@ -69,7 +69,7 @@ const MEALS: Record<
     water: "1 : 3.5",
     catId: "heritage",
     image:
-      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=900",
+      "/rice/indrayani.jpg",
   },
 };
 
@@ -301,16 +301,21 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 className="relative"
               >
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <motion.div
                     key={rec.image}
                     initial={{ opacity: 0.3, scale: 1.04 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: DURATION.slow, ease: EASE.out }}
-                    src={rec.image}
-                    alt={rec.riceName}
-                    className="w-full h-72 sm:h-96 lg:h-[440px] object-cover"
-                  />
+                    className="w-full h-72 sm:h-96 lg:h-[440px]"
+                  >
+                    <img
+                      src={rec.image}
+                      alt={rec.riceName}
+                      className="w-full h-full object-cover"
+                      loading="eager"
+                    />
+                  </motion.div>
                 </AnimatePresence>
               </motion.div>
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/75 via-stone-900/10 to-transparent pointer-events-none" />

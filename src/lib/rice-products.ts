@@ -26,7 +26,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.8,
     reviewsCount: 342,
     image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=900",
+      "/rice/sona-masoori.jpg",
     nutritionFacts: {
       caloriesPer100g: 350,
       carbsGrams: 77,
@@ -61,7 +61,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.9,
     reviewsCount: 518,
     image:
-      "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&q=80&w=900",
+      "/rice/indrayani.jpg",
     nutritionFacts: {
       caloriesPer100g: 356,
       carbsGrams: 78,
@@ -95,7 +95,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.9,
     reviewsCount: 890,
     image:
-      "https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?auto=format&fit=crop&q=80&w=900",
+      "/rice/basmati-1121.jpg",
     nutritionFacts: {
       caloriesPer100g: 348,
       carbsGrams: 76,
@@ -135,7 +135,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.9,
     reviewsCount: 275,
     image:
-      "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?auto=format&fit=crop&q=80&w=900",
+      "/rice/black-kavuni.jpg",
     nutritionFacts: {
       caloriesPer100g: 340,
       carbsGrams: 72,
@@ -170,7 +170,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.8,
     reviewsCount: 184,
     image:
-      "https://images.unsplash.com/photo-1626200419189-39ca732a32c6?auto=format&fit=crop&q=80&w=900",
+      "/rice/rajamudi.jpg",
     nutritionFacts: {
       caloriesPer100g: 345,
       carbsGrams: 74,
@@ -205,7 +205,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.7,
     reviewsCount: 310,
     image:
-      "https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&q=80&w=900",
+      "/rice/matta-red.jpg",
     nutritionFacts: {
       caloriesPer100g: 338,
       carbsGrams: 73,
@@ -239,7 +239,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.9,
     reviewsCount: 420,
     image:
-      "https://images.unsplash.com/photo-1546554137-f86b9593a222?auto=format&fit=crop&q=80&w=900",
+      "/rice/gobindobhog.jpg",
     nutritionFacts: {
       caloriesPer100g: 358,
       carbsGrams: 79,
@@ -273,7 +273,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.8,
     reviewsCount: 630,
     image:
-      "https://images.unsplash.com/photo-1596593922378-55b206b0460c?auto=format&fit=crop&q=80&w=900",
+      "/rice/wada-kolam.jpg",
     nutritionFacts: {
       caloriesPer100g: 352,
       carbsGrams: 78,
@@ -307,7 +307,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 4.9,
     reviewsCount: 290,
     image:
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&q=80&w=900",
+      "/rice/ambemohar.jpg",
     nutritionFacts: {
       caloriesPer100g: 355,
       carbsGrams: 77,
@@ -342,7 +342,7 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     rating: 5.0,
     reviewsCount: 156,
     image:
-      "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=900",
+      "/rice/trio-combo.jpg",
     nutritionFacts: {
       caloriesPer100g: 345,
       carbsGrams: 74,

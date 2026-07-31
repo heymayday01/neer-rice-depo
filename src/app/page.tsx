@@ -85,17 +85,19 @@ export default function Home() {
 
       <Footer onOpenAISommelier={() => setAiOpen(true)} />
 
-      {/* Mobile dock — hidden when any modal is open to avoid overlap */}
-      {!detailProduct && !aiOpen && !compareOpen && !ordersOpen && !cartOpen && !checkoutOpen && !mobileMenuOpen && (
-        <MobileDock
-          active={dockActive}
-          onHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          onOpenCart={() => setCartOpen(true)}
-          onOpenAISommelier={() => setAiOpen(true)}
-          onOpenOrders={() => setOrdersOpen(true)}
-          onOpenComparison={() => setCompareOpen(true)}
-        />
-      )}
+      {/* Mobile dock — animates out when a modal/sheet is open to avoid overlap */}
+      <MobileDock
+        active={dockActive}
+        visible={!detailProduct && !aiOpen && !compareOpen && !ordersOpen && !cartOpen && !checkoutOpen && !mobileMenuOpen}
+        onHome={() => {
+          setActiveCategory("all");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        onOpenCart={() => setCartOpen(true)}
+        onOpenAISommelier={() => setAiOpen(true)}
+        onOpenOrders={() => setOrdersOpen(true)}
+        onOpenComparison={() => setCompareOpen(true)}
+      />
 
       {/* Spacer so content isn't hidden behind the mobile dock */}
       <div className="sm:hidden h-28" aria-hidden />

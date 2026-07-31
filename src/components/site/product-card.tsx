@@ -7,6 +7,7 @@ import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, swapUp, hoverLift, tapPress, blurReveal } from "@/lib/motion";
+import { SmartImage } from "./smart-image";
 
 interface ProductCardProps {
   product: RiceProduct;
@@ -41,12 +42,11 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
       <div>
         {/* Image */}
         <div className="relative h-52 overflow-hidden bg-[#f5f2ed]">
-          <motion.img
-            whileHover={{ scale: 1.08 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          <SmartImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover"
+            className="w-full h-52"
+            hoverScale={1.08}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-stone-950/65 via-transparent to-transparent pointer-events-none" />
 
