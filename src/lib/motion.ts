@@ -27,8 +27,10 @@ export const SPRING = {
   gentle: { type: "spring" as const, stiffness: 280, damping: 26, mass: 0.9 },
   /** Bouncy emphasis — badges, highlights */
   bouncy: { type: "spring" as const, stiffness: 360, damping: 18, mass: 0.7 },
-  /** Drawer / sheet spring — heavier feel */
-  drawer: { type: "spring" as const, stiffness: 320, damping: 34, mass: 1 },
+  /** Drawer / sheet spring — heavier, smooth (no overshoot) */
+  drawer: { type: "spring" as const, stiffness: 300, damping: 38, mass: 1 },
+  /** Dock / pill spring — quick, precise, no wobble */
+  dock: { type: "spring" as const, stiffness: 500, damping: 38, mass: 0.7 },
 };
 
 /* Duration presets (seconds) — for non-spring tweens */

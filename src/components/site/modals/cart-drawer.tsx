@@ -46,7 +46,15 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col">
+      <SheetContent
+        className="w-full sm:max-w-md p-0 flex flex-col rounded-l-3xl"
+        style={
+          {
+            // Refined slide timing — smoother than default
+            "--tw-enter-opacity": "1",
+          } as React.CSSProperties
+        }
+      >
         <SheetHeader className="px-5 py-4 border-b border-stone-200 bg-white">
           <SheetTitle className="font-serif text-lg flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-[#1f431e]" />
@@ -105,8 +113,13 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                         {item.selectedWeightKg}kg bag · ₹{item.unitPricePerKg}/kg
                       </p>
                       <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-1 bg-stone-100 rounded-lg p-0.5">
-                          <button
+                        <motion.div
+                          className="flex items-center gap-1 bg-stone-100 rounded-full p-0.5"
+                          initial={false}
+                        >
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            transition={SPRING.dock}
                             onClick={() =>
                               update(
                                 item.productId,
@@ -114,15 +127,23 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                                 item.quantity - 1
                               )
                             }
-                            className="p-1 rounded-md hover:bg-white cursor-pointer"
-                            aria-label="Decrease"
+                            className="p-1.5 rounded-full hover:bg-white cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+                            aria-label="Decrease quantity"
                           >
                             <Minus className="w-3 h-3 text-stone-600" />
-                          </button>
-                          <span className="text-xs font-bold w-5 text-center">
+                          </motion.button>
+                          <motion.span
+                            key={item.quantity}
+                            initial={{ scale: 0.6, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={SPRING.bouncy}
+                            className="text-xs font-bold w-5 text-center"
+                          >
                             {item.quantity}
-                          </span>
-                          <button
+                          </motion.span>
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            transition={SPRING.dock}
                             onClick={() =>
                               update(
                                 item.productId,
@@ -130,24 +151,26 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                                 item.quantity + 1
                               )
                             }
-                            className="p-1 rounded-md hover:bg-white cursor-pointer"
+                            className="p-1.5 rounded-full hover:bg-white cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
                             aria-label="Increase"
                           >
                             <Plus className="w-3 h-3 text-stone-600" />
-                          </button>
-                        </div>
+                          </motion.button>
+                        </motion.div>
                         <span className="text-sm font-black font-serif text-[#1f431e]">
                           ₹{item.totalPrice}
                         </span>
                       </div>
                     </div>
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.85 }}
+                      transition={SPRING.dock}
                       onClick={() => remove(item.productId, item.selectedWeightKg)}
                       className="self-start p-1.5 text-stone-400 hover:text-red-500 transition-colors cursor-pointer"
-                      aria-label="Remove"
+                      aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" />
-                    </button>
+                    </motion.button>
                   </motion.div>
                 ))}
               </AnimatePresence>

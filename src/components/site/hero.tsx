@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import gsap from "gsap";
 import {
   Sparkles,
   ShieldCheck,
@@ -17,13 +18,11 @@ import {
   EASE,
   DURATION,
   SPRING,
-  blurReveal,
-  blurRevealScale,
-  blurRevealAt,
   swapUp,
-  staggerContainer,
   hoverLift,
   tapPress,
+  blurReveal,
+  staggerContainer,
 } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
@@ -44,32 +43,28 @@ const MEALS: Record<
     tagline: "24-Month Natural Aging · 8.3mm Fluffy Grain",
     water: "1 : 2.0",
     catId: "aromatic",
-    image:
-      "/rice/basmati-1121.jpg",
+    image: "/rice/basmati-1121.jpg",
   },
   curry: {
     riceName: "Single-Origin Unpolished Sona Masoori",
     tagline: "Light Digestible Staple · Karnataka Paddy",
     water: "1 : 2.5",
     catId: "daily",
-    image:
-      "/rice/sona-masoori.jpg",
+    image: "/rice/sona-masoori.jpg",
   },
   diabetic: {
     riceName: "Karuppu Kavuni Organic Black Rice",
     tagline: "Low GI (42) · 10× Anthocyanin Antioxidants",
     water: "1 : 3.0",
     catId: "superfood",
-    image:
-      "/rice/black-kavuni.jpg",
+    image: "/rice/black-kavuni.jpg",
   },
   khichdi: {
     riceName: "Organic Maval Indrayani Rice",
     tagline: "Naturally Sticky & Fragrant · Gentle Digestion",
     water: "1 : 3.5",
     catId: "heritage",
-    image:
-      "/rice/indrayani.jpg",
+    image: "/rice/indrayani.jpg",
   },
 };
 
@@ -91,9 +86,53 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const [meal, setMeal] = useState<Meal>("biryani");
   const rec = MEALS[meal];
   const sectionRef = useRef<HTMLElement>(null);
+  const heroRootRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
-  // Scroll-linked parallax — drives ambient layers + image depth
+  // GSAP timeline entrance — orchestrates the whole hero on mount
+  useLayoutEffect(() => {
+    if (reduced || !heroRootRef.current) return;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.from(".hero-badge", {
+        y: 18,
+        opacity: 0,
+        filter: "blur(8px)",
+        stagger: 0.08,
+        duration: 0.7,
+      })
+        .from(
+          ".hero-headline-line",
+          { y: 40, opacity: 0, filter: "blur(12px)", stagger: 0.12, duration: 0.9 },
+          "-=0.4"
+        )
+        .from(".hero-desc", { y: 20, opacity: 0, duration: 0.6 }, "-=0.5")
+        .from(
+          ".hero-selector",
+          { y: 28, opacity: 0, scale: 0.97, duration: 0.7 },
+          "-=0.35"
+        )
+        .from(".hero-cta", { y: 18, opacity: 0, stagger: 0.08, duration: 0.55 }, "-=0.4")
+        .from(
+          ".hero-image-card",
+          { x: 30, opacity: 0, scale: 0.96, duration: 0.9 },
+          "-=1.1"
+        )
+        .from(
+          ".hero-seal",
+          { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.8)" },
+          "-=0.5"
+        )
+        .from(
+          ".hero-bottom-info",
+          { y: 20, opacity: 0, duration: 0.5 },
+          "-=0.3"
+        );
+    }, heroRootRef);
+    return () => ctx.revert();
+  }, [reduced]);
+
+  // Scroll-linked parallax (framer-motion useScroll — smooth with Lenis)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -104,8 +143,6 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-
-  // Reduced-motion: disable parallax transforms
   const parallax = (mv: typeof imageY) => (reduced ? 0 : mv);
 
   return (
@@ -123,70 +160,44 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       />
 
       <motion.div
+        ref={heroRootRef}
         style={{ y: reduced ? 0 : contentY, opacity: reduced ? 1 : contentOpacity }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 lg:py-20 relative z-10"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left */}
           <div className="lg:col-span-7 space-y-5 sm:space-y-6">
-            {/* Badge pills — blur reveal stagger */}
-            <motion.div
-              variants={staggerContainer(0.08, 0.05)}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-wrap items-center gap-2"
-            >
-              <motion.span
-                variants={blurRevealAt(0.05)}
-                className="pill inline-flex items-center gap-2 px-3.5 py-1.5 text-[#1f431e] text-[11px] sm:text-xs font-bold tracking-wide"
-              >
+            {/* Badge pills */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="hero-badge pill inline-flex items-center gap-2 px-3.5 py-1.5 text-[#1f431e] text-[11px] sm:text-xs font-bold tracking-wide">
                 <Sprout className="w-4 h-4 text-[#1f431e]" />
                 100% Organically Cultivated
-              </motion.span>
-              <motion.span
-                variants={blurRevealAt(0.15)}
-                className="pill inline-flex items-center gap-2 px-3 py-1.5 bg-[#c88a4a]/10 border-[#c88a4a]/30 text-stone-700 text-[10px] sm:text-[11px] font-bold"
-              >
+              </span>
+              <span className="hero-badge pill inline-flex items-center gap-2 px-3 py-1.5 bg-[#c88a4a]/10 border-[#c88a4a]/30 text-stone-700 text-[10px] sm:text-[11px] font-bold">
                 <CloudSun className="w-3.5 h-3.5 text-[#1f431e]" />
                 <span className="hidden xs:inline">Maval Paddy: 27°C · Organic Harvest</span>
                 <span className="xs:hidden">27°C · Organic Harvest</span>
-              </motion.span>
-            </motion.div>
+              </span>
+            </div>
 
-            {/* Headline — blur reveal */}
-            <motion.h1
-              variants={blurRevealAt(0.2)}
-              initial="hidden"
-              animate="visible"
-              className="font-brand font-black text-[#1f431e] leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]"
-            >
-              Neer Rice Depo
-              <span className="block font-serif italic text-stone-800 font-semibold text-xl xs:text-2xl sm:text-4xl lg:text-5xl tracking-normal normal-case mt-3 sm:mt-4 mb-1">
+            {/* Headline — GSAP staggered line reveal */}
+            <h1 className="font-brand font-black text-[#1f431e] leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
+              <span className="hero-headline-line block">Neer Rice Depo</span>
+              <span className="hero-headline-line block font-serif italic text-stone-800 font-semibold text-xl xs:text-2xl sm:text-4xl lg:text-5xl tracking-normal normal-case mt-3 sm:mt-4 mb-1">
                 Pristine Indian Organic{" "}
                 <span className="text-gold-shimmer">&amp; Heirloom Grains</span>
               </span>
-            </motion.h1>
+            </h1>
 
-            {/* Description — blur reveal */}
-            <motion.p
-              variants={blurRevealAt(0.35)}
-              initial="hidden"
-              animate="visible"
-              className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl"
-            >
+            {/* Description */}
+            <p className="hero-desc text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl">
               Authentic, unpolished, single-origin heirloom grains and naturally aged
               Basmati — sourced directly from verified organic farming cooperatives
               across Karnataka, Maharashtra, Bengal, and Tamil Nadu.
-            </motion.p>
+            </p>
 
             {/* Meal selector — frosted refractive card */}
-            <motion.div
-              variants={blurRevealScale}
-              initial="hidden"
-              animate="visible"
-              transition={{ ...SPRING.gentle, delay: 0.5 }}
-              className="glass refract-edge p-4 sm:p-5 rounded-3xl space-y-3.5"
-            >
+            <div className="hero-selector glass refract-edge p-4 sm:p-5 rounded-3xl space-y-3.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#1f431e] flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#c88a4a]" />
@@ -213,7 +224,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                       {selected && (
                         <motion.span
                           layoutId="meal-pill"
-                          transition={SPRING.snappy}
+                          transition={SPRING.dock}
                           className="absolute inset-0 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] shadow-md shadow-[#1f431e]/20"
                         />
                       )}
@@ -253,20 +264,15 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </motion.div>
+            </div>
 
-            {/* CTAs — blur reveal */}
-            <motion.div
-              variants={blurRevealAt(0.65)}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-wrap items-center gap-3"
-            >
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3">
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="shine-on-hover px-5 sm:px-6 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm shadow-md shadow-[#1f431e]/15 transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="hero-cta shine-on-hover px-5 sm:px-6 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm shadow-md shadow-[#1f431e]/15 transition-all flex items-center gap-2.5 group cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" />
                 <span className="hidden xs:inline">Ask AI Grain Sommelier</span>
@@ -278,23 +284,17 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenComparison}
-                className="pill px-5 py-3.5 text-stone-800 font-bold text-sm flex items-center gap-2 cursor-pointer"
+                className="hero-cta pill px-5 py-3.5 text-stone-800 font-bold text-sm flex items-center gap-2 cursor-pointer"
               >
                 <Compass className="w-4 h-4 text-[#1f431e]" />
                 <span className="hidden sm:inline">Rice Comparison Matrix</span>
                 <span className="sm:hidden">Compare</span>
               </motion.button>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right feature card — frosted refractive + parallax image */}
-          <motion.div
-            variants={blurRevealScale}
-            initial="hidden"
-            animate="visible"
-            transition={{ ...SPRING.gentle, delay: 0.4 }}
-            className="lg:col-span-5 relative"
-          >
+          <div className="hero-image-card lg:col-span-5 relative">
             <div className="relative rounded-[1.75rem] overflow-hidden shadow-luxe-lg group refract-edge bg-white">
               <motion.div
                 style={{ y: parallax(imageY), scale: reduced ? 1 : imageScale }}
@@ -324,7 +324,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               <motion.div
                 animate={reduced ? {} : { y: [0, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-4 right-4 glass refract-edge p-2 pr-4 rounded-2xl flex items-center gap-3 max-w-[calc(100%-2rem)]"
+                className="hero-seal absolute top-4 right-4 glass refract-edge p-2 pr-4 rounded-2xl flex items-center gap-3 max-w-[calc(100%-2rem)]"
               >
                 <img
                   src="/neer-logo.jpg"
@@ -342,7 +342,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               </motion.div>
 
               {/* Bottom info — frosted glass */}
-              <div className="absolute bottom-4 left-4 right-4 glass refract-edge p-4 rounded-2xl">
+              <div className="hero-bottom-info absolute bottom-4 left-4 right-4 glass refract-edge p-4 rounded-2xl">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#c88a4a] block">
@@ -367,7 +367,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             >
               <Leaf className="w-6 h-6 text-[#e9c496]" />
             </motion.div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Value pillars — scroll blur reveal stagger */}

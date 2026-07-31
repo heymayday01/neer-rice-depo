@@ -250,9 +250,11 @@ export function Header({
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;
               return (
-                <button
+                <motion.button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
+                  whileTap={{ scale: 0.94 }}
+                  transition={SPRING.dock}
                   className={`relative px-4 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${
                     selected
                       ? "text-white"
@@ -262,17 +264,17 @@ export function Header({
                   {selected && (
                     <motion.span
                       layoutId="cat-pill"
-                      transition={SPRING.snappy}
+                      transition={SPRING.dock}
                       className="absolute inset-0 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] rounded-full shadow-md shadow-[#1f431e]/20"
                     />
                   )}
                   <Icon
-                    className={`relative z-10 w-3.5 h-3.5 ${
+                    className={`relative z-10 w-3.5 h-3.5 transition-colors ${
                       selected ? "text-[#d4a373]" : "text-stone-400"
                     }`}
                   />
                   <span className="relative z-10 tracking-tight">{cat.label}</span>
-                </button>
+                </motion.button>
               );
             })}
           </nav>

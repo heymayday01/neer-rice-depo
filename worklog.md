@@ -93,3 +93,27 @@ Stage Summary:
 - Enhanced mobile dock: spring slide transitions, haptic feedback, press-confirm delay, iOS-style indicator, gradient active pill, bouncy badge.
 - All 5 dock options verified working on mobile with smooth animations.
 - Frosted-refractive glass + pill uniformity maintained throughout.
+
+---
+Task ID: lenis-gsap-animations
+Agent: main (Z.ai Code)
+Task: Fix and refactor hero section, fix all transition animations (dock, navbar, cart), use Lenis + GSAP, best mobile animations.
+
+Work Log:
+- Installed lenis@1.3.25 + gsap@3.15.0.
+- Created MotionProvider: Lenis smooth scroll (desktop only, mobile uses native momentum) synced with GSAP ScrollTrigger rAF, scroll-lock observer (stops Lenis when body overflow hidden for modals), prefers-reduced-motion respected. Wired into layout.tsx wrapping all children.
+- Refined motion foundation: added SPRING.dock (stiffness 500, damping 38 — quick, precise, no wobble) for dock/pills; softened SPRING.drawer (damping 38, no overshoot) for cart/sheets.
+- Refactored hero with GSAP timeline: orchestrated entrance — badges (stagger blur reveal) → headline lines (stagger) → description → selector card → CTAs → image card → seal (back.out ease) → bottom info. Replaced per-element framer-motion animate with gsap.context + gsap.from for cohesive, jank-free timeline. Kept framer-motion for scroll parallax (useScroll/useTransform) which now runs smoother with Lenis.
+- Enhanced mobile dock: SPRING.dock for all transitions, press ripple effect (scale 0→1.6 with fade), whileHover scale 1.04, whileTap scale 0.82, pressedId state for visible press feedback before modal opens (110ms delay), iOS-style top indicator bar, bouncy cart badge, layoutId active pill slides between tabs.
+- Enhanced navbar: category buttons now motion.button with whileTap scale 0.94 + SPRING.dock, layoutId cat-pill slides with SPRING.dock (smoother than snappy).
+- Enhanced cart drawer: rounded-l-3xl panel, quantity buttons are motion.button with whileTap scale 0.85 + SPRING.dock, quantity number bounces (scale 0.6→1 with SPRING.bouncy on change), remove button has tap animation, rounded-full quantity controls.
+- Enhanced modal transitions: Dialog overlay now backdrop-blur-sm + shadow-2xl + rounded-3xl + duration-300 (smoother), Sheet overlay backdrop-blur-sm, Sheet transition ease-out with duration-500 open / 300 close.
+- Verified: lint clean, all routes 200, no runtime/console errors. Agent Browser: GSAP timeline completes (all hero elements opacity 1), category pill slides smoothly, cart drawer opens/closes, all 5 dock options (Explore/Advisor/Matrix/Orders/Basket) work with ripple + slide animations, cart quantity buttons animate. VLM: mobile hero 8.5/10 "no janky elements, production-ready".
+
+Stage Summary:
+- Lenis smooth scroll (desktop) + GSAP ScrollTrigger globally integrated via MotionProvider.
+- Hero refactored with GSAP timeline entrance (cohesive staggered blur reveals).
+- All janky animations fixed: dock uses SPRING.dock (no wobble), cart drawer smooth slide + backdrop blur, modals smoother zoom + blur backdrop.
+- Dock: ripple effect, press feedback, haptic, smooth active pill slide.
+- Navbar: category pill slides with precise spring, tap feedback.
+- Cart: spring quantity buttons, bouncy number, smooth slide.

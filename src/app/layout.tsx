@@ -3,6 +3,7 @@ import { Cinzel, Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { MotionProvider } from "@/components/site/motion-provider";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -64,9 +65,11 @@ export default function RootLayout({
       <body
         className={`${cinzel.variable} ${playfair.variable} ${jakarta.variable} antialiased`}
       >
-        {children}
-        <Toaster />
-        <SonnerToaster position="top-center" richColors />
+        <MotionProvider>
+          {children}
+          <Toaster />
+          <SonnerToaster position="top-center" richColors />
+        </MotionProvider>
       </body>
     </html>
   );
