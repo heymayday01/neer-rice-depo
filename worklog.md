@@ -454,3 +454,24 @@ Stage Summary:
 - PullToRefresh with elastic physics + grain-bowl SVG indicator.
 - @use-gesture/react installed for future gesture features.
 - All mobile interactions now have proper haptic feedback mapping.
+
+---
+Task ID: fix-rice-image-loading
+Agent: main (Z.ai Code)
+Task: Fix rice catalog images stuck at loading.
+
+Work Log:
+- ROOT CAUSE: SmartImage used motion.img (framer-motion) which doesn't reliably fire onLoad events. Combined with loading="lazy" and opacity-0 initial state, created a chicken-and-egg problem: browser won't load lazy images that are invisible (opacity:0), so onLoad never fires, so the image stays invisible with shimmer forever.
+- DIAGNOSIS: Browser eval confirmed images 0-4 loaded (complete:true, naturalWidth:1024) but images 5-9 were stuck (complete:false, naturalWidth:0) even after scrolling. The lazy loading + opacity-0 combination prevented the browser from loading off-screen images.
+- FIX: Rewrote SmartImage component:
+  1. Replaced motion.img with plain <img> tag (reliable onLoad)
+  2. Changed loading="lazy" to loading="eager" (only 10 images — no perf concern)
+  3. Removed opacity-0 initial state — image is always visible so browser always loads it
+  4. Shimmer overlay now sits ON TOP of the image (absolute, pointer-events-none) and is simply removed when loaded — no opacity transition on the image itself
+  5. Hover zoom via CSS transition (hover:scale-110) instead of framer-motion whileHover
+- VERIFIED: All 10 images now load — complete:true, naturalWidth:1024 for every image. VLM: 10/10 "fully loaded and displaying correctly without any loading issues".
+
+Stage Summary:
+- All 10 rice product images now load reliably — zero stuck loading.
+- Root cause: motion.img + lazy + opacity-0 chicken-and-egg.
+- Fix: plain img + eager loading + shimmer overlay (not opacity toggle).
