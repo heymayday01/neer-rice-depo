@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo, lazy, Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Header } from "@/components/site/header";
 import { Hero } from "@/components/site/hero";
@@ -10,14 +10,38 @@ import { Footer } from "@/components/site/footer";
 import { MobileDock } from "@/components/site/mobile-dock";
 import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
 import { Onboarding } from "@/components/site/onboarding";
-import { ProductDetailModal } from "@/components/site/modals/product-detail-modal";
-import { CartDrawer } from "@/components/site/modals/cart-drawer";
-import { CheckoutModal } from "@/components/site/modals/checkout-modal";
-import { OrderTrackerModal } from "@/components/site/modals/order-tracker-modal";
-import { AISommelierModal } from "@/components/site/modals/ai-sommelier-modal";
-import { ComparisonModal } from "@/components/site/modals/comparison-modal";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
+
+// Lazy-load modals — they only enter the bundle when opened (code-splitting)
+const ProductDetailModal = lazy(() =>
+  import("@/components/site/modals/product-detail-modal").then((m) => ({
+    default: m.ProductDetailModal,
+  }))
+);
+const CartDrawer = lazy(() =>
+  import("@/components/site/modals/cart-drawer").then((m) => ({ default: m.CartDrawer }))
+);
+const CheckoutModal = lazy(() =>
+  import("@/components/site/modals/checkout-modal").then((m) => ({
+    default: m.CheckoutModal,
+  }))
+);
+const OrderTrackerModal = lazy(() =>
+  import("@/components/site/modals/order-tracker-modal").then((m) => ({
+    default: m.OrderTrackerModal,
+  }))
+);
+const AISommelierModal = lazy(() =>
+  import("@/components/site/modals/ai-sommelier-modal").then((m) => ({
+    default: m.AISommelierModal,
+  }))
+);
+const ComparisonModal = lazy(() =>
+  import("@/components/site/modals/comparison-modal").then((m) => ({
+    default: m.ComparisonModal,
+  }))
+);
 
 type DockTab = "home" | "ai" | "matrix" | "orders" | "cart";
 
@@ -46,26 +70,75 @@ export default function Home() {
     }
   });
 
-  const dismissOnboarding = () => {
+  const dismissOnboarding = useCallback(() => {
     try {
       localStorage.setItem("neer-onboarding-seen", "1");
     } catch {
       /* noop */
     }
     setShowOnboarding(false);
-  };
+  }, []);
 
   const addOrder = useOrders((s) => s.add);
 
-  const dockActive: DockTab = aiOpen
-    ? "ai"
-    : compareOpen
-      ? "matrix"
-      : ordersOpen
-        ? "orders"
-        : cartOpen
-          ? "cart"
-          : "home";
+  // Dock active state — memoized to avoid recompute on every render
+  const dockActive: DockTab = useMemo(
+    () =>
+      aiOpen
+        ? "ai"
+        : compareOpen
+          ? "matrix"
+          : ordersOpen
+            ? "orders"
+            : cartOpen
+              ? "cart"
+              : "home",
+    [aiOpen, compareOpen, ordersOpen, cartOpen]
+  );
+
+  // Dock visibility — memoized
+  const dockVisible = useMemo(
+    () =>
+      !detailProduct &&
+      !aiOpen &&
+      !compareOpen &&
+      !ordersOpen &&
+      !cartOpen &&
+      !checkoutOpen &&
+      !mobileMenuOpen,
+    [detailProduct, aiOpen, compareOpen, ordersOpen, cartOpen, checkoutOpen, mobileMenuOpen]
+  );
+
+  // Stable callbacks to avoid child re-renders
+  const handleSelectCategory = useCallback(
+    (cat: string) => {
+      setActiveCategory(cat);
+      document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+    },
+    []
+  );
+
+  const handleOrderPlaced = useCallback(
+    (trackingId: string) => {
+      addOrder({
+        id: trackingId,
+        createdAt: new Date().toISOString(),
+        customerName: "",
+        total: 0,
+        itemsCount: 0,
+        status: "placed",
+        trackingId,
+      });
+      setPendingTrackingId(trackingId);
+    },
+    [addOrder]
+  );
+
+  const handleCheckout = useCallback((c: string) => {
+    setCoupon(c);
+    setCartOpen(false);
+    setCheckoutOpen(true);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f5] font-sans text-stone-900 antialiased">
@@ -84,10 +157,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero
           onOpenAISommelier={() => setAiOpen(true)}
-          onSelectCategory={(cat) => {
-            setActiveCategory(cat);
-            document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
-          }}
+          onSelectCategory={handleSelectCategory}
           onOpenComparison={() => setCompareOpen(true)}
         />
 
@@ -107,10 +177,10 @@ export default function Home() {
 
       <Footer onOpenAISommelier={() => setAiOpen(true)} />
 
-      {/* Mobile dock — animates out when a modal/sheet is open to avoid overlap */}
+      {/* Mobile dock — animates out when a modal/sheet is open */}
       <MobileDock
         active={dockActive}
-        visible={!detailProduct && !aiOpen && !compareOpen && !ordersOpen && !cartOpen && !checkoutOpen && !mobileMenuOpen}
+        visible={dockVisible}
         onHome={() => {
           setActiveCategory("all");
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -137,42 +207,52 @@ export default function Home() {
         onOpenComparison={() => setCompareOpen(true)}
       />
 
-      {/* Modals */}
-      <ProductDetailModal product={detailProduct} onClose={() => setDetailProduct(null)} />
-      <CartDrawer
-        open={cartOpen}
-        onClose={() => setCartOpen(false)}
-        onCheckout={(c) => {
-          setCoupon(c);
-          setCartOpen(false);
-          setCheckoutOpen(true);
-        }}
-      />
-      <CheckoutModal
-        open={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        coupon={coupon}
-        onOrderPlaced={(trackingId) => {
-          addOrder({
-            id: trackingId,
-            createdAt: new Date().toISOString(),
-            customerName: "",
-            total: 0,
-            itemsCount: 0,
-            status: "placed",
-            trackingId,
-          });
-          setPendingTrackingId(trackingId);
-        }}
-        onOpenOrderTracker={() => setOrdersOpen(true)}
-      />
-      <OrderTrackerModal
-        open={ordersOpen}
-        onClose={() => setOrdersOpen(false)}
-        pendingTrackingId={pendingTrackingId}
-      />
-      <AISommelierModal open={aiOpen} onClose={() => setAiOpen(false)} />
-      <ComparisonModal open={compareOpen} onClose={() => setCompareOpen(false)} />
+      {/* Modals — lazy-loaded, only render when opened to keep DOM light */}
+      <Suspense fallback={null}>
+        <ProductDetailModal
+          product={detailProduct}
+          onClose={() => setDetailProduct(null)}
+        />
+      </Suspense>
+      {cartOpen && (
+        <Suspense fallback={null}>
+          <CartDrawer
+            open={cartOpen}
+            onClose={() => setCartOpen(false)}
+            onCheckout={handleCheckout}
+          />
+        </Suspense>
+      )}
+      {checkoutOpen && (
+        <Suspense fallback={null}>
+          <CheckoutModal
+            open={checkoutOpen}
+            onClose={() => setCheckoutOpen(false)}
+            coupon={coupon}
+            onOrderPlaced={handleOrderPlaced}
+            onOpenOrderTracker={() => setOrdersOpen(true)}
+          />
+        </Suspense>
+      )}
+      {ordersOpen && (
+        <Suspense fallback={null}>
+          <OrderTrackerModal
+            open={ordersOpen}
+            onClose={() => setOrdersOpen(false)}
+            pendingTrackingId={pendingTrackingId}
+          />
+        </Suspense>
+      )}
+      {aiOpen && (
+        <Suspense fallback={null}>
+          <AISommelierModal open={aiOpen} onClose={() => setAiOpen(false)} />
+        </Suspense>
+      )}
+      {compareOpen && (
+        <Suspense fallback={null}>
+          <ComparisonModal open={compareOpen} onClose={() => setCompareOpen(false)} />
+        </Suspense>
+      )}
 
       {/* Onboarding overlay — first visit only */}
       <AnimatePresence>

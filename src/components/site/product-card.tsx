@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { motion } from "framer-motion";
 import { Star, ShoppingBag, Eye, Check, Sparkles } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
@@ -14,7 +14,7 @@ interface ProductCardProps {
   onOpenDetail: (p: RiceProduct) => void;
 }
 
-export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
+function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
   const [weight, setWeight] = useState<number>(product.availableWeights[0] ?? 1);
   const [added, setAdded] = useState(false);
   const add = useCart((s) => s.add);
@@ -238,3 +238,6 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
     </motion.article>
   );
 }
+
+// Memoized — prevents re-render of all cards when cart/state updates elsewhere
+export const ProductCard = memo(ProductCardImpl);

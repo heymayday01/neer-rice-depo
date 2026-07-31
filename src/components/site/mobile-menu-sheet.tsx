@@ -52,7 +52,10 @@ export function MobileMenuSheet({
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="bottom" className="p-0 rounded-t-[1.75rem] max-h-[88vh] overflow-y-auto glass refract-edge border-stone-200/60">
+      <SheetContent
+        side="bottom"
+        className="p-0 rounded-t-[1.75rem] max-h-[88vh] overflow-y-auto bg-[#fdfcfb] border-stone-200/80 shadow-2xl"
+      >
         <SheetHeader className="px-5 pt-5 pb-3">
           <SheetTitle className="font-serif text-lg">Browse Grains</SheetTitle>
           <SheetDescription className="text-xs">
