@@ -6,19 +6,16 @@ interface SmartImageProps {
   src: string;
   alt: string;
   className?: string;
-  hoverScale?: number;
 }
 
 /**
  * Reliable image with loading placeholder.
- * Image is always rendered (no opacity-0) to ensure browsers load it.
- * Simple fade-in on load, no shine/shimmer effects.
+ * Clean, no shine/shimmer/zoom effects — just the image.
  */
 export function SmartImage({
   src,
   alt,
   className = "",
-  hoverScale,
 }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -33,9 +30,7 @@ export function SmartImage({
         decoding="async"
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${
-          loaded && !errored ? "opacity-100" : "opacity-0"
-        } ${hoverScale ? "transition-transform duration-700 hover:scale-110" : ""}`}
+        className="w-full h-full object-cover"
       />
 
       {/* Loading placeholder — solid dark, no shimmer */}

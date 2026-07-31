@@ -55,7 +55,6 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             src={product.image}
             alt={product.name}
             className="w-full h-52"
-            hoverScale={1.08}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209] via-[#0a1209]/20 to-transparent pointer-events-none" />
 
