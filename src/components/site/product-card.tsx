@@ -6,6 +6,7 @@ import { Star, ShoppingBag, Eye, Check, Sparkles } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
+import { SPRING, swapUp, hoverLift, tapPress, fadeRise } from "@/lib/motion";
 
 interface ProductCardProps {
   product: RiceProduct;
@@ -20,8 +21,7 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
   const { final, original, savings, perKg } = getPriceForWeight(product, weight);
   const discountPct = product.discountedPricePerKg
     ? Math.round(
-        ((product.pricePerKg - product.discountedPricePerKg) / product.pricePerKg) *
-          100
+        ((product.pricePerKg - product.discountedPricePerKg) / product.pricePerKg) * 100
       )
     : 0;
 
@@ -33,27 +33,34 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
 
   return (
     <motion.article
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-white rounded-2xl border border-stone-200/90 shadow-luxe hover:shadow-luxe-lg transition-shadow duration-300 flex flex-col justify-between overflow-hidden group relative"
+      variants={fadeRise}
+      whileHover={hoverLift}
+      transition={SPRING.gentle}
+      className="bg-white rounded-2xl border border-stone-200/90 shadow-luxe hover:shadow-luxe-lg flex flex-col justify-between overflow-hidden group relative"
     >
       <div>
         {/* Image */}
-        <div className="relative h-56 overflow-hidden bg-[#f5f2ed]">
+        <div className="relative h-52 overflow-hidden bg-[#f5f2ed]">
           <motion.img
-            whileHover={{ scale: 1.06 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ scale: 1.08 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/65 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/65 via-transparent to-transparent pointer-events-none" />
 
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10 max-w-[70%]">
             {discountPct > 0 && (
-              <span className="bg-[#c88a4a] text-white font-extrabold text-[10px] px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wider">
+              <motion.span
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={SPRING.bouncy}
+                className="bg-[#c88a4a] text-white font-extrabold text-[10px] px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wider"
+              >
                 Save {discountPct}%
-              </span>
+              </motion.span>
             )}
             {product.badges[0] && (
               <span className="bg-[#1f431e] text-white font-extrabold text-[10px] px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wider">
@@ -62,14 +69,16 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
             )}
           </div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={tapPress}
             onClick={() => onOpenDetail(product)}
-            className="absolute top-3 right-3 p-2.5 bg-white/95 hover:bg-white text-stone-800 rounded-full shadow-sm transition-all cursor-pointer border border-stone-200 hover:scale-105"
+            className="absolute top-3 right-3 p-2.5 bg-white/95 hover:bg-white text-stone-800 rounded-full shadow-sm transition-colors cursor-pointer border border-stone-200"
             title="View cooking ratio & heritage details"
             aria-label="View details"
           >
             <Eye className="w-4 h-4 text-[#1f431e]" />
-          </button>
+          </motion.button>
 
           <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
             <span className="bg-stone-900/80 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-white/20 backdrop-blur-sm">
@@ -88,7 +97,7 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
               {product.originRegion.split(",")[0]}
             </span>
             <span
-              className={`font-bold px-2 py-0.5 rounded-md text-[10px] ${
+              className={`font-bold px-2 py-0.5 rounded-md text-[10px] shrink-0 ${
                 product.giIndex.includes("Low")
                   ? "bg-[#1f431e]/10 text-[#1f431e] border border-[#1f431e]/20"
                   : "bg-stone-100 text-stone-700 border border-stone-200"
@@ -127,33 +136,45 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
             </div>
           </div>
 
-          {/* Weight selector */}
+          {/* Weight selector with sliding pill */}
           <div className="pt-1">
             <div className="flex justify-between items-center mb-1.5 text-xs">
-              <span className="font-extrabold text-[11px] text-stone-700">
-                Bag Weight:
-              </span>
+              <span className="font-extrabold text-[11px] text-stone-700">Bag Weight:</span>
               {weight >= 10 && (
-                <span className="text-[10px] font-bold text-[#1f431e] bg-[#1f431e]/10 px-2 py-0.5 rounded-md">
+                <motion.span
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={SPRING.bouncy}
+                  className="text-[10px] font-bold text-[#1f431e] bg-[#1f431e]/10 px-2 py-0.5 rounded-md"
+                >
                   Bulk Savings Applied
-                </span>
+                </motion.span>
               )}
             </div>
             <div className="grid grid-cols-4 gap-1.5">
-              {product.availableWeights.map((w) => (
-                <motion.button
-                  key={w}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setWeight(w)}
-                  className={`py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
-                    weight === w
-                      ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                      : "bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:border-stone-300"
-                  }`}
-                >
-                  {w} kg
-                </motion.button>
-              ))}
+              {product.availableWeights.map((w) => {
+                const selected = weight === w;
+                return (
+                  <button
+                    key={w}
+                    onClick={() => setWeight(w)}
+                    className={`relative py-1.5 rounded-lg text-xs font-bold transition-colors border cursor-pointer overflow-hidden ${
+                      selected
+                        ? "text-white border-[#1f431e]"
+                        : "bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:border-stone-300"
+                    }`}
+                  >
+                    {selected && (
+                      <motion.span
+                        layoutId={`weight-${product.id}`}
+                        transition={SPRING.snappy}
+                        className="absolute inset-0 bg-[#1f431e] shadow-sm"
+                      />
+                    )}
+                    <span className="relative z-10">{w} kg</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -164,13 +185,9 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
         <div className="flex items-baseline justify-between">
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-black font-serif text-[#1f431e]">
-                ₹{final}
-              </span>
+              <span className="text-2xl font-black font-serif text-[#1f431e]">₹{final}</span>
               {savings > 0 && (
-                <span className="text-xs text-stone-400 line-through">
-                  ₹{original}
-                </span>
+                <span className="text-xs text-stone-400 line-through">₹{original}</span>
               )}
             </div>
             <p className="text-[10px] text-stone-500 font-medium">
@@ -186,26 +203,34 @@ export function ProductCard({ product, onOpenDetail }: ProductCardProps) {
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={hoverLift}
+          whileTap={tapPress}
           onClick={handleAdd}
-          className={`w-full py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+          className={`shine-on-hover w-full py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
             added
               ? "bg-[#2d5a27] text-white"
               : "bg-[#1f431e] hover:bg-[#16331a] text-white shadow-sm"
           }`}
         >
-          {added ? (
-            <>
-              <Check className="w-4 h-4 text-[#e9c496]" />
-              Added {weight}kg to Cart!
-            </>
-          ) : (
-            <>
-              <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
-              Add {weight}kg Bag · ₹{final}
-            </>
-          )}
+          <motion.span
+            key={added ? "added" : "add"}
+            variants={swapUp}
+            initial="hidden"
+            animate="visible"
+            className="flex items-center gap-2"
+          >
+            {added ? (
+              <>
+                <Check className="w-4 h-4 text-[#e9c496]" />
+                Added {weight}kg to Cart!
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
+                Add {weight}kg Bag · ₹{final}
+              </>
+            )}
+          </motion.span>
         </motion.button>
       </div>
     </motion.article>

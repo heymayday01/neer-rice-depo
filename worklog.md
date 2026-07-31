@@ -20,3 +20,27 @@ Stage Summary:
 - Production-ready Next.js 16 App Router site, lint-clean, all routes 200, no runtime/hydration errors.
 - Real AI Grain Sommelier wired to z-ai-web-dev-sdk LLM; functional cart/checkout/order-tracking with Prisma persistence.
 - Premium forest-green/gold/cream aesthetic with cinematic hero, glassmorphism, staggered scroll animations, responsive + mobile dock, sticky footer.
+
+---
+Task ID: anim-refactor
+Agent: main (Z.ai Code)
+Task: Fix all animations, refactor for premium 2026 feel, fix mobile view issues, high-quality materials.
+
+Work Log:
+- Audited animation code: found heavy animated filter:blur() everywhere (GPU-expensive jank), overly long durations (0.8-1.1s), repeated ease arrays, header scroll listener re-registering on every scroll (perf bug), no reduced-motion support, dead `xs:` breakpoint.
+- Built motion foundation: src/lib/motion.ts (EASE tokens, SPRING presets, shared variants: fadeUp/fadeRise/swapUp/dialogContent/drawerPanel, hoverLift/tapPress). Added hooks/use-prefers-reduced-motion.ts (useSyncExternalStore, SSR-safe) and hooks/use-count-up.ts (rAF easeOutExpo, reduced-motion aware).
+- Refactored reveal.tsx: dropped blur, spring-based, RevealText word-by-word headline reveal (2026 signature). Added premium CSS utilities: shimmer-skeleton, gradient-drift, shine-on-hover, ring-pulse, reduced-motion media query.
+- Header: replaced floating mobile bar with clean sticky bar (no overlap), fixed scroll listener via useScroll/useMotionValueEvent, added sliding layoutId category pill, spring hover on actions, bouncy cart badge count animation, mobile menu button.
+- Created MobileMenuSheet (bottom sheet with search, quick actions, staggered categories). Refined MobileDock: spring tap, layoutId active indicator, 48px min tap targets, bouncy badge.
+- Hero: scroll-linked parallax (useScroll/useTransform) on blobs + image + content, word-by-word RevealText headline, spring meal-selector pill (layoutId), shine-on-hover CTA, gradient-drift ambient blobs, TrustMarquee strip, refined image card (less heavy gradient, glass border-white/60, shadow-lg), increased whitespace per VLM.
+- ProductCard: spring hover lift, sliding weight-pill (layoutId per product), shine-on-hover add button, swapUp label transition, bouncy discount badge.
+- ProductCatalog: fadeRise stagger variants (no blur), spring layout transitions, refined filter bar.
+- Modals: ProductDetail (staggered content entrance, sliding weight pill, shine button), CartDrawer (spring x-slide items, shine checkout), Checkout (spring place-order), AISommelier (spring result reveal), GrainWisdom (spring tab swap, no blur).
+- Mobile fixes: clean sticky header, larger dock tap targets (48px min), h-28 spacer so footer clears dock, hero image height h-72 on mobile, selector gap-2 + py-2.5.
+- Generated premium "farmer hands" sourcing image (1024x1024).
+- Verified: lint clean, all routes 200, no runtime errors. Agent Browser desktop + mobile flows (add-to-cart, cart drawer, AI sommelier LLM 200, mobile menu). VLM: desktop hero 8.5/10 (from 7.5), mobile flows functional.
+
+Stage Summary:
+- Premium 2026 animation system: spring physics, snappy easings, no heavy blur, reduced-motion accessibility, word-reveal headlines, sliding layoutId pills, scroll parallax, shine sweeps.
+- Mobile fully fixed: clean sticky header, bottom-sheet menu, 48px dock tap targets, proper bottom spacing, no overlaps.
+- All animations timed properly with shared tokens (DURATION.base 0.5s, SPRING.gentle/snappy/bouncy).

@@ -7,6 +7,7 @@ import { ProductCatalog } from "@/components/site/product-catalog";
 import { GrainWisdomHub } from "@/components/site/grain-wisdom";
 import { Footer } from "@/components/site/footer";
 import { MobileDock } from "@/components/site/mobile-dock";
+import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
 import { ProductDetailModal } from "@/components/site/modals/product-detail-modal";
 import { CartDrawer } from "@/components/site/modals/cart-drawer";
 import { CheckoutModal } from "@/components/site/modals/checkout-modal";
@@ -15,6 +16,8 @@ import { AISommelierModal } from "@/components/site/modals/ai-sommelier-modal";
 import { ComparisonModal } from "@/components/site/modals/comparison-modal";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
+
+type DockTab = "home" | "ai" | "matrix" | "orders" | "cart";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,9 +30,20 @@ export default function Home() {
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pendingTrackingId, setPendingTrackingId] = useState<string | null>(null);
 
   const addOrder = useOrders((s) => s.add);
+
+  const dockActive: DockTab = aiOpen
+    ? "ai"
+    : compareOpen
+      ? "matrix"
+      : ordersOpen
+        ? "orders"
+        : cartOpen
+          ? "cart"
+          : "home";
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f5] font-sans text-stone-900 antialiased">
@@ -42,16 +56,15 @@ export default function Home() {
         onOpenAISommelier={() => setAiOpen(true)}
         onOpenOrders={() => setOrdersOpen(true)}
         onOpenComparison={() => setCompareOpen(true)}
+        onOpenMobileMenu={() => setMobileMenuOpen(true)}
       />
 
-      <main className="flex-1 max-md:pt-24 md:pt-0">
+      <main className="flex-1">
         <Hero
           onOpenAISommelier={() => setAiOpen(true)}
           onSelectCategory={(cat) => {
             setActiveCategory(cat);
-            document
-              .getElementById("catalog")
-              ?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
           }}
           onOpenComparison={() => setCompareOpen(true)}
         />
@@ -72,21 +85,36 @@ export default function Home() {
 
       <Footer onOpenAISommelier={() => setAiOpen(true)} />
 
-      {/* Mobile dock */}
-      <MobileDock
-        onHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        onOpenCart={() => setCartOpen(true)}
+      {/* Mobile dock — hidden when any modal is open to avoid overlap */}
+      {!detailProduct && !aiOpen && !compareOpen && !ordersOpen && !cartOpen && !checkoutOpen && !mobileMenuOpen && (
+        <MobileDock
+          active={dockActive}
+          onHome={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onOpenCart={() => setCartOpen(true)}
+          onOpenAISommelier={() => setAiOpen(true)}
+          onOpenOrders={() => setOrdersOpen(true)}
+          onOpenComparison={() => setCompareOpen(true)}
+        />
+      )}
+
+      {/* Spacer so content isn't hidden behind the mobile dock */}
+      <div className="sm:hidden h-28" aria-hidden />
+
+      {/* Mobile menu */}
+      <MobileMenuSheet
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
         onOpenAISommelier={() => setAiOpen(true)}
         onOpenOrders={() => setOrdersOpen(true)}
         onOpenComparison={() => setCompareOpen(true)}
       />
 
       {/* Modals */}
-      <ProductDetailModal
-        product={detailProduct}
-        onClose={() => setDetailProduct(null)}
-      />
-
+      <ProductDetailModal product={detailProduct} onClose={() => setDetailProduct(null)} />
       <CartDrawer
         open={cartOpen}
         onClose={() => setCartOpen(false)}
@@ -96,7 +124,6 @@ export default function Home() {
           setCheckoutOpen(true);
         }}
       />
-
       <CheckoutModal
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
@@ -115,13 +142,11 @@ export default function Home() {
         }}
         onOpenOrderTracker={() => setOrdersOpen(true)}
       />
-
       <OrderTrackerModal
         open={ordersOpen}
         onClose={() => setOrdersOpen(false)}
         pendingTrackingId={pendingTrackingId}
       />
-
       <AISommelierModal open={aiOpen} onClose={() => setAiOpen(false)} />
       <ComparisonModal open={compareOpen} onClose={() => setCompareOpen(false)} />
     </div>

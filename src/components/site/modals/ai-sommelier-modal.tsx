@@ -22,6 +22,7 @@ import {
 import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
+import { SPRING, hoverLift, tapPress } from "@/lib/motion";
 
 interface Props {
   open: boolean;
@@ -162,9 +163,8 @@ export function AISommelierModal({ open, onClose }: Props) {
           {/* Result */}
           {rec && !loading && (
             <motion.div
-              initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}
               className="space-y-4"
             >
               <div className="bg-[#faf8f5] rounded-2xl p-4 border border-stone-200/80">

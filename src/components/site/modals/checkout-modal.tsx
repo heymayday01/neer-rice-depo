@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
+import { SPRING, hoverLift, tapPress } from "@/lib/motion";
 
 interface Props {
   open: boolean;
@@ -289,11 +290,11 @@ export function CheckoutModal({
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={hoverLift}
+              whileTap={tapPress}
               onClick={placeOrder}
               disabled={placing}
-              className="w-full py-3.5 bg-[#1f431e] hover:bg-[#16331a] disabled:opacity-70 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="shine-on-hover w-full py-3.5 bg-[#1f431e] hover:bg-[#16331a] disabled:opacity-70 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               {placing ? (
                 <>

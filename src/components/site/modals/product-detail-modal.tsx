@@ -24,6 +24,8 @@ import {
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
+import { SPRING, swapUp, hoverLift, tapPress, staggerContainer } from "@/lib/motion";
+import { StaggerItem } from "../reveal";
 
 interface Props {
   product: RiceProduct | null;
@@ -91,7 +93,13 @@ export function ProductDetailModal({ product, onClose }: Props) {
           </div>
 
           {/* Details side */}
-          <div className="p-6 sm:p-7 space-y-5 bg-white">
+          <motion.div
+            variants={staggerContainer(0.05, 0.05)}
+            initial="hidden"
+            animate="visible"
+            className="p-6 sm:p-7 space-y-5 bg-white"
+          >
+          <StaggerItem>
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#c88a4a]">
                 {product.originRegion}
@@ -105,6 +113,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 </p>
               )}
             </div>
+          </StaggerItem>
 
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1 text-amber-600">
@@ -208,19 +217,29 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 )}
               </div>
               <div className="grid grid-cols-4 gap-2">
-                {product.availableWeights.map((w) => (
-                  <button
-                    key={w}
-                    onClick={() => setWeight(w)}
-                    className={`py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
-                      weight === w
-                        ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                        : "bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100"
-                    }`}
-                  >
-                    {w} kg
-                  </button>
-                ))}
+                {product.availableWeights.map((w) => {
+                  const selected = weight === w;
+                  return (
+                    <button
+                      key={w}
+                      onClick={() => setWeight(w)}
+                      className={`relative py-2 rounded-lg text-xs font-bold transition-colors border cursor-pointer overflow-hidden ${
+                        selected
+                          ? "text-white border-[#1f431e]"
+                          : "bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100"
+                      }`}
+                    >
+                      {selected && (
+                        <motion.span
+                          layoutId="detail-weight"
+                          transition={SPRING.snappy}
+                          className="absolute inset-0 bg-[#1f431e] shadow-sm"
+                        />
+                      )}
+                      <span className="relative z-10">{w} kg</span>
+                    </button>
+                  );
+                })}
               </div>
 
               <div className="flex items-end justify-between pt-1">
@@ -242,29 +261,37 @@ export function ProductDetailModal({ product, onClose }: Props) {
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={hoverLift}
+                whileTap={tapPress}
                 onClick={handleAdd}
-                className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                className={`shine-on-hover w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
                   added
                     ? "bg-[#2d5a27] text-white"
                     : "bg-[#1f431e] hover:bg-[#16331a] text-white shadow-sm"
                 }`}
               >
-                {added ? (
-                  <>
-                    <Check className="w-4 h-4 text-[#e9c496]" />
-                    Added {weight}kg to Cart!
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
-                    Add {weight}kg Bag · ₹{final}
-                  </>
-                )}
+                <motion.span
+                  key={added ? "added" : "add"}
+                  variants={swapUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex items-center gap-2"
+                >
+                  {added ? (
+                    <>
+                      <Check className="w-4 h-4 text-[#e9c496]" />
+                      Added {weight}kg to Cart!
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
+                      Add {weight}kg Bag · ₹{final}
+                    </>
+                  )}
+                </motion.span>
               </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </DialogContent>
     </Dialog>

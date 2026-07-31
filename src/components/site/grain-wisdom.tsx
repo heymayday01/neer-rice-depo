@@ -13,6 +13,7 @@ import {
   Timer,
 } from "lucide-react";
 import { Reveal } from "./reveal";
+import { SPRING, DURATION, EASE } from "@/lib/motion";
 
 const TOPICS = [
   {
@@ -188,10 +189,9 @@ export function GrainWisdomHub() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
-                initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}
+                exit={{ opacity: 0, y: -14, transition: { duration: DURATION.fast, ease: EASE.io } }}
                 className="bg-white rounded-3xl border border-stone-200/90 shadow-luxe p-6 sm:p-8 space-y-6"
               >
                 <div className="flex items-center gap-4 border-b border-stone-100 pb-5">

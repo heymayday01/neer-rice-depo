@@ -259,20 +259,17 @@
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ---------- Section reveal (used by IntersectionObserver) ---------- */
+/* ---------- Section reveal (CSS fallback — no blur, GPU-cheap) ---------- */
 .reveal {
   opacity: 0;
-  transform: translateY(36px);
-  filter: blur(6px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform, filter;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
 /* ---------- Soft elevated card shadow ---------- */
@@ -282,8 +279,87 @@
 .shadow-luxe-lg {
   box-shadow: 0 2px 6px rgba(28, 25, 23, 0.05), 0 24px 56px -16px rgba(45, 90, 39, 0.18);
 }
+.shadow-glow-gold {
+  box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.4), 0 16px 40px -12px rgba(212, 163, 115, 0.35);
+}
 
 /* ---------- Mobile bottom safe-area ---------- */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+/* ---------- Premium shimmer skeleton (2026) ---------- */
+@keyframes shimmerSweep {
+  0% { background-position: -150% 0; }
+  100% { background-position: 150% 0; }
+}
+.shimmer-skeleton {
+  background: linear-gradient(
+    100deg,
+    rgba(245, 242, 237, 0.6) 30%,
+    rgba(231, 229, 228, 0.9) 50%,
+    rgba(245, 242, 237, 0.6) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSweep 1.6s ease-in-out infinite;
+}
+
+/* ---------- Gradient drift for ambient blobs ---------- */
+@keyframes gradientDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(3%, -2%) scale(1.05); }
+  66% { transform: translate(-2%, 3%) scale(0.97); }
+}
+.animate-gradient-drift {
+  animation: gradientDrift 18s ease-in-out infinite;
+}
+.animate-gradient-drift-slow {
+  animation: gradientDrift 26s ease-in-out infinite;
+}
+
+/* ---------- Glass shine sweep (hover accent) ---------- */
+@keyframes shineSweep {
+  0% { transform: translateX(-120%) skewX(-12deg); }
+  100% { transform: translateX(220%) skewX(-12deg); }
+}
+.shine-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+.shine-on-hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-120%) skewX(-12deg);
+  pointer-events: none;
+}
+.shine-on-hover:hover::after {
+  animation: shineSweep 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Tactile ring pulse (for focused CTAs) ---------- */
+@keyframes ringPulse {
+  0% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0.5); }
+  70% { box-shadow: 0 0 0 12px rgba(212, 163, 115, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0); }
+}
+.animate-ring-pulse {
+  animation: ringPulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* ---------- Reduce motion: respect user preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

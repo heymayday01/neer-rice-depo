@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, X } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useState } from "react";
+import { SPRING, DURATION, EASE, swapUp, hoverLift, tapPress } from "@/lib/motion";
 
 interface Props {
   open: boolean;
@@ -86,9 +87,9 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                   <motion.div
                     key={`${item.productId}-${item.selectedWeightKg}`}
                     layout
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -40 }}
+                    initial={{ opacity: 0, x: 40, scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, scale: 1, transition: SPRING.gentle }}
+                    exit={{ opacity: 0, x: 60, scale: 0.96, transition: { duration: DURATION.fast, ease: EASE.io } }}
                     className="bg-white rounded-2xl border border-stone-200/90 p-3 flex gap-3 shadow-sm"
                   >
                     <img
@@ -210,10 +211,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={hoverLift}
+                whileTap={tapPress}
                 onClick={() => onCheckout(applied ?? "")}
-                className="w-full py-3 bg-[#1f431e] hover:bg-[#16331a] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="shine-on-hover w-full py-3 bg-[#1f431e] hover:bg-[#16331a] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 Proceed to Checkout
                 <ArrowRight className="w-4 h-4" />

@@ -17,6 +17,16 @@ import {
 import { RICE_PRODUCTS, CATEGORIES } from "@/lib/rice-products";
 import { ProductCard } from "./product-card";
 import { RiceProduct } from "@/lib/types";
+import {
+  EASE,
+  DURATION,
+  SPRING,
+  fadeUp,
+  fadeRise,
+  staggerContainer,
+  hoverLift,
+  tapPress,
+} from "@/lib/motion";
 
 interface ProductCatalogProps {
   searchQuery: string;
@@ -122,10 +132,10 @@ export function ProductCatalog({
 
       {/* Filter bar */}
       <motion.div
-        initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-stone-200/90 shadow-luxe"
       >
         <div className="flex items-center gap-2">
@@ -202,22 +212,15 @@ export function ProductCatalog({
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {sorted.map((product, i) => (
+            {sorted.map((product) => (
               <motion.div
                 key={product.id}
                 layout
-                initial={{ opacity: 0, y: 32, filter: "blur(6px)" }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  filter: "blur(0px)",
-                  transition: {
-                    duration: 0.6,
-                    delay: Math.min(i * 0.05, 0.4),
-                    ease: [0.16, 1, 0.3, 1],
-                  },
-                }}
-                exit={{ opacity: 0, y: -16 }}
+                variants={fadeRise}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, y: -16, transition: { duration: DURATION.fast, ease: EASE.io } }}
+                transition={SPRING.gentle}
               >
                 <ProductCard product={product} onOpenDetail={onOpenDetail} />
               </motion.div>
@@ -226,14 +229,11 @@ export function ProductCatalog({
 
           {/* Promo card to balance the grid */}
           <motion.div
-            initial={{ opacity: 0, y: 32, filter: "blur(6px)" }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-              transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-            }}
+            variants={fadeRise}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
+            transition={SPRING.gentle}
             className="relative overflow-hidden rounded-2xl border border-[#1f431e]/30 bg-gradient-to-br from-[#1f431e] to-[#0a1209] text-white p-6 flex flex-col justify-between min-h-[420px] shadow-luxe"
           >
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#d4a373]/15 rounded-full blur-3xl pointer-events-none" />
