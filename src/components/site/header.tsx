@@ -133,16 +133,21 @@ export function Header({
               </div>
             </button>
 
-            {/* Desktop search — pill shape */}
+            {/* Desktop search — pill shape with Cmd+K hint */}
             <div className="hidden sm:block flex-1 max-w-xs md:max-w-md relative">
               <input
                 type="text"
                 placeholder="Search grains, regions, dishes…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-9 py-2.5 bg-white/5 border border-white/10 focus:border-[#d4a373]/40 rounded-full text-xs text-white placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#d4a373]/20 transition-all font-medium"
+                className="w-full pl-10 pr-16 py-2.5 bg-white/5 border border-white/10 focus:border-[#d4a373]/40 rounded-full text-xs text-white placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#d4a373]/20 transition-all font-medium"
               />
               <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-stone-500 pointer-events-none" strokeWidth={1.5} />
+              {!searchQuery && (
+                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-500 border border-white/10 rounded px-1.5 py-0.5 data-mono pointer-events-none">
+                  ⌘K
+                </kbd>
+              )}
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}

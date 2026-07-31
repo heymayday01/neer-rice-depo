@@ -149,6 +149,26 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
         }}
       />
 
+      {/* Atmospheric grain particles — "living" 2026 feel */}
+      {!reduced && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span
+              key={i}
+              className="grain-particle"
+              style={{
+                left: `${(i * 8.3 + 5) % 100}%`,
+                top: `${(i * 17 + 10) % 100}%`,
+                ["--dx" as string]: `${(i % 3) * 20 - 20}px`,
+                ["--dy" as string]: `${-40 - (i % 4) * 15}px`,
+                ["--dur" as string]: `${6 + (i % 4) * 2}s`,
+                ["--delay" as string]: `${i * 0.7}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* ===== Content layer ===== */}
       <motion.div
         ref={heroRootRef}

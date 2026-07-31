@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, lazy, Suspense } from "react";
+import { useState, useCallback, useMemo, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Header } from "@/components/site/header";
 import { Hero } from "@/components/site/hero";
@@ -11,6 +11,8 @@ import { MobileDock } from "@/components/site/mobile-dock";
 import { MobileMenuSheet } from "@/components/site/mobile-menu-sheet";
 import { Onboarding } from "@/components/site/onboarding";
 import { ScrollProgress } from "@/components/site/scroll-progress";
+import { CommandPalette } from "@/components/site/command-palette";
+import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
 
@@ -59,6 +61,19 @@ export default function Home() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pendingTrackingId, setPendingTrackingId] = useState<string | null>(null);
+  const [cmdOpen, setCmdOpen] = useState(false);
+
+  // Cmd+K / Ctrl+K command palette
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   // Onboarding — show on first visit (localStorage flag). Lazy init avoids
   // setState-in-effect; SSR-safe via typeof guard.
@@ -262,6 +277,22 @@ export default function Home() {
           <Onboarding onComplete={dismissOnboarding} onSkip={dismissOnboarding} />
         )}
       </AnimatePresence>
+
+      {/* Command palette — Cmd+K / Ctrl+K */}
+      <CommandPalette
+        open={cmdOpen}
+        onClose={() => setCmdOpen(false)}
+        onSelectProduct={(id) => {
+          const p = RICE_PRODUCTS.find((r) => r.id === id);
+          if (p) setDetailProduct(p);
+        }}
+        onSelectCategory={(cat) => {
+          setActiveCategory(cat);
+          document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+        }}
+        onOpenAISommelier={() => setAiOpen(true)}
+        onOpenComparison={() => setCompareOpen(true)}
+      />
     </div>
   );
 }

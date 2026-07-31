@@ -8,6 +8,7 @@ import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, swapUp, hoverLift, tapPress, cleanRise } from "@/lib/motion";
 import { SmartImage } from "./smart-image";
+import { RadialGauge } from "./radial-gauge";
 
 interface ProductCardProps {
   product: RiceProduct;
@@ -85,11 +86,20 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
 
         {/* Body */}
         <div className="p-5 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[#d4a373]" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-stone-500 truncate">
-              {product.originRegion.split(",")[0]}
-            </span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="w-1 h-1 rounded-full bg-[#d4a373]" />
+              <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-stone-500 truncate">
+                {product.originRegion.split(",")[0]}
+              </span>
+            </div>
+            {/* Live stock indicator */}
+            <div className="flex items-center gap-1.5">
+              <span className="live-dot" />
+              <span className="text-[8px] font-bold uppercase tracking-wider text-stone-500 data-mono">
+                {product.stockKg > 1000 ? "In stock" : "Limited"}
+              </span>
+            </div>
           </div>
 
           <div>
@@ -107,16 +117,14 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             {product.tagline}
           </p>
 
-          <div className="flex items-center justify-between pt-2 text-xs border-t border-white/8">
+          {/* Data viz: radial gauge for aroma + rating + GI */}
+          <div className="flex items-center justify-between pt-2 border-t border-white/8">
             <div className="flex items-center gap-1 text-[#d4a373]">
               <Star className="w-3.5 h-3.5 fill-[#d4a373] text-[#d4a373]" />
-              <span className="font-bold text-white">{product.rating}</span>
-              <span className="text-stone-500 text-[10px]">({product.reviewsCount})</span>
+              <span className="font-bold text-white data-mono text-xs">{product.rating}</span>
+              <span className="text-stone-500 text-[10px] data-mono">({product.reviewsCount})</span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-stone-400 font-medium">
-              <Sparkles className="w-3 h-3 text-[#d4a373]" />
-              <span>Aroma <strong className="text-white">{product.aromaLevel}/5</strong></span>
-            </div>
+            <RadialGauge value={product.aromaLevel} max={5} size={28} label="Aroma" />
           </div>
 
           {/* Weight selector — ghost pills */}
@@ -168,12 +176,17 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-black font-serif text-white">₹{final}</span>
               {savings > 0 && (
-                <span className="text-xs text-stone-600 line-through font-mono">₹{original}</span>
+                <span className="text-xs text-stone-600 line-through data-mono">₹{original}</span>
               )}
             </div>
-            <p className="text-[10px] text-stone-500 font-mono tracking-wide">
-              ₹{perKg}/kg
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-[10px] text-stone-500 data-mono tracking-wide">
+                ₹{perKg}/kg
+              </p>
+              {savings > 0 && (
+                <span className="eco-badge">Save ₹{savings}</span>
+              )}
+            </div>
           </div>
           <button
             onClick={() => onOpenDetail(product)}
