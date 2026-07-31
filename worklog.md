@@ -198,3 +198,23 @@ Stage Summary:
 - Hero fully redesigned: clean translateY+opacity reveals (no blur), image crossfade (no shimmer), softer editorial gradients, static gradient text on accent word.
 - New motion variants: cleanRise, cleanRiseScale, cleanRiseAt, imageCrossfade.
 - VLM 9/10 on both mobile and desktop — "clean, editorial, premium 2026 app".
+
+---
+Task ID: hero-image-mobile-reimagine
+Agent: main (Z.ai Code)
+Task: Reimagine and redesign the hero image for best mobile view.
+
+Work Log:
+- Identified issue (VLM critique): on mobile the hero image was a "thin horizontal sliver at the bottom" — barely visible, poorly composed for tall mobile screens, with cluttered overlay badges.
+- Reimagined hero image as MOBILE-FIRST immersive card: tall 4:5 aspect ratio (60vh, max 480px, min 360px) at the TOP of the screen — the first thing seen. Full-width, dominates the viewport.
+- Restructured hero: mobile shows image card first (lg:hidden), then text content below. Desktop keeps side-by-side (image right, text left) via order classes.
+- Extracted shared HeroImageCard component (mobile/desktop variants) to avoid duplication. Mobile: tall card, stronger gradient (from-[#0a1209]/85) for text legibility, compact seal top-left, water-ratio pill top-right, grain name + tagline overlaid at bottom. Desktop: 440px card, lighter gradient, floating leaf accent.
+- Refined overlay elements: official seal compacted (9px label, 11px title), water ratio as gradient pill with Droplets icon, "Featured Grain" eyebrow + serif grain name + tagline at bottom — all on the image for an immersive editorial feel.
+- Meal selector: simplified labels (Biryani/Daily Curry/Low GI/Khichdi) for 4-col mobile grid, shorter rice names in MEALS data for overlay truncation.
+- GSAP timeline: image card animates first (mobile priority), then text content.
+- Verified: lint clean, all routes 200, no errors. VLM mobile hero 9/10 ("image successfully dominates the mobile screen... exceptionally clean, readable overlaid elements... premium 2026 app hero"). Image crossfade on meal switch confirmed clean (black rice shows, name updates). Desktop side-by-side layout verified polished.
+
+Stage Summary:
+- Hero image completely reimagined for mobile: tall immersive 60vh card at top, full-width, with overlaid seal/ratio/grain name.
+- Shared HeroImageCard component (mobile/desktop variants).
+- VLM 9/10 — "premium 2026 app hero, organic luxury".

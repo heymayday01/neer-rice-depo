@@ -13,6 +13,7 @@ import {
   CloudSun,
   Compass,
   Leaf,
+  Droplets,
 } from "lucide-react";
 import {
   EASE,
@@ -21,7 +22,6 @@ import {
   hoverLift,
   tapPress,
   cleanRise,
-  cleanRiseScale,
   imageCrossfade,
   staggerContainer,
 } from "@/lib/motion";
@@ -40,29 +40,29 @@ const MEALS: Record<
   { riceName: string; tagline: string; water: string; catId: string; image: string }
 > = {
   biryani: {
-    riceName: "Royal 1121 Extra Long Basmati",
-    tagline: "24-Month Natural Aging · 8.3mm Fluffy Grain",
+    riceName: "Royal 1121 Basmati",
+    tagline: "24-Month Aging · 8.3mm Grain",
     water: "1 : 2.0",
     catId: "aromatic",
     image: "/rice/basmati-1121.jpg",
   },
   curry: {
-    riceName: "Single-Origin Unpolished Sona Masoori",
-    tagline: "Light Digestible Staple · Karnataka Paddy",
+    riceName: "Sona Masoori",
+    tagline: "Light Staple · Karnataka Paddy",
     water: "1 : 2.5",
     catId: "daily",
     image: "/rice/sona-masoori.jpg",
   },
   diabetic: {
-    riceName: "Karuppu Kavuni Organic Black Rice",
-    tagline: "Low GI (42) · 10× Anthocyanin Antioxidants",
+    riceName: "Black Kavuni Rice",
+    tagline: "Low GI (42) · 10× Antioxidants",
     water: "1 : 3.0",
     catId: "superfood",
     image: "/rice/black-kavuni.jpg",
   },
   khichdi: {
-    riceName: "Organic Maval Indrayani Rice",
-    tagline: "Naturally Sticky & Fragrant · Gentle Digestion",
+    riceName: "Indrayani Rice",
+    tagline: "Sticky & Fragrant · Gentle",
     water: "1 : 3.5",
     catId: "heritage",
     image: "/rice/indrayani.jpg",
@@ -70,10 +70,10 @@ const MEALS: Record<
 };
 
 const MEAL_TABS: { id: Meal; label: string }[] = [
-  { id: "biryani", label: "Biryani / Pulao" },
+  { id: "biryani", label: "Biryani" },
   { id: "curry", label: "Daily Curry" },
-  { id: "diabetic", label: "Diabetic Low GI" },
-  { id: "khichdi", label: "Khichdi / Soft" },
+  { id: "diabetic", label: "Low GI" },
+  { id: "khichdi", label: "Khichdi" },
 ];
 
 const PILLARS = [
@@ -95,44 +95,17 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
     if (reduced || !heroRootRef.current) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from(".hero-badge", {
-        y: 16,
-        opacity: 0,
-        stagger: 0.07,
-        duration: 0.6,
-      })
-        .from(
-          ".hero-headline-line",
-          { y: 32, opacity: 0, stagger: 0.1, duration: 0.8 },
-          "-=0.35"
-        )
-        .from(".hero-desc", { y: 16, opacity: 0, duration: 0.55 }, "-=0.45")
-        .from(
-          ".hero-selector",
-          { y: 24, opacity: 0, duration: 0.65 },
-          "-=0.3"
-        )
-        .from(".hero-cta", { y: 14, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=0.35")
-        .from(
-          ".hero-image-card",
-          { y: 24, opacity: 0, duration: 0.85 },
-          "-=1.0"
-        )
-        .from(
-          ".hero-seal",
-          { scale: 0, opacity: 0, duration: 0.45, ease: "back.out(1.7)" },
-          "-=0.45"
-        )
-        .from(
-          ".hero-bottom-info",
-          { y: 16, opacity: 0, duration: 0.45 },
-          "-=0.25"
-        );
+      tl.from(".hero-image-card", { y: 20, opacity: 0, duration: 0.8 })
+        .from(".hero-badge", { y: 14, opacity: 0, stagger: 0.07, duration: 0.55 }, "-=0.5")
+        .from(".hero-headline-line", { y: 28, opacity: 0, stagger: 0.1, duration: 0.75 }, "-=0.35")
+        .from(".hero-desc", { y: 14, opacity: 0, duration: 0.5 }, "-=0.4")
+        .from(".hero-selector", { y: 20, opacity: 0, duration: 0.6 }, "-=0.3")
+        .from(".hero-cta", { y: 12, opacity: 0, stagger: 0.07, duration: 0.45 }, "-=0.35");
     }, heroRootRef);
     return () => ctx.revert();
   }, [reduced]);
 
-  // Scroll-linked parallax (framer-motion useScroll — smooth with Lenis)
+  // Scroll-linked parallax
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -146,7 +119,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Layered background — softer, more editorial */}
+      {/* Layered background */}
       <div className="absolute inset-0 bg-[#faf8f5]" />
       <div className="absolute inset-0 bg-aurora opacity-70 pointer-events-none" />
       <motion.div
@@ -161,11 +134,21 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       <motion.div
         ref={heroRootRef}
         style={{ y: reduced ? 0 : contentY, opacity: reduced ? 1 : contentOpacity }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 lg:py-20 relative z-10"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-14 lg:py-20 relative z-10"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* ===== MOBILE: immersive tall image hero (first thing seen) ===== */}
+        <div className="lg:hidden">
+          <HeroImageCard
+            rec={rec}
+            imageY={imageY}
+            reduced={reduced}
+            variant="mobile"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center mt-6 lg:mt-0">
           {/* Left */}
-          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6 order-2 lg:order-1">
             {/* Badge pills */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="hero-badge pill inline-flex items-center gap-2 px-3.5 py-1.5 text-[#1f431e] text-[11px] sm:text-xs font-bold tracking-wide">
@@ -179,7 +162,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               </span>
             </div>
 
-            {/* Headline — clean rise with gradient text fill */}
+            {/* Headline */}
             <h1 className="font-brand font-black leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
               <span className="hero-headline-line block text-transparent bg-clip-text bg-gradient-to-br from-[#1f431e] via-[#c88a4a] to-[#1f431e]">
                 Neer Rice Depo
@@ -199,7 +182,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               across Karnataka, Maharashtra, Bengal, and Tamil Nadu.
             </p>
 
-            {/* Meal selector — frosted refractive card */}
+            {/* Meal selector */}
             <div className="hero-selector glass refract-edge p-4 sm:p-5 rounded-3xl space-y-3.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#1f431e] flex items-center gap-1.5">
@@ -211,14 +194,14 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                 {MEAL_TABS.map((m) => {
                   const selected = meal === m.id;
                   return (
                     <button
                       key={m.id}
                       onClick={() => setMeal(m.id)}
-                      className={`relative py-2.5 px-2.5 rounded-full text-xs font-bold text-center cursor-pointer overflow-hidden min-h-[40px] ${
+                      className={`relative py-2.5 px-1 rounded-full text-[11px] sm:text-xs font-bold text-center cursor-pointer overflow-hidden min-h-[40px] ${
                         selected
                           ? "text-white"
                           : "bg-white/70 text-stone-700 border border-stone-200/80 hover:bg-white hover:border-[#1f431e]/30"
@@ -237,7 +220,8 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 })}
               </div>
 
-              <div className="pt-2.5 border-t border-stone-200/60 min-h-[52px]">
+              {/* Selected grain info + explore */}
+              <div className="pt-2.5 border-t border-stone-200/60 min-h-[48px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={meal}
@@ -249,16 +233,16 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                   >
                     <div className="min-w-0">
                       <span className="font-serif font-bold text-stone-900 block text-sm truncate">
-                        {rec.riceName}
+                        {MEALS[meal].riceName}
                       </span>
                       <span className="text-stone-700 text-[11px] font-semibold">
-                        {rec.tagline}
+                        {MEALS[meal].tagline}
                       </span>
                     </div>
                     <motion.button
                       whileHover={hoverLift}
                       whileTap={tapPress}
-                      onClick={() => onSelectCategory(rec.catId)}
+                      onClick={() => onSelectCategory(MEALS[meal].catId)}
                       className="pill px-3.5 py-1.5 bg-[#c88a4a]/15 hover:bg-[#c88a4a]/25 text-stone-900 font-bold text-xs shrink-0 flex items-center gap-1.5 border-[#c88a4a]/30 cursor-pointer"
                     >
                       Explore
@@ -296,85 +280,18 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             </div>
           </div>
 
-          {/* Right feature card — clean editorial image with crossfade */}
-          <div className="hero-image-card lg:col-span-5 relative">
-            <div className="relative rounded-[1.75rem] overflow-hidden shadow-luxe-lg group refract-edge bg-[#f5f2ed]">
-              <motion.div
-                style={{ y: parallax(imageY) }}
-                className="relative"
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={rec.image}
-                    variants={imageCrossfade}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="w-full h-72 sm:h-96 lg:h-[440px]"
-                  >
-                    <img
-                      src={rec.image}
-                      alt={rec.riceName}
-                      className="w-full h-full object-cover"
-                      loading="eager"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </motion.div>
-              {/* Refined gradient — softer, editorial */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209]/60 via-[#0a1209]/10 to-transparent pointer-events-none" />
-
-              {/* Official seal — clean frosted pill */}
-              <motion.div
-                animate={reduced ? {} : { y: [0, -4, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="hero-seal absolute top-4 right-4 glass refract-edge p-2 pr-4 rounded-2xl flex items-center gap-3 max-w-[calc(100%-2rem)]"
-              >
-                <img
-                  src="/neer-logo.jpg"
-                  alt=""
-                  className="w-10 h-10 rounded-full object-cover border border-[#1f431e] shrink-0"
-                />
-                <div className="min-w-0">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-[#1f431e] block">
-                    Official Seal
-                  </span>
-                  <p className="text-xs font-bold font-serif text-stone-900 truncate">
-                    Certified Organic Depo
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Bottom info — clean frosted glass */}
-              <div className="hero-bottom-info absolute bottom-4 left-4 right-4 glass refract-edge p-4 rounded-2xl">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#c88a4a] block">
-                      Featured Grain Variety
-                    </span>
-                    <h4 className="text-sm font-bold text-stone-900 font-serif truncate">
-                      {rec.riceName}
-                    </h4>
-                  </div>
-                  <div className="bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white font-extrabold text-[11px] px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap">
-                    {rec.water}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating leaf accent */}
-            <motion.div
-              animate={reduced ? {} : { rotate: [0, 10, 0], y: [0, -7, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-5 -left-3 sm:-left-5 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white flex items-center justify-center shadow-lg border-4 border-[#faf8f5] z-20"
-            >
-              <Leaf className="w-6 h-6 text-[#e9c496]" />
-            </motion.div>
+          {/* Right — desktop image card */}
+          <div className="hidden lg:block lg:col-span-5 relative order-1 lg:order-2">
+            <HeroImageCard
+              rec={rec}
+              imageY={imageY}
+              reduced={reduced}
+              variant="desktop"
+            />
           </div>
         </div>
 
-        {/* Value pillars — clean rise stagger (no blur) */}
+        {/* Value pillars */}
         <motion.div
           variants={staggerContainer(0.07)}
           initial="hidden"
@@ -400,9 +317,116 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
         </motion.div>
       </motion.div>
 
-      {/* Marquee trust strip */}
       <TrustMarquee />
     </section>
+  );
+}
+
+/* ===== Shared hero image card — mobile (tall 4:5) vs desktop (side) ===== */
+function HeroImageCard({
+  rec,
+  imageY,
+  reduced,
+  variant,
+}: {
+  rec: { riceName: string; tagline: string; water: string; image: string };
+  imageY: import("framer-motion").MotionValue<number>;
+  reduced: boolean;
+  variant: "mobile" | "desktop";
+}) {
+  const isMobile = variant === "mobile";
+  return (
+    <div className="hero-image-card relative">
+      <div
+        className={`relative overflow-hidden shadow-luxe-lg group refract-edge bg-[#f5f2ed] ${
+          isMobile ? "rounded-[1.5rem] h-[60vh] max-h-[480px] min-h-[360px]" : "rounded-[1.75rem] h-[440px]"
+        }`}
+      >
+        {/* Image with parallax + crossfade */}
+        <motion.div
+          style={{ y: reduced ? 0 : imageY, scale: reduced ? 1 : 1.05 }}
+          className="absolute inset-0"
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={rec.image}
+              variants={imageCrossfade}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="absolute inset-0"
+            >
+              <img
+                src={rec.image}
+                alt={rec.riceName}
+                className="w-full h-full object-cover"
+                loading="eager"
+              />
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Gradient overlay — stronger on mobile for text legibility */}
+        <div
+          className={`absolute inset-0 pointer-events-none ${
+            isMobile
+              ? "bg-gradient-to-t from-[#0a1209]/85 via-[#0a1209]/30 to-[#0a1209]/20"
+              : "bg-gradient-to-t from-[#0a1209]/60 via-[#0a1209]/10 to-transparent"
+          }`}
+        />
+
+        {/* Top-left: official seal (compact) */}
+        <div className="absolute top-4 left-4 flex items-center gap-2.5 glass refract-edge p-1.5 pr-3 rounded-2xl">
+          <img
+            src="/neer-logo.jpg"
+            alt=""
+            className="w-9 h-9 rounded-full object-cover border border-[#1f431e] shrink-0"
+          />
+          <div className="min-w-0">
+            <span className="text-[8px] font-black uppercase tracking-widest text-[#1f431e] block leading-tight">
+              Official Seal
+            </span>
+            <p className="text-[11px] font-bold font-serif text-stone-900 leading-tight">
+              Certified Organic
+            </p>
+          </div>
+        </div>
+
+        {/* Top-right: water ratio pill */}
+        <div className="absolute top-4 right-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white font-extrabold text-[11px] px-3 py-1.5 rounded-full shadow-md whitespace-nowrap flex items-center gap-1.5">
+          <Droplets className="w-3 h-3 text-[#e9c496]" />
+          {rec.water}
+        </div>
+
+        {/* Bottom: grain name + tagline overlaid (mobile-first) */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#d4a373] block mb-0.5">
+                Featured Grain
+              </span>
+              <h3 className={`font-serif font-bold text-white leading-tight ${isMobile ? "text-2xl" : "text-xl"} truncate`}>
+                {rec.riceName}
+              </h3>
+              <p className="text-[11px] sm:text-xs text-stone-300 font-medium truncate">
+                {rec.tagline}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating leaf accent (desktop only — avoids clutter on mobile) */}
+        {!isMobile && (
+          <motion.div
+            animate={reduced ? {} : { rotate: [0, 10, 0], y: [0, -7, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-5 -left-5 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white flex items-center justify-center shadow-lg border-4 border-[#faf8f5] z-20"
+          >
+            <Leaf className="w-6 h-6 text-[#e9c496]" />
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 }
 
