@@ -71,16 +71,16 @@ const MEALS: Record<
 
 const MEAL_TABS: { id: Meal; label: string }[] = [
   { id: "biryani", label: "Biryani" },
-  { id: "curry", label: "Daily Curry" },
+  { id: "curry", label: "Curry" },
   { id: "diabetic", label: "Low GI" },
   { id: "khichdi", label: "Khichdi" },
 ];
 
 const PILLARS = [
-  { icon: Sprout, title: "100% Farm-Direct", desc: "Zero middlemen, supporting smallholder farmers" },
-  { icon: ShieldCheck, title: "Naturally Aged", desc: "Aged 9–24 months for low moisture & aroma" },
-  { icon: Truck, title: "Express Delivery", desc: "Fast pan-India doorstep shipping" },
-  { icon: HeartHandshake, title: "Bulk Savings", desc: "Save up to 10% on 10kg & 25kg bags" },
+  { icon: Sprout, title: "Farm-Direct", desc: "Zero middlemen" },
+  { icon: ShieldCheck, title: "Naturally Aged", desc: "9–24 months" },
+  { icon: Truck, title: "Express Delivery", desc: "Pan-India" },
+  { icon: HeartHandshake, title: "Bulk Savings", desc: "Up to 10% off" },
 ];
 
 export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: HeroProps) {
@@ -90,180 +90,191 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const heroRootRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
-  // GSAP timeline entrance — clean translateY + opacity (no blur)
+  // GSAP timeline — staggered, breathing entrance
   useLayoutEffect(() => {
     if (reduced || !heroRootRef.current) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from(".hero-image-card", { y: 20, opacity: 0, duration: 0.8 })
-        .from(".hero-badge", { y: 14, opacity: 0, stagger: 0.07, duration: 0.55 }, "-=0.5")
-        .from(".hero-headline-line", { y: 28, opacity: 0, stagger: 0.1, duration: 0.75 }, "-=0.35")
-        .from(".hero-desc", { y: 14, opacity: 0, duration: 0.5 }, "-=0.4")
-        .from(".hero-selector", { y: 20, opacity: 0, duration: 0.6 }, "-=0.3")
-        .from(".hero-cta", { y: 12, opacity: 0, stagger: 0.07, duration: 0.45 }, "-=0.35");
+      tl.from(".hero-eyebrow", { y: 12, opacity: 0, duration: 0.6 })
+        .from(".hero-headline-line", { y: 30, opacity: 0, stagger: 0.12, duration: 0.9 }, "-=0.3")
+        .from(".hero-desc", { y: 16, opacity: 0, duration: 0.6 }, "-=0.5")
+        .from(".hero-image-card", { y: 24, opacity: 0, scale: 0.98, duration: 1.0 }, "-=0.9")
+        .from(".hero-selector", { y: 20, opacity: 0, duration: 0.6 }, "-=0.5")
+        .from(".hero-cta", { y: 14, opacity: 0, stagger: 0.08, duration: 0.5 }, "-=0.4")
+        .from(".hero-pillar", { y: 18, opacity: 0, stagger: 0.06, duration: 0.5 }, "-=0.3");
     }, heroRootRef);
     return () => ctx.revert();
   }, [reduced]);
 
-  // Scroll-linked parallax
+  // Scroll parallax
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const blobY1 = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const blobY2 = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 50]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 30]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 24]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const parallax = (mv: typeof imageY) => (reduced ? 0 : mv);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Layered background */}
-      <div className="absolute inset-0 bg-[#faf8f5]" />
-      <div className="absolute inset-0 bg-aurora opacity-70 pointer-events-none" />
+    <section ref={sectionRef} className="relative overflow-hidden min-h-[100svh]">
+      {/* ===== Full-bleed cinematic background image ===== */}
       <motion.div
-        style={{ y: parallax(blobY1) }}
-        className="absolute -top-24 right-1/4 w-[28rem] h-[28rem] bg-[#d4a373]/10 rounded-full blur-[120px] pointer-events-none animate-gradient-drift"
-      />
-      <motion.div
-        style={{ y: parallax(blobY2) }}
-        className="absolute bottom-0 -left-10 w-[26rem] h-[26rem] bg-[#2d5a27]/8 rounded-full blur-[120px] pointer-events-none animate-gradient-drift-slow"
+        style={{ y: reduced ? 0 : bgY, scale: reduced ? 1.05 : bgScale }}
+        className="absolute inset-0 z-0"
+      >
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={rec.image}
+            src={rec.image}
+            alt=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: EASE.out }}
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+        </AnimatePresence>
+        {/* Cinematic color grade + depth gradients */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/40 via-[#0a1209]/30 to-[#0a1209]/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/70 via-transparent to-[#0a1209]/40" />
+        {/* Warm tint */}
+        <div
+          className="absolute inset-0 opacity-30 mix-blend-overlay"
+          style={{ background: "radial-gradient(ellipse at 30% 40%, rgba(212,163,115,0.4), transparent 60%)" }}
+        />
+      </motion.div>
+
+      {/* Subtle noise texture overlay for filmic depth */}
+      <div
+        className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
       />
 
+      {/* ===== Content layer ===== */}
       <motion.div
         ref={heroRootRef}
         style={{ y: reduced ? 0 : contentY, opacity: reduced ? 1 : contentOpacity }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-14 lg:py-20 relative z-10"
+        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
       >
-        {/* ===== MOBILE: immersive tall image hero (first thing seen) ===== */}
-        <div className="lg:hidden">
-          <HeroImageCard
-            rec={rec}
-            imageY={imageY}
-            reduced={reduced}
-            variant="mobile"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center mt-6 lg:mt-0">
-          {/* Left */}
-          <div className="lg:col-span-7 space-y-5 sm:space-y-6 order-2 lg:order-1">
-            {/* Badge pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="hero-badge pill inline-flex items-center gap-2 px-3.5 py-1.5 text-[#1f431e] text-[11px] sm:text-xs font-bold tracking-wide">
-                <Sprout className="w-4 h-4 text-[#1f431e]" />
-                100% Organically Cultivated
-              </span>
-              <span className="hero-badge pill inline-flex items-center gap-2 px-3 py-1.5 bg-[#c88a4a]/10 border-[#c88a4a]/30 text-stone-700 text-[10px] sm:text-[11px] font-bold">
-                <CloudSun className="w-3.5 h-3.5 text-[#1f431e]" />
-                <span className="hidden xs:inline">Maval Paddy: 27°C · Organic Harvest</span>
-                <span className="xs:hidden">27°C · Organic Harvest</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+          {/* Left — editorial content */}
+          <div className="lg:col-span-7 space-y-7 sm:space-y-8">
+            {/* Eyebrow */}
+            <div className="hero-eyebrow flex items-center gap-3">
+              <span className="h-px w-10 bg-[#d4a373]/60" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#d4a373]">
+                Farm-Direct · Heirloom · Aged
               </span>
             </div>
 
-            {/* Headline */}
-            <h1 className="font-brand font-black leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
-              <span className="hero-headline-line block text-transparent bg-clip-text bg-gradient-to-br from-[#1f431e] via-[#c88a4a] to-[#1f431e]">
-                Neer Rice Depo
-              </span>
-              <span className="hero-headline-line block font-serif italic text-stone-800 font-semibold text-xl xs:text-2xl sm:text-4xl lg:text-5xl tracking-normal normal-case mt-3 sm:mt-4 mb-1">
-                Pristine Indian Organic{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c88a4a] via-[#f5d9b0] to-[#c88a4a]">
-                  &amp; Heirloom Grains
-                </span>
+            {/* Headline — single serif voice, refined */}
+            <h1 className="font-serif font-bold leading-[0.95] tracking-tight text-white text-[2.5rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[5.5rem]">
+              <span className="hero-headline-line block">Pristine Indian</span>
+              <span className="hero-headline-line block italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#f5d9b0] to-[#d4a373]">
+                Organic Grains
               </span>
             </h1>
 
-            {/* Description */}
-            <p className="hero-desc text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl">
-              Authentic, unpolished, single-origin heirloom grains and naturally aged
-              Basmati — sourced directly from verified organic farming cooperatives
-              across Karnataka, Maharashtra, Bengal, and Tamil Nadu.
+            {/* Description — generous letter spacing, warm grey */}
+            <p className="hero-desc text-sm sm:text-base text-stone-300/90 leading-relaxed max-w-xl tracking-wide font-light">
+              Unpolished, single-origin heirloom rice and naturally aged Basmati —
+              sourced directly from verified organic cooperatives across Karnataka,
+              Maharashtra, Bengal &amp; Tamil Nadu.
             </p>
 
-            {/* Meal selector */}
-            <div className="hero-selector glass refract-edge p-4 sm:p-5 rounded-3xl space-y-3.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#1f431e] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#c88a4a]" />
-                  Quick Grain Selector
-                </span>
-                <span className="text-[10px] text-stone-500 font-bold hidden sm:block">
-                  What are you cooking today?
+            {/* Meal selector — minimal, jewelry-like */}
+            <div className="hero-selector space-y-3">
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-3.5 h-3.5 text-[#d4a373]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">
+                  Select your grain
                 </span>
               </div>
-
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap gap-2">
                 {MEAL_TABS.map((m) => {
                   const selected = meal === m.id;
                   return (
                     <button
                       key={m.id}
                       onClick={() => setMeal(m.id)}
-                      className={`relative py-2.5 px-1 rounded-full text-[11px] sm:text-xs font-bold text-center cursor-pointer overflow-hidden min-h-[40px] ${
+                      className={`relative py-2.5 px-4 rounded-full text-xs font-bold cursor-pointer transition-all min-h-[40px] ${
                         selected
-                          ? "text-white"
-                          : "bg-white/70 text-stone-700 border border-stone-200/80 hover:bg-white hover:border-[#1f431e]/30"
+                          ? "text-white border border-[#d4a373]/60 bg-[#d4a373]/10"
+                          : "text-stone-400 hover:text-white border border-white/12 hover:border-white/25"
                       }`}
                     >
                       {selected && (
                         <motion.span
                           layoutId="meal-pill"
                           transition={SPRING.dock}
-                          className="absolute inset-0 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] shadow-md shadow-[#1f431e]/20"
+                          className="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(212,163,115,0.25)]"
+                          style={{ boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.4)" }}
                         />
                       )}
-                      <span className="relative z-10">{m.label}</span>
+                      <span className="relative z-10 flex items-center gap-1.5">
+                        {selected && <span className="w-1 h-1 rounded-full bg-[#d4a373]" />}
+                        {m.label}
+                      </span>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Selected grain info + explore */}
-              <div className="pt-2.5 border-t border-stone-200/60 min-h-[48px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={meal}
-                    variants={swapUp}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    className="flex items-center justify-between text-xs gap-3"
-                  >
-                    <div className="min-w-0">
-                      <span className="font-serif font-bold text-stone-900 block text-sm truncate">
-                        {MEALS[meal].riceName}
-                      </span>
-                      <span className="text-stone-700 text-[11px] font-semibold">
-                        {MEALS[meal].tagline}
-                      </span>
-                    </div>
+              {/* Selected grain — minimal text, no heavy badge */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={meal}
+                  variants={swapUp}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex items-center justify-between gap-4 pt-3 border-t border-white/10"
+                >
+                  <div className="min-w-0">
+                    <span className="font-serif font-bold text-white block text-base sm:text-lg truncate">
+                      {rec.riceName}
+                    </span>
+                    <span className="text-stone-400 text-[11px] tracking-wide">
+                      {rec.tagline}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    {/* Water ratio — minimal text, no background */}
+                    <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#d4a373]">
+                      <Droplets className="w-3 h-3" />
+                      {rec.water}
+                    </span>
                     <motion.button
                       whileHover={hoverLift}
                       whileTap={tapPress}
-                      onClick={() => onSelectCategory(MEALS[meal].catId)}
-                      className="pill px-3.5 py-1.5 bg-[#c88a4a]/15 hover:bg-[#c88a4a]/25 text-stone-900 font-bold text-xs shrink-0 flex items-center gap-1.5 border-[#c88a4a]/30 cursor-pointer"
+                      onClick={() => onSelectCategory(rec.catId)}
+                      className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#d4a373] transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
                       Explore
-                      <ArrowRight className="w-3.5 h-3.5 text-[#1f431e]" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </motion.button>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3">
+            {/* CTAs — primary glow + ghost secondary */}
+            <div className="hero-cta flex flex-wrap items-center gap-3 pt-2">
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="hero-cta btn-primary-glow shine-on-hover px-5 sm:px-6 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="btn-primary-glow shine-on-hover px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
               >
                 <Sparkles className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" />
-                <span className="hidden xs:inline">Ask AI Grain Sommelier</span>
-                <span className="xs:hidden">AI Sommelier</span>
+                Ask AI Grain Sommelier
                 <ArrowRight className="w-4 h-4 text-[#e9c496] group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
@@ -271,162 +282,126 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenComparison}
-                className="hero-cta pill px-5 py-3.5 text-stone-800 font-bold text-sm flex items-center gap-2 cursor-pointer"
+                className="px-6 py-4 text-white font-bold rounded-full text-sm tracking-wide border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center gap-2 cursor-pointer"
               >
-                <Compass className="w-4 h-4 text-[#1f431e]" />
-                <span className="hidden sm:inline">Rice Comparison Matrix</span>
-                <span className="sm:hidden">Compare</span>
+                <Compass className="w-4 h-4" />
+                Compare Grains
               </motion.button>
             </div>
           </div>
 
-          {/* Right — desktop image card */}
-          <div className="hidden lg:block lg:col-span-5 relative order-1 lg:order-2">
-            <HeroImageCard
-              rec={rec}
-              imageY={imageY}
-              reduced={reduced}
-              variant="desktop"
-            />
+          {/* Right — floating glass info card (desktop) */}
+          <div className="hidden lg:block lg:col-span-5">
+            <HeroGlassPanel rec={rec} reduced={reduced} imageY={imageY} />
           </div>
         </div>
 
-        {/* Value pillars */}
+        {/* ===== Value pillars — minimal, hairline dividers ===== */}
         <motion.div
           variants={staggerContainer(0.07)}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-12 sm:mt-14 pt-8 border-t border-stone-200"
+          className="grid grid-cols-4 gap-4 sm:gap-8 mt-14 sm:mt-20 pt-8 border-t border-white/10"
         >
           {PILLARS.map((p) => (
             <motion.div
               key={p.title}
               variants={cleanRise}
-              className="flex items-start gap-3 glass refract-edge p-3.5 rounded-2xl hover:-translate-y-1 transition-transform duration-300"
+              className="hero-pillar flex flex-col gap-2"
             >
-              <div className="p-2.5 bg-[#1f431e]/10 text-[#1f431e] rounded-xl shrink-0">
-                <p.icon className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-stone-900">{p.title}</h4>
-                <p className="text-[11px] text-stone-500 leading-snug">{p.desc}</p>
-              </div>
+              <p.icon className="w-5 h-5 text-[#d4a373] mb-1" strokeWidth={1.5} />
+              <h4 className="text-xs sm:text-sm font-bold text-white tracking-wide">{p.title}</h4>
+              <p className="text-[10px] sm:text-[11px] text-stone-400 tracking-wide">{p.desc}</p>
             </motion.div>
           ))}
         </motion.div>
       </motion.div>
 
-      <TrustMarquee />
+      {/* Scroll hint */}
+      <motion.div
+        animate={reduced ? {} : { y: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-1.5"
+      >
+        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/50">Scroll</span>
+        <div className="w-px h-8 bg-gradient-to-b from-white/50 to-transparent" />
+      </motion.div>
     </section>
   );
 }
 
-/* ===== Shared hero image card — mobile (tall 4:5) vs desktop (side) ===== */
-function HeroImageCard({
+/* ===== Floating glass panel — desktop right side ===== */
+function HeroGlassPanel({
   rec,
-  imageY,
   reduced,
-  variant,
+  imageY,
 }: {
   rec: { riceName: string; tagline: string; water: string; image: string };
-  imageY: import("framer-motion").MotionValue<number>;
   reduced: boolean;
-  variant: "mobile" | "desktop";
+  imageY: import("framer-motion").MotionValue<number>;
 }) {
-  const isMobile = variant === "mobile";
   return (
-    <div className="hero-image-card relative">
-      <div
-        className={`relative overflow-hidden shadow-luxe-lg group refract-edge bg-[#f5f2ed] ${
-          isMobile ? "rounded-[1.5rem] h-[60vh] max-h-[480px] min-h-[360px]" : "rounded-[1.75rem] h-[440px]"
-        }`}
-      >
-        {/* Image with parallax + crossfade */}
-        <motion.div
-          style={{ y: reduced ? 0 : imageY, scale: reduced ? 1 : 1.05 }}
-          className="absolute inset-0"
-        >
+    <motion.div
+      style={{ y: reduced ? 0 : imageY }}
+      className="hero-image-card relative"
+    >
+      <div className="relative rounded-[1.5rem] overflow-hidden shadow-2xl border border-white/15 backdrop-blur-2xl bg-white/5">
+        {/* Image */}
+        <div className="relative h-[420px] overflow-hidden">
           <AnimatePresence mode="wait">
-            <motion.div
+            <motion.img
               key={rec.image}
+              src={rec.image}
+              alt={rec.riceName}
               variants={imageCrossfade}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="absolute inset-0"
-            >
-              <img
-                src={rec.image}
-                alt={rec.riceName}
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
-            </motion.div>
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </AnimatePresence>
-        </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209]/80 via-transparent to-[#0a1209]/20" />
 
-        {/* Gradient overlay — stronger on mobile for text legibility */}
-        <div
-          className={`absolute inset-0 pointer-events-none ${
-            isMobile
-              ? "bg-gradient-to-t from-[#0a1209]/85 via-[#0a1209]/30 to-[#0a1209]/20"
-              : "bg-gradient-to-t from-[#0a1209]/60 via-[#0a1209]/10 to-transparent"
-          }`}
-        />
-
-        {/* Top-left: official seal (compact) */}
-        <div className="absolute top-4 left-4 flex items-center gap-2.5 glass refract-edge p-1.5 pr-3 rounded-2xl">
-          <img
-            src="/neer-logo.jpg"
-            alt=""
-            className="w-9 h-9 rounded-full object-cover border border-[#1f431e] shrink-0"
-          />
-          <div className="min-w-0">
-            <span className="text-[8px] font-black uppercase tracking-widest text-[#1f431e] block leading-tight">
-              Official Seal
-            </span>
-            <p className="text-[11px] font-bold font-serif text-stone-900 leading-tight">
-              Certified Organic
-            </p>
-          </div>
-        </div>
-
-        {/* Top-right: water ratio pill */}
-        <div className="absolute top-4 right-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white font-extrabold text-[11px] px-3 py-1.5 rounded-full shadow-md whitespace-nowrap flex items-center gap-1.5">
-          <Droplets className="w-3 h-3 text-[#e9c496]" />
-          {rec.water}
-        </div>
-
-        {/* Bottom: grain name + tagline overlaid (mobile-first) */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-          <div className="flex items-end justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#d4a373] block mb-0.5">
-                Featured Grain
+          {/* Floating official seal — hairline border, sticker-like */}
+          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-white/95 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-stone-900/5 shadow-lg">
+            <img
+              src="/neer-logo.jpg"
+              alt=""
+              className="w-8 h-8 rounded-full object-cover border border-[#1f431e]/20"
+            />
+            <div>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#1f431e] block leading-none">
+                Certified
               </span>
-              <h3 className={`font-serif font-bold text-white leading-tight ${isMobile ? "text-2xl" : "text-xl"} truncate`}>
-                {rec.riceName}
-              </h3>
-              <p className="text-[11px] sm:text-xs text-stone-300 font-medium truncate">
-                {rec.tagline}
+              <p className="text-[11px] font-bold font-serif text-stone-900 leading-tight">
+                Organic Depo
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Floating leaf accent (desktop only — avoids clutter on mobile) */}
-        {!isMobile && (
-          <motion.div
-            animate={reduced ? {} : { rotate: [0, 10, 0], y: [0, -7, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -bottom-5 -left-5 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white flex items-center justify-center shadow-lg border-4 border-[#faf8f5] z-20"
-          >
-            <Leaf className="w-6 h-6 text-[#e9c496]" />
-          </motion.div>
-        )}
+          {/* Bottom — grain name, minimal */}
+          <div className="absolute bottom-0 left-0 right-0 p-5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d4a373] block mb-1">
+              Featured
+            </span>
+            <h3 className="font-serif font-bold text-white text-2xl leading-tight">
+              {rec.riceName}
+            </h3>
+            <p className="text-[11px] text-stone-300 tracking-wide mt-0.5">{rec.tagline}</p>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Floating leaf accent */}
+      <motion.div
+        animate={reduced ? {} : { rotate: [0, 8, 0], y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -bottom-5 -right-3 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white flex items-center justify-center shadow-xl border-4 border-[#0a1209] z-20"
+      >
+        <Leaf className="w-6 h-6 text-[#e9c496]" />
+      </motion.div>
+    </motion.div>
   );
 }
 

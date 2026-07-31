@@ -218,3 +218,22 @@ Stage Summary:
 - Hero image completely reimagined for mobile: tall immersive 60vh card at top, full-width, with overlaid seal/ratio/grain name.
 - Shared HeroImageCard component (mobile/desktop variants).
 - VLM 9/10 — "premium 2026 app hero, organic luxury".
+
+---
+Task ID: hero-100k-elevation
+Agent: main (Z.ai Code)
+Task: Improve and enhance the hero section for a $100,000 award-winning app view.
+
+Work Log:
+- VLM harsh critique of baseline identified: flat depth (card felt pasted on), disjointed typography (multiple voices), image treated as passive rectangle, tight padding, system-default micro-details.
+- Generated premium cinematic hero image (dark moody slate, dramatic side lighting, brass scoop, golden highlights).
+- Reimagined hero as FULL-BLEED CINEMATIC experience: the rice image is now the atmospheric foundation (full-bleed background with parallax + scale on scroll), content floats over it with layered depth gradients (top/bottom + side + warm radial tint + filmic noise texture).
+- Typography: single serif voice (Playfair) for all headlines. "Pristine Indian / Organic Grains" with italic gold-gradient accent word. Eyebrow uses wide tracking caps with hairline divider. Body uses light-weight warm-grey with generous letter-spacing.
+- Micro-details (jewelry-like): meal selector active state is now border-only ghost with gold accent dot + inset gold ring (no solid fill). Water ratio is minimal monospace text with droplet icon (no background badge). CTAs: primary with inner-glow + shine, secondary as ghost with hairline border. Pillars use thin-stroke icons + minimal text.
+- Layout: full-height (100svh) centered content, generous breathing room (space-y-7/8), desktop has floating glass panel (backdrop-blur-2xl, hairline border) with sticker-like seal. Scroll hint at bottom (animated line + "Scroll" label).
+- Applied VLM refinement: changed active meal selector from solid green fill to elegant border-only ghost state with gold accent dot — VLM confirmed 9/10 "jewelry-like, significantly more refined."
+- Verified: lint clean, all routes 200, no errors. VLM mobile 8.5/10 ("D&AD/Pencil-worthy, treats rice with reverence of fragrance or timepieces, Aesop/Le Labo level"), refined selector 9/10, desktop 8.5/10 ("award-winning luxury, aspirational lifestyle experience").
+
+Stage Summary:
+- Hero elevated to $100k standard: full-bleed cinematic image, layered depth (gradients + noise + warm tint), single-voice serif typography, jewelry-like micro-details (ghost selectors, minimal text labels, hairline borders), generous breathing room, floating glass panel.
+- VLM: "D&AD/Pencil-worthy... would sit between Maison Margiela perfume and Mariage Frères tea."
