@@ -152,6 +152,57 @@ export const blurRevealScale: Variants = {
   },
 };
 
+/* ============================================================
+   CLEAN REVEAL VARIANTS — no blur, crisp & editorial.
+   Lighter on GPU; use translateY + opacity + optional scale.
+   ============================================================ */
+
+/** Clean rise — opacity + translateY only (no blur). */
+export const cleanRise: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: EASE.out },
+  },
+};
+
+/** Clean rise with subtle scale — for cards/images. */
+export const cleanRiseScale: Variants = {
+  hidden: { opacity: 0, y: 28, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.8, ease: EASE.out },
+  },
+};
+
+/** Clean rise with delay helper */
+export const cleanRiseAt = (delay = 0): Variants => ({
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay, ease: EASE.out },
+  },
+});
+
+/** Image crossfade — smooth opacity + scale, no blur, no shimmer. */
+export const imageCrossfade: Variants = {
+  hidden: { opacity: 0, scale: 1.02 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.8, ease: EASE.out },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.99,
+    transition: { duration: 0.4, ease: EASE.soft },
+  },
+};
+
 /** Blur reveal with delay helper */
 export const blurRevealAt = (delay = 0): Variants => ({
   hidden: { opacity: 0, y: 28, filter: "blur(14px)" },

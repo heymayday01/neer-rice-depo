@@ -181,3 +181,20 @@ Stage Summary:
 - Scroll progress indicator (gradient, spring-filled).
 - App metadata: theme color, apple web app, viewport-fit cover.
 - Award-winning 2026 app feel confirmed by VLM.
+
+---
+Task ID: hero-redesign-clean-reveal
+Agent: main (Z.ai Code)
+Task: Fix hero section, fix hero image, replace shimmer fade with better alternative, improve vibe.
+
+Work Log:
+- Identified issues: hero used blur-filter reveals (GSAP filter:"blur(8px/12px)" + framer-motion blurReveal variants) which felt heavy/janky; image swap used opacity 0.3→1 which looked like a shimmer fade; overall vibe too busy.
+- Added CLEAN REVEAL variants to motion foundation: cleanRise (opacity+y, no blur), cleanRiseScale (opacity+y+scale), cleanRiseAt (delayed), imageCrossfade (opacity+scale crossfade, no blur, no shimmer).
+- Redesigned hero: replaced ALL blur-filter GSAP timeline with clean translateY+opacity reveals (crisp, editorial, GPU-light). Replaced image shimmer fade with imageCrossfade variant (smooth opacity+scale, no blur). Softened background gradients (lower opacity blobs, bg-aurora at 70%). Refined image card gradient (from-[#0a1209]/60 instead of stone-950/75 — softer, more editorial). Replaced text-gold-shimmer on "& Heirloom Grains" with a static gradient bg-clip-text (no animation, cleaner).
+- Value pillars: switched from blurReveal to cleanRise (no blur on scroll reveal).
+- Verified: lint clean, all routes 200, no errors. Agent Browser mobile + desktop. VLM: mobile hero 9/10 ("exceptionally clean and editorial... polished 2026 aesthetic"), desktop hero 9/10 ("clean and editorial, no artificial shimmer effects, highly polished"). Image crossfade on meal switch confirmed clean (no shimmer/blur artifacts).
+
+Stage Summary:
+- Hero fully redesigned: clean translateY+opacity reveals (no blur), image crossfade (no shimmer), softer editorial gradients, static gradient text on accent word.
+- New motion variants: cleanRise, cleanRiseScale, cleanRiseAt, imageCrossfade.
+- VLM 9/10 on both mobile and desktop — "clean, editorial, premium 2026 app".

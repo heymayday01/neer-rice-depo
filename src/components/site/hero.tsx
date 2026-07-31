@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import {
@@ -16,12 +16,13 @@ import {
 } from "lucide-react";
 import {
   EASE,
-  DURATION,
   SPRING,
   swapUp,
   hoverLift,
   tapPress,
-  blurReveal,
+  cleanRise,
+  cleanRiseScale,
+  imageCrossfade,
   staggerContainer,
 } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
@@ -89,44 +90,43 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const heroRootRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
-  // GSAP timeline entrance — orchestrates the whole hero on mount
+  // GSAP timeline entrance — clean translateY + opacity (no blur)
   useLayoutEffect(() => {
     if (reduced || !heroRootRef.current) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.from(".hero-badge", {
-        y: 18,
+        y: 16,
         opacity: 0,
-        filter: "blur(8px)",
-        stagger: 0.08,
-        duration: 0.7,
+        stagger: 0.07,
+        duration: 0.6,
       })
         .from(
           ".hero-headline-line",
-          { y: 40, opacity: 0, filter: "blur(12px)", stagger: 0.12, duration: 0.9 },
-          "-=0.4"
-        )
-        .from(".hero-desc", { y: 20, opacity: 0, duration: 0.6 }, "-=0.5")
-        .from(
-          ".hero-selector",
-          { y: 28, opacity: 0, scale: 0.97, duration: 0.7 },
+          { y: 32, opacity: 0, stagger: 0.1, duration: 0.8 },
           "-=0.35"
         )
-        .from(".hero-cta", { y: 18, opacity: 0, stagger: 0.08, duration: 0.55 }, "-=0.4")
+        .from(".hero-desc", { y: 16, opacity: 0, duration: 0.55 }, "-=0.45")
+        .from(
+          ".hero-selector",
+          { y: 24, opacity: 0, duration: 0.65 },
+          "-=0.3"
+        )
+        .from(".hero-cta", { y: 14, opacity: 0, stagger: 0.07, duration: 0.5 }, "-=0.35")
         .from(
           ".hero-image-card",
-          { x: 30, opacity: 0, scale: 0.96, duration: 0.9 },
-          "-=1.1"
+          { y: 24, opacity: 0, duration: 0.85 },
+          "-=1.0"
         )
         .from(
           ".hero-seal",
-          { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.8)" },
-          "-=0.5"
+          { scale: 0, opacity: 0, duration: 0.45, ease: "back.out(1.7)" },
+          "-=0.45"
         )
         .from(
           ".hero-bottom-info",
-          { y: 20, opacity: 0, duration: 0.5 },
-          "-=0.3"
+          { y: 16, opacity: 0, duration: 0.45 },
+          "-=0.25"
         );
     }, heroRootRef);
     return () => ctx.revert();
@@ -137,26 +137,25 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const blobY1 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const blobY2 = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 60]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const blobY1 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const blobY2 = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 50]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 30]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const parallax = (mv: typeof imageY) => (reduced ? 0 : mv);
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Layered background */}
-      <div className="absolute inset-0 bg-[#faf8f5] bg-aurora" />
-      <div className="absolute inset-0 bg-dotgrid opacity-[0.1] pointer-events-none" />
+      {/* Layered background — softer, more editorial */}
+      <div className="absolute inset-0 bg-[#faf8f5]" />
+      <div className="absolute inset-0 bg-aurora opacity-70 pointer-events-none" />
       <motion.div
         style={{ y: parallax(blobY1) }}
-        className="absolute -top-24 right-1/4 w-[28rem] h-[28rem] bg-[#d4a373]/12 rounded-full blur-[120px] pointer-events-none animate-gradient-drift"
+        className="absolute -top-24 right-1/4 w-[28rem] h-[28rem] bg-[#d4a373]/10 rounded-full blur-[120px] pointer-events-none animate-gradient-drift"
       />
       <motion.div
         style={{ y: parallax(blobY2) }}
-        className="absolute bottom-0 -left-10 w-[26rem] h-[26rem] bg-[#2d5a27]/10 rounded-full blur-[120px] pointer-events-none animate-gradient-drift-slow"
+        className="absolute bottom-0 -left-10 w-[26rem] h-[26rem] bg-[#2d5a27]/8 rounded-full blur-[120px] pointer-events-none animate-gradient-drift-slow"
       />
 
       <motion.div
@@ -180,14 +179,16 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
               </span>
             </div>
 
-            {/* Headline — GSAP staggered line reveal with gradient text fill */}
+            {/* Headline — clean rise with gradient text fill */}
             <h1 className="font-brand font-black leading-[1.05] tracking-wide uppercase text-[1.95rem] xs:text-3xl sm:text-5xl lg:text-[4.1rem]">
               <span className="hero-headline-line block text-transparent bg-clip-text bg-gradient-to-br from-[#1f431e] via-[#c88a4a] to-[#1f431e]">
                 Neer Rice Depo
               </span>
               <span className="hero-headline-line block font-serif italic text-stone-800 font-semibold text-xl xs:text-2xl sm:text-4xl lg:text-5xl tracking-normal normal-case mt-3 sm:mt-4 mb-1">
                 Pristine Indian Organic{" "}
-                <span className="text-gold-shimmer">&amp; Heirloom Grains</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c88a4a] via-[#f5d9b0] to-[#c88a4a]">
+                  &amp; Heirloom Grains
+                </span>
               </span>
             </h1>
 
@@ -295,20 +296,20 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             </div>
           </div>
 
-          {/* Right feature card — frosted refractive + parallax image */}
+          {/* Right feature card — clean editorial image with crossfade */}
           <div className="hero-image-card lg:col-span-5 relative">
-            <div className="relative rounded-[1.75rem] overflow-hidden shadow-luxe-lg group refract-edge bg-white">
+            <div className="relative rounded-[1.75rem] overflow-hidden shadow-luxe-lg group refract-edge bg-[#f5f2ed]">
               <motion.div
-                style={{ y: parallax(imageY), scale: reduced ? 1 : imageScale }}
+                style={{ y: parallax(imageY) }}
                 className="relative"
               >
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={rec.image}
-                    initial={{ opacity: 0.3, scale: 1.04 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: DURATION.slow, ease: EASE.out }}
+                    variants={imageCrossfade}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
                     className="w-full h-72 sm:h-96 lg:h-[440px]"
                   >
                     <img
@@ -320,12 +321,13 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                   </motion.div>
                 </AnimatePresence>
               </motion.div>
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/75 via-stone-900/10 to-transparent pointer-events-none" />
+              {/* Refined gradient — softer, editorial */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209]/60 via-[#0a1209]/10 to-transparent pointer-events-none" />
 
-              {/* Official seal — frosted glass pill */}
+              {/* Official seal — clean frosted pill */}
               <motion.div
-                animate={reduced ? {} : { y: [0, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                animate={reduced ? {} : { y: [0, -4, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
                 className="hero-seal absolute top-4 right-4 glass refract-edge p-2 pr-4 rounded-2xl flex items-center gap-3 max-w-[calc(100%-2rem)]"
               >
                 <img
@@ -343,7 +345,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 </div>
               </motion.div>
 
-              {/* Bottom info — frosted glass */}
+              {/* Bottom info — clean frosted glass */}
               <div className="hero-bottom-info absolute bottom-4 left-4 right-4 glass refract-edge p-4 rounded-2xl">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
@@ -372,9 +374,9 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           </div>
         </div>
 
-        {/* Value pillars — scroll blur reveal stagger */}
+        {/* Value pillars — clean rise stagger (no blur) */}
         <motion.div
-          variants={staggerContainer(0.08)}
+          variants={staggerContainer(0.07)}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
@@ -383,7 +385,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           {PILLARS.map((p) => (
             <motion.div
               key={p.title}
-              variants={blurReveal}
+              variants={cleanRise}
               className="flex items-start gap-3 glass refract-edge p-3.5 rounded-2xl hover:-translate-y-1 transition-transform duration-300"
             >
               <div className="p-2.5 bg-[#1f431e]/10 text-[#1f431e] rounded-xl shrink-0">
