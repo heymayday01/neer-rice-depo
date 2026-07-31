@@ -264,7 +264,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={handleAdd}
-                className={`shine-on-hover w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
+                className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
                   added
                     ? "bg-[#2d5a27] text-white"
                     : "bg-[#1f431e] hover:bg-[#16331a] text-white shadow-sm"

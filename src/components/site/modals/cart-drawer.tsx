@@ -230,7 +230,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={handleCheckout}
-                className="btn-primary-glow shine-on-hover w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 Proceed to Checkout
                 <ArrowRight className="w-4 h-4 text-[#e9c496]" />

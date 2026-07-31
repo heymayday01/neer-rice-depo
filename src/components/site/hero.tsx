@@ -241,7 +241,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="btn-primary-glow shine-on-hover px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="btn-primary-glow px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
               >
                 <BrainCircuit className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
                 Ask AI Grain Sommelier

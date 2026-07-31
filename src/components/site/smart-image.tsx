@@ -10,10 +10,9 @@ interface SmartImageProps {
 }
 
 /**
- * Reliable image with shimmer-skeleton placeholder.
+ * Reliable image with loading placeholder.
  * Image is always rendered (no opacity-0) to ensure browsers load it.
- * Shimmer overlay sits on top and fades out when loaded.
- * Hover zoom via CSS transition.
+ * Simple fade-in on load, no shine/shimmer effects.
  */
 export function SmartImage({
   src,
@@ -34,16 +33,15 @@ export function SmartImage({
         decoding="async"
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
-        className={`w-full h-full object-cover transition-transform duration-700 ${
-          hoverScale ? "hover:scale-110" : ""
-        }`}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${
+          loaded && !errored ? "opacity-100" : "opacity-0"
+        } ${hoverScale ? "transition-transform duration-700 hover:scale-110" : ""}`}
       />
 
-      {/* Shimmer overlay — sits on top, fades out when loaded */}
+      {/* Loading placeholder — solid dark, no shimmer */}
       {!loaded && !errored && (
         <div
-          className="absolute inset-0 shimmer-skeleton transition-opacity duration-500 pointer-events-none"
-          style={{ opacity: 1 }}
+          className="absolute inset-0 bg-white/[0.03] pointer-events-none"
           aria-hidden
         />
       )}

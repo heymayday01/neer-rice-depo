@@ -326,7 +326,7 @@ export function CheckoutModal({
               whileTap={tapPress}
               onClick={placeOrder}
               disabled={placing}
-              className="btn-primary-glow shine-on-hover w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] disabled:opacity-[0.38] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] disabled:opacity-[0.38] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               {placing ? (
                 <>

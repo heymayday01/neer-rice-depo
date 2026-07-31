@@ -255,7 +255,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
               onClick={next}
               whileTap={{ scale: 0.97 }}
               transition={SPRING.snappy}
-              className="shine-on-hover relative w-full h-12 rounded-xl bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1f431e]/30 transition-colors cursor-pointer overflow-hidden"
+              className="relative w-full h-12 rounded-xl bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1f431e]/30 transition-colors cursor-pointer overflow-hidden"
               style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
             >
               <AnimatePresence mode="wait">
