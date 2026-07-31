@@ -22,9 +22,6 @@ import {
   DURATION,
   SPRING,
   cleanRise,
-  staggerContainer,
-  hoverLift,
-  tapPress,
 } from "@/lib/motion";
 
 interface ProductCatalogProps {

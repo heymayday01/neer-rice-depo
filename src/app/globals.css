@@ -155,6 +155,21 @@
   html {
     scroll-padding-top: 5rem;
   }
+
+  /* GPU promotion for animated elements — reduces jank */
+  .glass,
+  .glass-dark,
+  .pill,
+  img[loading="eager"] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  /* Contain layout for scrolling sections */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
 }
 
 /* ---------- App-grade: no scrollbars anywhere (clean app feel) ---------- */

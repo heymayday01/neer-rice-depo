@@ -10,7 +10,6 @@ import {
   Sprout,
   HeartHandshake,
   ArrowRight,
-  CloudSun,
   Compass,
   Leaf,
   Droplets,

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sprout,
   Scale,
   Droplets,
   HeartHandshake,

@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Home, ShoppingBag, Sparkles, Package, BarChart2 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
-import { SPRING, DURATION, EASE } from "@/lib/motion";
+import { SPRING, EASE } from "@/lib/motion";
 import { useCallback, useState } from "react";
 
 interface MobileDockProps {

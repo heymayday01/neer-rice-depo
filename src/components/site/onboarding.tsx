@@ -191,9 +191,9 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
             <AnimatePresence mode="wait">
               <motion.h2
                 key={current.id}
-                initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -12, filter: "blur(6px)" }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.6, ease: EASE.out }}
                 className="font-serif font-bold text-3xl sm:text-5xl leading-[1.05] mb-4"
               >
