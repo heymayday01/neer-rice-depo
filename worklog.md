@@ -237,3 +237,23 @@ Work Log:
 Stage Summary:
 - Hero elevated to $100k standard: full-bleed cinematic image, layered depth (gradients + noise + warm tint), single-voice serif typography, jewelry-like micro-details (ghost selectors, minimal text labels, hairline borders), generous breathing room, floating glass panel.
 - VLM: "D&AD/Pencil-worthy... would sit between Maison Margiela perfume and Mariage Frères tea."
+
+---
+Task ID: cinematic-continuity
+Agent: main (Z.ai Code)
+Task: Keep improving the new cinematic design style, make continuity feel across the entire app.
+
+Work Log:
+- VLM identified jarring disconnect: hero was cinematic dark luxury, catalog/grain-wisdom were flat light e-commerce. Continuity broken.
+- Unified entire app to the hero's cinematic design language: dark surfaces (#0a1209), gold accents (#d4a373), white/10 hairline borders, wide-tracked caps eyebrows, font-serif headlines, ghost/border-only pills, monospace meta text, light-weight body copy.
+- Product catalog: redesigned as dark section with ambient glows, editorial eyebrow ("The Collection") + serif title, ghost-pill category filters (border-only with gold dot), jewelry-like filter bar, cinematic dark promo card.
+- Product cards: dark glass surface (from-white/[0.04]), image with dark gradient, minimal hairline labels (−11% in gold border, grain type in mono text), ghost weight selectors with inset gold ring, serif white prices, gold-accent meta. Removed heavy badges for minimal text.
+- Grain wisdom: dark section with ambient glow, editorial eyebrow + serif title, ghost-pill tabs with 01/02 numbering, cinematic dark content panel with gold-bordered icon, mono bullet numbers, gold-tinted "Did You Know" panel.
+- Page wrapper: bg changed from #faf8f5 to #0a1209 for full continuity.
+- Replaced blurReveal with cleanRise throughout for consistent motion language.
+- Verified: lint clean, all routes 200, no errors. VLM continuity 9/10 mobile ("highly continuous and cinematic, unified visual language"), catalog 9/10, heritage hub 9/10, desktop 9/10 ("one cohesive cinematic luxury experience").
+
+Stage Summary:
+- Full app unified to cinematic dark luxury language matching the $100k hero.
+- Consistent tokens: #0a1209 surfaces, #d4a373 gold accents, white/10 hairlines, serif headlines, ghost pills, monospace meta, wide-tracked eyebrows.
+- VLM 9/10 continuity across all sections on mobile and desktop.
