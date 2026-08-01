@@ -907,3 +907,37 @@ Stage Summary:
 - Duplicate AnimatePresence import removed.
 - Cart + checkout + payment flow verified end-to-end.
 - Lint clean, build 200, zero errors.
+
+---
+Task ID: checkout-ux-enhance
+Agent: main (Z.ai Code)
+Task: Improve the secure checkout page — add everything missing for a user-friendly UI.
+
+Work Log:
+- Audited the old checkout: it was a single-step flat form (items text list + 7 inputs + 4 payment buttons + place order). Missing: progress, order summary with thumbnails, inline coupon, delivery options, ETA, payment-specific fields, trust signals, review step, address labels, terms, loyalty, mobile summary.
+- REDESIGNED as a 4-STEP WIZARD with sticky sidebar:
+  - Step 1 INFORMATION: Contact (email/phone with validation + checkmarks) + Shipping address (fullName/address/city/state/pincode) + address label pills (Home/Work/Other) + delivery instructions textarea + save-address checkbox.
+  - Step 2 DELIVERY: 3 options (Standard FREE / Express ₹49 "Fastest" / Farm Pickup FREE) each with ETA date range + Heritage Gift Wrap add-on (₹49) + vacuum-seal freshness info card.
+  - Step 3 PAYMENT: 4 methods (UPI/Card/NetBanking/COD) with DYNAMIC method-specific fields (UPI ID, card number/name/expiry/CVV with auto-formatting, bank dropdown, COD note) + billing-same-as-shipping toggle + newsletter opt-in.
+  - Step 4 REVIEW: editable cards for Deliver To / Delivery Method / Payment (with masked card) + delivery note quote + terms agreement checkbox (gates Place Order).
+- PROGRESS STEPPER: 4 circular icons with labels, animated connector lines (scaleX), completed=checkmark, active=filled green, disabled=grey. Clickable to jump back.
+- STICKY ORDER SUMMARY SIDEBAR (desktop, right column): item THUMBNAILS with qty badges, inline COUPON input + Apply/Remove (try NEER10 hint), price breakdown (subtotal/discount/delivery/gift wrap/total incl. taxes), savings badge, loyalty-points-earned badge, estimated-delivery ETA card, trust footer.
+- MOBILE: collapsible order-summary card at top (tap to expand → same full OrderSummary) + sticky bottom bar with running total + Back/Continue/Place Order + trust badges row (SSL/Returns/Refund/Farm-Direct).
+- TOP SECURE BAR: lock icon + "Secure Checkout" + "256-bit SSL encrypted" + Back-to-cart link.
+- INLINE VALIDATION: required fields show red border + error text; valid fields show green border + checkmark badge.
+- SUCCESS SCREEN: animated check + "Order Confirmed!" + tracking-ID card with COPY button + order total + ETA + 3-step "what happens next" (Packed → Out for Delivery → Delivered) + Track My Order / Continue Shopping buttons. Confetti celebration retained.
+- TRANSITIONS: AnimatePresence step swaps (swapUp spring), animated stepper connectors, spring buttons (hoverLift/tapPress), mobile summary height animation.
+- Backend: sends deliveryMethod, orderNote, giftWrap, addressLabel, eta alongside existing fields — API already ignores extras gracefully (confirmed POST /api/orders 200).
+- VERIFIED via Agent Browser (desktop 1440 + mobile iPhone 14): add-to-cart → cart → checkout → fill form → Continue → Step 2 (select Express) → Continue → Step 3 (switch UPI/Card, verify dynamic fields) → Continue → Step 4 (accept terms) → Place Order → success screen with tracking ID. POST /api/orders 200, Prisma INSERT succeeded. Mobile collapsible summary + coupon apply verified. VLM (thinking mode) reconstructed the full modal accurately confirming all features render. Lint clean, zero runtime errors.
+
+Stage Summary:
+- Multi-step secure checkout wizard (Information → Delivery → Payment → Review) with progress stepper.
+- Sticky order-summary sidebar with item thumbnails, inline coupon, full price breakdown, loyalty points, savings, ETA.
+- Delivery method selection with ETA dates + gift wrap add-on.
+- Payment methods with dynamic method-specific fields (UPI ID, card with auto-format, bank dropdown).
+- Address labels (Home/Work/Other), delivery instructions, save-address, billing-same toggle, newsletter opt-in.
+- Review step with editable cards + terms agreement gating Place Order.
+- Mobile collapsible order summary + sticky bottom CTA with running total + trust badges.
+- Enhanced success screen: copy tracking ID, 3-step "what's next", ETA, track/continue actions.
+- Inline field validation with checkmarks. Trust signals throughout (SSL, encrypted, returns, refund, farm-direct).
+- Lint clean, POST /api/orders 200 confirmed, zero runtime errors.
