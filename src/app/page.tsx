@@ -164,7 +164,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a1209] font-sans text-stone-100 antialiased">
+    <div className="min-h-screen flex flex-col bg-[#0a0f0a] font-sans text-stone-100 antialiased">
       <ScrollProgress />
       <Header
         searchQuery={searchQuery}

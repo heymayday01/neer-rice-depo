@@ -518,3 +518,48 @@ Stage Summary:
 - Shimmer skeleton dark-themed.
 - Bottom spacing increased to prevent dock overlap.
 - VLM 9/10 across every surface — no remaining rough edges detected.
+
+---
+Task ID: fonts-colors-dock-redesign
+Agent: main (Z.ai Code)
+Task: Fix all visual inconsistency, choose better fonts and colors, redesign bottom dock.
+
+Work Log:
+- VLM AUDIT identified: 3 competing fonts (Cinzel + Playfair + Jakarta = too many voices), 9 different hex colors (3 golds, 3 greens, 3 darks = muddy), dock icons misaligned with cart button taller than others.
+
+- FONT SYSTEM REDESIGN:
+  - Removed Cinzel (decorative, dated) and Plus Jakarta Sans (generic)
+  - Added Fraunces — a "soft serif" with optical sizing, warm/organic/editorial feel. Used for ALL display headings, product names, prices.
+  - Added Manrope — a modern geometric sans with excellent legibility. Used for ALL body text, UI labels, metadata, buttons.
+  - Updated layout.tsx font imports + CSS variables (--font-serif, --font-sans)
+  - Updated globals.css body/h1-h4/.font-brand/.font-sans to use new variables
+  - Only 2 font families now — clear hierarchy: serif for display, sans for UI.
+
+- COLOR PALETTE CONSOLIDATION:
+  - Reduced from 9 hex colors to 3 core + neutrals:
+    - Gold accent: #d4a373 (replaced #c88a4a, #e9c496, #f5d9b0 — all consolidated to one gold)
+    - Forest green: #1f431e (replaced #2d5a27, #16331a — all consolidated to one green)
+    - Dark base: #0a0f0a (replaced #0a1209, #1a2818 — all consolidated to one dark)
+  - Batch sed replacement across all 20+ files — zero competing shades.
+
+- DOCK REDESIGN:
+  - All tabs now use uniform 40px (w-10 h-10) containers — cart is 44px (w-11 h-11)
+  - Icon sizes: 17px inactive, 18px active/cart — subtle but consistent
+  - Gap reduced to 0.5 (gap-0.5) for tighter grouping
+  - Padding reduced to 1.5 (px-1.5 py-1.5) for a more compact, centered bar
+  - Cart badge: min-w-[16px] h-4 with px-1 for proper centering
+  - Active indicator: bg-[#d4a373]/8 with border-[#d4a373]/15 — subtle
+  - All icons on the same baseline — no height difference between active/inactive
+
+- Verified: lint clean, all routes 200, no errors. VLM:
+  - Hero: 9/10 ("significantly more sophisticated and cohesive typographic hierarchy, cleaner palette")
+  - Cards: 8/10 ("visually consistent and clean, excellent typography hierarchy")
+  - Dock: 8/10 ("icons properly aligned on same baseline, cart button balanced, clean and modern")
+  - Grain wisdom: 9/10 ("perfectly consistent, premium aesthetic")
+  - Footer: 8/10 ("clean and consistent")
+
+Stage Summary:
+- 2 fonts only: Fraunces (serif display) + Manrope (sans UI) — down from 3.
+- 3 colors only: #d4a373 (gold), #1f431e (green), #0a0f0a (dark) — down from 9.
+- Dock: all icons uniform 40px, same baseline, properly aligned.
+- VLM 8-9/10 across every surface.

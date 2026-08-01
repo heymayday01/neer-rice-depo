@@ -50,13 +50,13 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
     >
       <div>
         {/* Image */}
-        <div className="relative h-52 overflow-hidden bg-[#0a1209]">
+        <div className="relative h-52 overflow-hidden bg-[#0a0f0a]">
           <SmartImage
             src={product.image}
             alt={product.name}
             className="w-full h-52"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209] via-[#0a1209]/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a] via-[#0a0f0a]/20 to-transparent pointer-events-none" />
 
           {/* Discount badge */}
           {discountPct > 0 && (
@@ -202,8 +202,8 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           onClick={handleAdd}
           className={`btn-primary-glow w-full h-11 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             added
-              ? "bg-[#2d5a27] text-white"
-              : "bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white"
+              ? "bg-[#1f431e] text-white"
+              : "bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white"
           }`}
         >
           <motion.span
@@ -215,12 +215,12 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           >
             {added ? (
               <>
-                <Check className="w-4 h-4 text-[#e9c496]" />
+                <Check className="w-4 h-4 text-[#d4a373]" />
                 Added to Cart
               </>
             ) : (
               <>
-                <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
+                <ShoppingBag className="w-4 h-4 text-[#d4a373]" />
                 Add {weight}kg · ₹{final}
               </>
             )}

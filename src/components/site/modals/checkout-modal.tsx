@@ -109,7 +109,7 @@ export function CheckoutModal({
       clear();
       toast.success("Order placed successfully!");
       // Celebration confetti burst — 60 particles, gravity 1.2, 800ms
-      const colors = ["#1f431e", "#d4a373", "#f5d9b0", "#2d5a27"];
+      const colors = ["#1f431e", "#d4a373", "#d4a373", "#1f431e"];
       confetti({
         particleCount: 60,
         spread: 70,
@@ -209,7 +209,7 @@ export function CheckoutModal({
                   close();
                   onOpenOrderTracker();
                 }}
-                className="px-5 py-2.5 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#16331a] cursor-pointer flex items-center gap-2"
+                className="px-5 py-2.5 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#1f431e] cursor-pointer flex items-center gap-2"
               >
                 <Package className="w-4 h-4" />
                 Track Order
@@ -326,7 +326,7 @@ export function CheckoutModal({
               whileTap={tapPress}
               onClick={placeOrder}
               disabled={placing}
-              className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] disabled:opacity-[0.38] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] disabled:opacity-[0.38] text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               {placing ? (
                 <>

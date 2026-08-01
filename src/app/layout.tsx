@@ -1,29 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { MotionProvider } from "@/components/site/motion-provider";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
+// Fraunces — a "soft serif" with optical sizing; warm, organic, editorial.
+// Used for all display headings, product names, prices.
+const fraunces = Fraunces({
+  variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["600", "700", "800", "900"],
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["400", "500", "600", "700", "900"],
   style: ["normal", "italic"],
   display: "swap",
 });
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+// Manrope — a modern geometric sans with excellent legibility.
+// Used for all body text, UI labels, metadata, buttons.
+const manrope = Manrope({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -66,7 +63,7 @@ export const viewport: Viewport = {
   maximumScale: 1, // prevent zoom for app feel
   userScalable: false, // app-like: no pinch zoom
   viewportFit: "cover", // safe-area insets
-  themeColor: "#faf8f5",
+  themeColor: "#0a0f0a",
 };
 
 export default function RootLayout({
@@ -77,7 +74,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${cinzel.variable} ${playfair.variable} ${jakarta.variable} antialiased`}
+        className={`${fraunces.variable} ${manrope.variable} antialiased`}
       >
         <MotionProvider>
           {children}

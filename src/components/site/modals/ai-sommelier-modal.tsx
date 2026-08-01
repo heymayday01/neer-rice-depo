@@ -94,9 +94,9 @@ export function AISommelierModal({ open, onClose }: Props) {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-3xl">
-        <DialogHeader className="px-6 pt-6 pb-3 bg-gradient-to-br from-[#1f431e] to-[#0a1209] text-white">
+        <DialogHeader className="px-6 pt-6 pb-3 bg-gradient-to-br from-[#1f431e] to-[#0a0f0a] text-white">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
-            <BrainCircuit className="w-5 h-5 text-[#e9c496]" strokeWidth={1.5} />
+            <BrainCircuit className="w-5 h-5 text-[#d4a373]" strokeWidth={1.5} />
             AI Grain Sommelier
           </DialogTitle>
           <DialogDescription className="text-stone-300 text-xs">
@@ -109,7 +109,7 @@ export function AISommelierModal({ open, onClose }: Props) {
           {/* Input */}
           <div className="flex gap-2">
             <div className="flex-1 flex items-center gap-2 bg-stone-100 rounded-xl px-3">
-              <BrainCircuit className="w-4 h-4 text-[#c88a4a]" strokeWidth={1.5} />
+              <BrainCircuit className="w-4 h-4 text-[#d4a373]" strokeWidth={1.5} />
               <input
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -121,7 +121,7 @@ export function AISommelierModal({ open, onClose }: Props) {
             <button
               onClick={() => ask(prompt)}
               disabled={loading || !prompt.trim()}
-              className="px-4 py-3 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#16331a] disabled:opacity-60 cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-3 bg-[#1f431e] text-white rounded-xl text-xs font-bold hover:bg-[#1f431e] disabled:opacity-60 cursor-pointer flex items-center gap-1.5"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -142,7 +142,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                     setPrompt(s);
                     ask(s);
                   }}
-                  className="px-3 py-1.5 bg-[#c88a4a]/10 hover:bg-[#c88a4a]/20 text-[#1f431e] border border-[#c88a4a]/30 rounded-full text-[11px] font-bold transition-all cursor-pointer"
+                  className="px-3 py-1.5 bg-[#d4a373]/10 hover:bg-[#d4a373]/20 text-[#1f431e] border border-[#d4a373]/30 rounded-full text-[11px] font-bold transition-all cursor-pointer"
                 >
                   {s}
                 </button>
@@ -201,8 +201,8 @@ export function AISommelierModal({ open, onClose }: Props) {
                         onClick={() => handleAdd(p.id)}
                         className={`px-3 py-2 rounded-lg text-[11px] font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                           addedIds.has(p.id)
-                            ? "bg-[#2d5a27] text-white"
-                            : "bg-[#1f431e] text-white hover:bg-[#16331a]"
+                            ? "bg-[#1f431e] text-white"
+                            : "bg-[#1f431e] text-white hover:bg-[#1f431e]"
                         }`}
                       >
                         {addedIds.has(p.id) ? (
@@ -267,7 +267,7 @@ function InfoCard({
   return (
     <div className="bg-white/[0.03] rounded-2xl p-3.5 border border-white/8 space-y-1.5">
       <div className="flex items-center gap-1.5 text-[#1f431e]">
-        <Icon className="w-3.5 h-3.5 text-[#c88a4a]" />
+        <Icon className="w-3.5 h-3.5 text-[#d4a373]" />
         <span className="text-[10px] font-extrabold uppercase tracking-widest">
           {title}
         </span>

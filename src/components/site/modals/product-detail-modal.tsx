@@ -65,7 +65,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-[#0a1209]/90 hover:bg-[#0a1209] rounded-full border border-white/10 shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2 bg-[#0a0f0a]/90 hover:bg-[#0a0f0a] rounded-full border border-white/10 shadow-sm cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -73,7 +73,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Image side */}
-          <div className="relative h-64 md:h-full min-h-[320px] bg-[#0a1209]">
+          <div className="relative h-64 md:h-full min-h-[320px] bg-[#0a0f0a]">
             <img
               src={product.image}
               alt={product.name}
@@ -101,7 +101,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
           >
           <StaggerItem>
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#c88a4a]">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#d4a373]">
                 {product.originRegion}
               </span>
               <h2 className="text-2xl font-serif font-bold text-white mt-1">
@@ -123,7 +123,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
               </div>
               <span className="text-stone-300">|</span>
               <span className="text-stone-500 font-medium flex items-center gap-1">
-                <Flower2 className="w-3.5 h-3.5 text-[#c88a4a]" strokeWidth={1.5} /> Aroma{" "}
+                <Flower2 className="w-3.5 h-3.5 text-[#d4a373]" strokeWidth={1.5} /> Aroma{" "}
                 <strong className="text-white">{product.aromaLevel}/5</strong>
               </span>
               <span className="text-stone-300">|</span>
@@ -177,7 +177,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
             {/* Nutrition */}
             <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/10/80">
               <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 mb-2.5 flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-[#c88a4a]" />
+                <Award className="w-3.5 h-3.5 text-[#d4a373]" />
                 Nutrition Facts (per 100g)
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5 text-xs">
@@ -266,8 +266,8 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 onClick={handleAdd}
                 className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
                   added
-                    ? "bg-[#2d5a27] text-white"
-                    : "bg-[#1f431e] hover:bg-[#16331a] text-white shadow-sm"
+                    ? "bg-[#1f431e] text-white"
+                    : "bg-[#1f431e] hover:bg-[#1f431e] text-white shadow-sm"
                 }`}
               >
                 <motion.span
@@ -279,12 +279,12 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 >
                   {added ? (
                     <>
-                      <Check className="w-4 h-4 text-[#e9c496]" />
+                      <Check className="w-4 h-4 text-[#d4a373]" />
                       Added {weight}kg to Cart!
                     </>
                   ) : (
                     <>
-                      <ShoppingBag className="w-4 h-4 text-[#e9c496]" />
+                      <ShoppingBag className="w-4 h-4 text-[#d4a373]" />
                       Add {weight}kg Bag · ₹{final}
                     </>
                   )}

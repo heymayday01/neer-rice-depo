@@ -68,7 +68,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
-      <DrawerContent className="bg-[#0a1209] border-t border-white/10 max-h-[88vh] rounded-t-3xl">
+      <DrawerContent className="bg-[#0a0f0a] border-t border-white/10 max-h-[88vh] rounded-t-3xl">
         {/* Drag handle */}
         <div className="mx-auto mt-3 mb-1 w-10 h-1 rounded-full bg-white/15 shrink-0" />
 
@@ -230,10 +230,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={handleCheckout}
-                className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="btn-primary-glow w-full py-3.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 Proceed to Checkout
-                <ArrowRight className="w-4 h-4 text-[#e9c496]" />
+                <ArrowRight className="w-4 h-4 text-[#d4a373]" />
               </motion.button>
             </div>
           </>

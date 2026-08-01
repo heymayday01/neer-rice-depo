@@ -123,8 +123,8 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           loading="eager"
         />
         {/* Strong depth gradients for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/85 via-[#0a1209]/65 to-[#0a1209]/97" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1209]/90 via-[#0a1209]/50 to-[#0a1209]/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0a]/85 via-[#0a0f0a]/65 to-[#0a0f0a]/97" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f0a]/90 via-[#0a0f0a]/50 to-[#0a0f0a]/70" />
       </div>
 
       {/* ===== Content layer ===== */}
@@ -147,7 +147,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             {/* Headline — single serif voice, refined */}
             <h1 className="font-serif font-bold leading-[0.95] tracking-tight text-white text-[2.5rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[5.5rem]">
               <span className="hero-headline-line block">Pristine Indian</span>
-              <span className="hero-headline-line block italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#f5d9b0] to-[#d4a373]">
+              <span className="hero-headline-line block italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#d4a373] to-[#d4a373]">
                 Organic Grains
               </span>
             </h1>
@@ -241,11 +241,11 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="btn-primary-glow px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="btn-primary-glow px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
               >
-                <BrainCircuit className="w-4 h-4 text-[#e9c496] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
+                <BrainCircuit className="w-4 h-4 text-[#d4a373] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
                 Ask AI Grain Sommelier
-                <ArrowRight className="w-4 h-4 text-[#e9c496] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-[#d4a373] group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
               <motion.button
@@ -326,11 +326,11 @@ function HeroGlassPanel({
               className="absolute inset-0 w-full h-full object-cover"
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209]/80 via-transparent to-[#0a1209]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a]/80 via-transparent to-[#0a0f0a]/20" />
 
           {/* Floating official seal — dark glass sticker */}
-          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#0a1209]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#1a2818] to-[#0a1209] border border-[#d4a373]/15">
+          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#0a0f0a]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] border border-[#d4a373]/15">
               <img
                 src="/neer-logo-premium.png"
                 alt="Neer Rice Depo certified seal"
@@ -364,9 +364,9 @@ function HeroGlassPanel({
       <motion.div
         animate={reduced ? {} : { rotate: [0, 8, 0], y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -bottom-5 -right-3 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#2d5a27] text-white flex items-center justify-center shadow-xl border-4 border-[#0a1209] z-20"
+        className="absolute -bottom-5 -right-3 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#1f431e] text-white flex items-center justify-center shadow-xl border-4 border-[#0a0f0a] z-20"
       >
-        <Leaf className="w-6 h-6 text-[#e9c496]" />
+        <Leaf className="w-6 h-6 text-[#d4a373]" />
       </motion.div>
     </div>
   );
@@ -390,7 +390,7 @@ function TrustMarquee() {
         {doubled.map((item, i) => (
           <span
             key={i}
-            className="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#e9c496]"
+            className="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#d4a373]"
           >
             <Leaf className="w-3 h-3 text-[#d4a373]" />
             {item}

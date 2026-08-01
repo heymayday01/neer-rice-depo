@@ -115,7 +115,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: DURATION.base, ease: EASE.soft }}
-      className="fixed inset-0 z-[100] bg-[#0a1209] flex flex-col"
+      className="fixed inset-0 z-[100] bg-[#0a0f0a] flex flex-col"
     >
       {/* Skip ghost button (top-right) */}
       <button
@@ -144,8 +144,8 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 alt=""
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0a1209]/30 via-transparent to-[#0a1209]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1209] via-[#0a1209]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0a]/30 via-transparent to-[#0a0f0a]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a] via-[#0a0f0a]/40 to-transparent" />
             </motion.div>
           </AnimatePresence>
 
@@ -159,7 +159,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
               transition={SPRING.gentle}
               className="absolute top-6 left-6 glass-gold refract-edge rounded-2xl px-4 py-2.5 flex items-center gap-3"
             >
-              <div className="text-2xl font-black font-serif text-[#f5d9b0]">
+              <div className="text-2xl font-black font-serif text-[#d4a373]">
                 {current.stat.value}
               </div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-stone-300 leading-tight max-w-[80px]">
@@ -198,7 +198,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 className="font-serif font-bold text-3xl sm:text-5xl leading-[1.05] mb-4"
               >
                 <span className="block text-white">{current.title}</span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#f5d9b0] to-[#d4a373]">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#d4a373] to-[#d4a373]">
                   {current.titleAccent}
                 </span>
               </motion.h2>
@@ -243,7 +243,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                         delay: i === step ? 0.1 : 0,
                       }}
                       style={{ originX: 0 }}
-                      className="h-full rounded-full bg-gradient-to-r from-[#d4a373] to-[#f5d9b0]"
+                      className="h-full rounded-full bg-gradient-to-r from-[#d4a373] to-[#d4a373]"
                     />
                   </div>
                 );
@@ -255,7 +255,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
               onClick={next}
               whileTap={{ scale: 0.97 }}
               transition={SPRING.snappy}
-              className="relative w-full h-12 rounded-xl bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1f431e]/30 transition-colors cursor-pointer overflow-hidden"
+              className="relative w-full h-12 rounded-xl bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1f431e]/30 transition-colors cursor-pointer overflow-hidden"
               style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
             >
               <AnimatePresence mode="wait">
@@ -277,7 +277,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                     className="flex items-center gap-2"
                   >
                     Get Started
-                    <ArrowRight className="w-4 h-4 text-[#e9c496]" />
+                    <ArrowRight className="w-4 h-4 text-[#d4a373]" />
                   </motion.span>
                 ) : (
                   <motion.span
@@ -288,7 +288,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                     className="flex items-center gap-2"
                   >
                     Continue
-                    <ArrowRight className="w-4 h-4 text-[#e9c496]" />
+                    <ArrowRight className="w-4 h-4 text-[#d4a373]" />
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -327,7 +327,7 @@ function CelebrationCheck() {
     >
       <motion.path
         d="M5 13l4 4L19 7"
-        stroke="#e9c496"
+        stroke="#d4a373"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -375,7 +375,7 @@ function CelebrationOverlay({ reduced }: { reduced: boolean }) {
                 }}
                 className="absolute w-2 h-2 rounded-full"
                 style={{
-                  background: i % 3 === 0 ? "#d4a373" : i % 3 === 1 ? "#f5d9b0" : "#2d5a27",
+                  background: i % 3 === 0 ? "#d4a373" : i % 3 === 1 ? "#d4a373" : "#1f431e",
                 }}
               />
             );

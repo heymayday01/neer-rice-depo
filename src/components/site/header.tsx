@@ -72,7 +72,7 @@ export function Header({
       }`}
     >
       {/* Top micro-banner (desktop only) */}
-      <div className="hidden md:block bg-[#0a1209] text-stone-300 text-[11px] py-1.5 px-6 border-b border-[#1f431e]/30">
+      <div className="hidden md:block bg-[#0a0f0a] text-stone-300 text-[11px] py-1.5 px-6 border-b border-[#1f431e]/30">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2.5 mx-auto sm:mx-0">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
@@ -96,8 +96,8 @@ export function Header({
       <div
         className={`border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#0a1209]/85 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
-            : "bg-[#0a1209]/60 border-white/5"
+            ? "bg-[#0a0f0a]/85 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
+            : "bg-[#0a0f0a]/60 border-white/5"
         }`}
         style={{
           backdropFilter: "blur(24px) saturate(160%)",
@@ -115,7 +115,7 @@ export function Header({
               className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
               aria-label="Neer Rice Depo home"
             >
-              <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden border border-[#d4a373]/20 group-hover:border-[#d4a373]/50 transition-all duration-300 shrink-0 bg-gradient-to-br from-[#1a2818] to-[#0a1209] shadow-sm">
+              <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden border border-[#d4a373]/20 group-hover:border-[#d4a373]/50 transition-all duration-300 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] shadow-sm">
                 <img
                   src="/neer-logo-premium.png"
                   alt="Neer Rice Depo"
@@ -183,7 +183,7 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a1209] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0a1209]"
+                    className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0a0f0a]"
                   >
                     {count}
                   </motion.span>
@@ -225,9 +225,9 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenCart}
-                className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] hover:from-[#16331a] hover:to-[#1f431e] text-white rounded-full text-xs font-bold transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white rounded-full text-xs font-bold transition-all cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4 text-[#e9c496]" strokeWidth={1.5} />
+                <ShoppingBag className="w-4 h-4 text-[#d4a373]" strokeWidth={1.5} />
                 <span className="hidden md:inline">Cart</span>
                 {count > 0 && (
                   <motion.span
@@ -235,13 +235,13 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="bg-[#d4a373] text-[#0a1209] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    className="bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
                     {count}
                   </motion.span>
                 )}
                 {subtotal > 0 && (
-                  <span className="text-[11px] font-bold text-[#e9c496] border-l border-white/20 pl-1.5 ml-0.5">
+                  <span className="text-[11px] font-bold text-[#d4a373] border-l border-white/20 pl-1.5 ml-0.5">
                     ₹{subtotal}
                   </span>
                 )}

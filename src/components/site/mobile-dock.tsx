@@ -65,15 +65,14 @@ export function MobileDock({
           transition={{ ...SPRING.drawer, duration: 0.4 }}
           className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40"
         >
-          {/* Refined glass bar */}
           <div
-            className="flex items-center gap-1 rounded-full px-2 py-2 pb-safe border border-white/10"
+            className="flex items-center gap-0.5 rounded-full px-1.5 py-1.5 pb-safe border border-white/8"
             style={{
-              background: "rgba(10, 18, 9, 0.8)",
+              background: "rgba(10, 15, 10, 0.85)",
               backdropFilter: "blur(32px) saturate(150%)",
               WebkitBackdropFilter: "blur(32px) saturate(150%)",
               boxShadow:
-                "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 32px -4px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3)",
+                "inset 0 1px 0 0 rgba(255,255,255,0.04), 0 8px 32px -4px rgba(0,0,0,0.5)",
             }}
           >
             {tabs.map((tab) => {
@@ -91,38 +90,38 @@ export function MobileDock({
                   animate={isPressed ? { scale: 0.88 } : { scale: 1 }}
                   className={`relative flex items-center justify-center rounded-full cursor-pointer select-none transition-colors ${
                     isCart
-                      ? "w-12 h-12 bg-gradient-to-br from-[#1f431e] to-[#2d5a27] border border-[#d4a373]/20"
-                      : "w-11 h-11"
+                      ? "w-11 h-11 bg-gradient-to-br from-[#1f431e] to-[#1f431e] border border-[#d4a373]/15"
+                      : "w-10 h-10"
                   }`}
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {/* Active indicator — sliding capsule */}
+                  {/* Active indicator */}
                   {isActive && !isCart && (
                     <motion.span
                       layoutId="dock-active"
                       transition={SPRING.dock}
-                      className="absolute inset-0 rounded-full bg-[#d4a373]/12 border border-[#d4a373]/20"
+                      className="absolute inset-0 rounded-full bg-[#d4a373]/8 border border-[#d4a373]/15"
                     />
                   )}
 
                   {/* Press ripple */}
                   {isPressed && (
                     <motion.span
-                      initial={{ scale: 0, opacity: 0.3 }}
+                      initial={{ scale: 0, opacity: 0.2 }}
                       animate={{ scale: 1.8, opacity: 0 }}
                       transition={{ duration: 0.5, ease: EASE.out }}
-                      className="absolute inset-0 rounded-full bg-[#d4a373]/15"
+                      className="absolute inset-0 rounded-full bg-[#d4a373]/12"
                     />
                   )}
 
                   <Icon
                     className={`relative z-10 transition-colors duration-200 ${
                       isCart
-                        ? "w-5 h-5 text-[#e9c496]"
+                        ? "w-[18px] h-[18px] text-[#d4a373]"
                         : isActive
-                          ? "w-[1.2rem] h-[1.2rem] text-[#d4a373]"
-                          : "w-[1.15rem] h-[1.15rem] text-stone-500"
+                          ? "w-[18px] h-[18px] text-[#d4a373]"
+                          : "w-[17px] h-[17px] text-stone-500"
                     }`}
                     strokeWidth={isActive || isCart ? 2 : 1.5}
                   />
@@ -134,7 +133,7 @@ export function MobileDock({
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a1209] text-[9px] font-black w-4.5 h-4.5 min-w-[18px] h-[18px] rounded-full flex items-center justify-center border-2 border-[#0a1209]"
+                      className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center border-2 border-[#0a0f0a]"
                     >
                       {count}
                     </motion.span>

@@ -72,7 +72,7 @@ export function ComparisonModal({ open, onClose }: Props) {
                   key={p.id}
                   className={`${
                     i % 2 ? "bg-white/[0.03]" : "bg-white"
-                  } hover:bg-[#c88a4a]/8 transition-colors border-b border-white/8`}
+                  } hover:bg-[#d4a373]/8 transition-colors border-b border-white/8`}
                 >
                   <td className="p-3">
                     <div className="flex items-center gap-2">
@@ -114,7 +114,7 @@ export function ComparisonModal({ open, onClose }: Props) {
                         <span
                           key={idx}
                           className={`w-1.5 h-1.5 rounded-full ${
-                            idx < p.aromaLevel ? "bg-[#c88a4a]" : "bg-stone-200"
+                            idx < p.aromaLevel ? "bg-[#d4a373]" : "bg-stone-200"
                           }`}
                         />
                       ))}
@@ -136,8 +136,8 @@ export function ComparisonModal({ open, onClose }: Props) {
                       onClick={() => handleAdd(p.id)}
                       className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold inline-flex items-center gap-1 cursor-pointer transition-all ${
                         addedIds.has(p.id)
-                          ? "bg-[#2d5a27] text-white"
-                          : "bg-[#1f431e] text-white hover:bg-[#16331a]"
+                          ? "bg-[#1f431e] text-white"
+                          : "bg-[#1f431e] text-white hover:bg-[#1f431e]"
                       }`}
                     >
                       {addedIds.has(p.id) ? (
