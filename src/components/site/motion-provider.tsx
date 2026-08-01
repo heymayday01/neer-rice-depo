@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,10 +11,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Global motion provider:
+ * - MotionConfig reducedMotion="user" (accessibility — respects OS setting)
  * - Lenis smooth scroll (desktop only; mobile uses native momentum)
  * - GSAP ScrollTrigger synced with Lenis rAF
  * - Respects prefers-reduced-motion
- * - Locks scroll when [data-scroll-locked] is set on <body> (modals)
+ * - Locks scroll when body overflow is hidden (modals)
  */
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   const reduced = usePrefersReducedMotion();
@@ -27,8 +29,9 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
     if (isMobile) return;
 
+    // Snappier duration (0.9 vs 1.1 — less floaty, more responsive)
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
@@ -44,24 +47,16 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    // Scroll-lock observer for modals
-    const observer = new MutationObserver(() => {
-      if (document.body.hasAttribute("data-scroll-locked")) {
-        lenis.stop();
-      } else {
-        lenis.start();
-      }
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ["style"] });
-
-    // Also react to overflow style changes (shadcn sets body overflow hidden)
+    // Single scroll-lock observer — watches body style changes for modal lock
     const checkLocked = () => {
-      const locked = document.body.style.overflow === "hidden";
+      const locked =
+        document.body.style.overflow === "hidden" ||
+        document.body.hasAttribute("data-scroll-locked");
       if (locked) lenis.stop();
       else lenis.start();
     };
-    const overflowObserver = new MutationObserver(checkLocked);
-    overflowObserver.observe(document.body, {
+    const observer = new MutationObserver(checkLocked);
+    observer.observe(document.body, {
       attributes: true,
       attributeFilter: ["style"],
     });
@@ -70,9 +65,12 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
       gsap.ticker.remove(raf);
       lenis.destroy();
       observer.disconnect();
-      overflowObserver.disconnect();
     };
   }, [reduced]);
 
-  return <>{children}</>;
+  return (
+    <MotionConfig reducedMotion="user" transition={{ type: "spring", stiffness: 380, damping: 30 }}>
+      {children}
+    </MotionConfig>
+  );
 }

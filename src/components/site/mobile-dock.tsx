@@ -112,7 +112,6 @@ export function MobileDock({
                   onClick={() => handleTap(tab.id, tab.action)}
                   whileTap={{ scale: 0.88 }}
                   transition={SPRING.dock}
-                  animate={isPressed ? { scale: 0.88 } : { scale: 1 }}
                   className="relative flex flex-col items-center justify-center gap-0.5 w-[52px] h-[52px] cursor-pointer select-none"
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
@@ -139,7 +138,7 @@ export function MobileDock({
                     <motion.span
                       initial={{ scale: 0, opacity: 0.2 }}
                       animate={{ scale: 1.5, opacity: 0 }}
-                      transition={{ duration: 0.45, ease: EASE.out }}
+                      transition={{ duration: 0.28, ease: EASE.out }}
                       className="absolute inset-1 rounded-2xl bg-[#d4a373]/10"
                     />
                   )}

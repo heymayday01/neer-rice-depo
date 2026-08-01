@@ -8,7 +8,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
-import { Search, X, BrainCircuit, Flower2, Package, BarChart2, Sprout } from "lucide-react";
+import { Search, X, BrainCircuit, Flower2, Package, BarChart2, Sprout, Layers, HeartHandshake, Wheat } from "lucide-react";
 import { CATEGORIES } from "@/lib/rice-products";
 import { SPRING, staggerContainer } from "@/lib/motion";
 
@@ -26,11 +26,11 @@ interface Props {
 }
 
 const CAT_ICONS: Record<string, typeof Sprout> = {
-  all: Sprout,
-  daily: Sprout,
+  all: Wheat,
+  daily: Layers,
   heritage: Sprout,
-  aromatic: BrainCircuit, Flower2,
-  superfood: Package,
+  aromatic: Flower2,
+  superfood: HeartHandshake,
   combos: Package,
 };
 

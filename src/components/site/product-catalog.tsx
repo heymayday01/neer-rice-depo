@@ -222,12 +222,10 @@ export function ProductCatalog({
               {sorted.map((product) => (
                 <motion.div
                   key={product.id}
-                  layout
                   variants={cleanRise}
                   initial="hidden"
                   animate="visible"
                   exit={{ opacity: 0, y: -16, transition: { duration: DURATION.fast, ease: EASE.io } }}
-                  transition={SPRING.gentle}
                 >
                   <ProductCard product={product} onOpenDetail={onOpenDetail} />
                 </motion.div>
@@ -240,7 +238,6 @@ export function ProductCatalog({
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-60px" }}
-              transition={SPRING.gentle}
               className="relative overflow-hidden rounded-3xl border border-white/10 text-white p-7 flex flex-col justify-between min-h-[420px] bg-gradient-to-br from-[#1f431e]/40 to-[#0a0f0a]"
             >
               <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#d4a373]/12 rounded-full blur-3xl pointer-events-none" />

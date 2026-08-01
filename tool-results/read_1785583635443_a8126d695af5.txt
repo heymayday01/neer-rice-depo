@@ -1,0 +1,395 @@
+   999→---
+  1000→Task ID: zomato-style-redesign
+  1001→Agent: main (Z.ai Code)
+  1002→Task: Implement Zomato/Swiggy/Zepto checkout UI/UX patterns with better colors for UX.
+  1003→
+  1004→Work Log:
+  1005→- RESEARCHED Zomato/Swiggy/Zepto checkout patterns: single-page consolidated (no wizard), light theme, prominent "Deliver to" card, bill-details card, payment as vertical radio list with expandable details, delivery-instruction chips, tip chips with emoji, coupon strip with dashed border, sticky bottom pay bar, organic/veg markers, ETA green pill.
+  1006→- COLOR PALETTE chosen for UX (Zomato-inspired light checkout):
+  1007→  - Primary: #1f431e (forest green — brand identity, organic/fresh association)
+  1008→  - Savings/positive: #15803d (brighter green-700 — Zomato uses #1BA672 for veg/savings, high contrast on white)
+  1009→  - Accent: #d4a373 (gold — premium touches, gift wrap, loyalty)
+  1010→  - Danger: #dc2626 (red — errors)
+  1011→  - Background: white (cards) / stone-50 (main bg) — LIGHT theme for trust/readability
+  1012→  - Text: stone-900 (primary) / stone-500 (secondary)
+  1013→  - Organic marker: green square border #15803d (like Zomato veg marker)
+  1014→
+  1015→- MAJOR STRUCTURAL CHANGE: Converted from 4-step wizard → SINGLE-PAGE consolidated checkout (Zomato pattern). All sections visible on one scrollable page, no step navigation, no stepper. Users see everything and can edit any field anytime.
+  1016→
+  1017→- IMPLEMENTED 12 Zomato patterns:
+  1018→  1. LIGHT THEME: White cards on stone-50 bg. Forced light (no dark: variants) — better readability, more trustworthy for payments. This is the biggest visual shift.
+  1019→  2. SINGLE-PAGE LAYOUT: Left column (scrollable sections) + right sidebar (sticky Bill Details) on desktop. Single column + sticky bottom bar on mobile.
+  1020→  3. PROMINENT "DELIVER TO" CARD: Shows compact address with name, label badge, full address, phone, and "Change" button. Expands to edit form when Change clicked. Saved-addresses quick-pick collapsible.
+  1021→  4. BILL DETAILS CARD (Zomato-style): Itemized breakdown with right-aligned amounts, dashed dividers, "Item Total / Discount / Delivery Fee / Gift Wrap / Tip / Sample Pack", bold "To Pay" at bottom. Collapsible item list with organic markers + qty controls.
+  1022→  5. PAYMENT AS VERTICAL RADIO LIST: Each method is a row with icon + label + desc + radio circle. Selecting expands details inline (UPI ID input, card fields, bank dropdown, COD note). Card type auto-detected and shown as badge.
+  1023→  6. DELIVERY INSTRUCTIONS CHIPS: 4 quick-select chips (Leave at door, Ring bell, Call me, Contactless) + custom note textarea. Zomato pattern.
+  1024→  7. TIP CHIPS WITH EMOJI: 4 options (🙂 No tip, 😊 ₹20, 😍 ₹30, 🤩 ₹50). Zomato/Swiggy pattern.
+  1025→  8. COUPON STRIP: Dashed-border button "Apply coupon / View offers" → expands to manual input + available offers list with eligibility gating. Applied coupon shows green badge with discount.
+  1026→  9. STICKY BOTTOM PAY BAR: "To Pay ₹XXX" + "Saving ₹XX" + "Place Order" button. Always visible. Disabled until address + payment + terms complete. Helper text shows what's missing.
+  1027→  10. ORGANIC MARKER: Green square border with green dot on each item (like Zomato's veg marker) — signals organic/fresh.
+  1028→  11. ETA GREEN PILL: In header, green pill showing delivery date range "5 Aug – 6 Aug".
+  1029→  12. MOBILE BILL SUMMARY: Collapsible card at top on mobile (lg:hidden) showing "N items ₹XXX" → expands to full bill details (items, coupon, breakdown, savings, loyalty, ETA). Zomato mobile pattern.
+  1030→
+  1031→- KEPT ALL EXISTING FEATURES: Auto-save draft, pincode→city/state autofill, card type detection, saved addresses, gift wrap + message, order bump upsell, loyalty points, free-ship progress bar, WhatsApp opt-in, newsletter, billing-same toggle, save-card, terms agreement, confetti success screen with tracking ID + timeline.
+  1032→
+  1033→- FIXED: Dialog max-width override (sm:max-w-5xl to override default sm:max-w-lg) — now 1024px on desktop.
+  1034→
+  1035→- VERIFIED via Agent Browser (desktop 1280 + mobile iPhone 14):
+  1036→  Desktop: Add → cart → checkout → single page renders with all sections + right bill sidebar → pincode autofill (411038→Pune/Maharashtra) → compact address card with Change → delivery instruction chip → tip emoji chip → card payment expands with VISA detection → coupon strip expands → apply NEER10 → accept terms → Place Order → POST /api/orders 200 → success screen.
+  1037→  Mobile: Single column scroll → mobile bill summary "4 ITEMS ₹304" → expand → free-ship progress + items + coupon + breakdown → all sections visible → sticky bottom Place Order bar.
+  1038→
+  1039→- Lint clean, zero runtime errors, POST /api/orders 200 confirmed.
+  1040→
+  1041→Stage Summary:
+  1042→- Complete Zomato/Swiggy-style checkout redesign: single-page consolidated, light theme, forest-green primary + brighter savings green.
+  1043→- 12 Zomato patterns implemented: prominent Deliver-to card, bill-details card, vertical radio payment with expandable details, delivery-instruction chips, tip chips with emoji, coupon strip with offers, sticky bottom pay bar, organic markers, ETA green pill, mobile collapsible bill.
+  1044→- Color palette optimized for checkout UX: white/stone-50 bg (trust/readability), #1f431e primary (brand/organic), #15803d savings (Zomato-green high contrast), #d4a373 gold accents.
+  1045→- All 16 previous features retained (auto-save, pincode autofill, card detection, saved addresses, gift wrap, order bump, loyalty, free-ship progress, WhatsApp, etc.).
+  1046→- Verified on desktop + mobile, lint clean, order creation confirmed.
+  1047→
+  1048→---
+  1049→Task ID: audit-1
+  1050→Agent: Explore
+  1051→Task: Audit visual inconsistencies across all section components
+  1052→
+  1053→Work Log:
+  1054→- Read worklog.md to understand design system (dark forest-green #1f431e / gold #d4a373 / cream #faf8f5 / ink #0a0f0a; fonts Cinzel/Playfair serif + Plus Jakarta sans).
+  1055→- Read globals.css to confirm CSS vars (--forest, --gold, --cream, --background=#0a0f0a, --foreground=#f5f5f4) and frosted-glass utilities (.glass, .glass-dark, .pill).
+  1056→- Audited all 8 section components + 6 modals in src/components/site/ — checked every className for: light-theme classes (bg-white, bg-stone-50/100/200, text-stone-900/800/700), hardcoded colors, font-serif/brand/sans misuse, card/border consistency.
+  1057→- Cross-referenced with Grep for solid bg-white, bg-stone-50/100/200, text-stone-900/700/600, border-stone-200/300, text-amber-*, fill-amber-*, text-red-*, and font-brand usage across the site directory.
+  1058→
+  1059→Stage Summary:
+  1060→
+  1061→CLEAN (no issues — fully dark-themed, palette-correct):
+  1062→- header.tsx — dark glass bar, gold/forest accents, all text light on dark ✅
+  1063→- hero.tsx — gradient overlays on image, all #0a0f0a/#d4a373/#1f431e palette-correct ✅
+  1064→- product-card.tsx — translucent white glass (bg-white/[0.04]) on dark, all light text ✅
+  1065→- product-catalog.tsx — bg-[#0a0f0a], gold accents, no light-theme leakage ✅
+  1066→- grain-wisdom.tsx (a.k.a. grain-wisdom-hub) — bg-[#0a0f0a], gold-tinted cards ✅
+  1067→- footer.tsx — bg-[#0a0f0a], border-white/8, palette-correct ✅
+  1068→- mobile-dock.tsx — rgba(10,15,10,0.68) glass, gold active state ✅
+  1069→- mobile-menu-sheet.tsx — bg-[#0a0f0a] (previously broken per worklog, now correctly dark) ✅
+  1070→  · minor code smell (not visual): line 32 `aromatic: BrainCircuit, Flower2,` is JS shorthand that adds an unused `Flower2` key to the CAT_ICONS object — works but accidental.
+  1071→- cart-drawer.tsx — bg-[#0a0f0a], gold totals, white/5 glass items ✅
+  1072→
+  1073→ISSUES FOUND (severity-ranked):
+  1074→
+  1075→[LOW] global — font-brand CSS class defined in globals.css (line 127) but NEVER used in any component. Brand wordmarks use plain `font-serif`. Inconsistency between design-system intent and usage. Should either use font-brand for "Neer Rice Depo" wordmark or remove the unused class.
+  1076→
+  1077→[LOW] header.tsx:85 — `text-stone-600` separator dot (#44403c) on `bg-[#0a0f0a]` is quite dim but acceptable as a tertiary separator.
+  1078→
+  1079→[MEDIUM] product-detail-modal.tsx:82 — `bg-gradient-to-t from-stone-950/70` uses stone-950 (#0c0a09) for image overlay instead of brand #0a0f0a. Visually fine (near-identical) but breaks palette discipline.
+  1080→
+  1081→[HIGH] product-detail-modal.tsx:87 — Badges use `bg-white/95 text-[#1f431e]` (solid white pills with forest text) on image — intentional contrast choice but breaks dark continuity.
+  1082→
+  1083→[HIGH] product-detail-modal.tsx:119-120 — Star rating uses `text-amber-600 fill-amber-500` — INCONSISTENT with product-card.tsx (line 209) which uses `fill-[#d4a373] text-[#d4a373]` (brand gold). Two different rating-star colors in the same app.
+  1084→
+  1085→[HIGH] product-detail-modal.tsx:169, 214, 248, 269 — Multiple uses of `text-[#1f431e]` (dark forest green) for chip text, bulk-savings badge, PRICE (₹{final}), and button bg on a DARK modal body (shadcn DialogContent uses --background=#0a0f0a). Dark green text on near-black background = UNREADABLE. The hero price (line 248, text-3xl) is effectively invisible.
+  1086→
+  1087→[LOW] product-detail-modal.tsx:149, 178 — `border-white/10/80` is invalid Tailwind double-opacity syntax (only first /10 applies, /80 is silently dropped or breaks purge).
+  1088→
+  1089→[MEDIUM] product-detail-modal.tsx:228, 236, 270 — Add-to-cart button uses `bg-[#1f431e] hover:bg-[#1f431e]` (same color for default and hover = no hover feedback).
+  1090→
+  1091→[HIGH] ai-sommelier-modal.tsx:111 — Search input uses `bg-stone-100` (solid light gray) on dark modal body. Light input box breaks dark continuity.
+  1092→
+  1093→[HIGH] ai-sommelier-modal.tsx:145, 156, 269 — Suggestion chips, loading spinner, and InfoCard titles use `text-[#1f431e]` (dark green) on dark modal body = unreadable.
+  1094→
+  1095→[CRITICAL] ai-sommelier-modal.tsx:184, 192 — Recommended product cards use `bg-white` (SOLID WHITE) and product name is `text-white` → WHITE TEXT ON WHITE BACKGROUND = INVISIBLE. Completely broken.
+  1096→
+  1097→[HIGH] ai-sommelier-modal.tsx:246 — "Ask Another Question" button uses `bg-white border-white/10 text-stone-400` — solid white button on dark modal = breaks continuity.
+  1098→
+  1099→[LOW] ai-sommelier-modal.tsx:184 — `border-white/10/90` invalid double-opacity syntax.
+  1100→
+  1101→[HIGH] comparison-modal.tsx:74 — Table alternating rows: `i % 2 ? "bg-white/[0.03]" : "bg-white"` — EVEN rows use SOLID WHITE BACKGROUND. Half the table is bright white = severely breaks dark continuity.
+  1102→
+  1103→[HIGH] comparison-modal.tsx:130 — Price column `text-[#1f431e]` (dark green). On `bg-white/[0.03]` rows this is dark green on near-black = unreadable. On `bg-white` rows it's fine.
+  1104→
+  1105→[MEDIUM] comparison-modal.tsx:105 — Non-Low-GI badge uses `bg-stone-100 text-stone-500` (light gray chip) — should be `bg-white/5 text-stone-400` for dark consistency.
+  1106→
+  1107→[MEDIUM] comparison-modal.tsx:117 — Empty aroma dots use `bg-stone-200` (light gray) — should be `bg-white/10` or `bg-stone-700` for dark.
+  1108→
+  1109→[MEDIUM] order-tracker-modal.tsx:88 — Package icon in title uses `text-[#1f431e]` (dark green) on dark modal = barely visible.
+  1110→
+  1111→[HIGH] order-tracker-modal.tsx:99 — Search input uses `bg-stone-100` (light gray) on dark modal — breaks continuity.
+  1112→
+  1113→[HIGH] order-tracker-modal.tsx:141 — Tracking ID uses `text-[#1f431e]` (dark green) on `bg-white/[0.03]` (translucent dark card) = unreadable.
+  1114→
+  1115→[MEDIUM] order-tracker-modal.tsx:172, 180 — Undone timeline steps use `bg-white border-white/10` (solid white circle) and `bg-stone-200` (light gray connector) — inconsistent with dark theme; should be `bg-white/5 border-white/10` and `bg-white/10`.
+  1116→
+  1117→[HIGH] order-tracker-modal.tsx:229 — Recent Orders list uses `bg-stone-50 hover:bg-stone-100` (solid light gray buttons) on dark modal — light-theme island in dark UI.
+  1118→
+  1119→[CRITICAL] checkout-modal.tsx — ENTIRE MODAL IS LIGHT-THEMED. Top comment (line 73-79) explicitly states "Zomato-inspired light checkout: Bg white / stone-50, Text stone-900 / stone-500". 99 occurrences of bg-white/bg-stone-50/bg-stone-100/bg-stone-200/text-stone-900/text-stone-700/border-stone-200/border-stone-300 across 1558 lines. Modal root (line 528) is `bg-white text-stone-900 border-stone-200`. Body (line 578) is `bg-stone-50`. Header (549), sticky footer (964), all form inputs (841, 854-858, 870, 912, 1174, 1380), all section cards (1003, 1271), success screen (1462-1526), and saved-address cards (627) are all solid white/stone-50 with dark stone-900 text. This is the SINGLE BIGGEST OFFENDER — completely breaks dark continuity when the checkout opens from the dark cart drawer.
+  1120→
+  1121→TOTAL: 8 components clean, 6 components with issues. Critical issues: 2 (ai-sommelier recommended card, checkout entire modal). High-severity issues: 11. Medium: 6. Low: 4.
+  1122→
+  1123→PRIORITY RECOMMENDATIONS (for next refactor task):
+  1124→1. checkout-modal.tsx — refactor entire 1558-line modal to dark theme (bg-[#0a0f0a]/[#0f1a0d], text-white, text-stone-300/400, border-white/10, bg-white/[0.03] glass). Replace all `text-[#1f431e]` price/text with `text-[#d4a373]` (gold) or `text-white`.
+  1125→2. ai-sommelier-modal.tsx:184 — change recommended card `bg-white` → `bg-white/[0.03] border-white/10`, change product name `text-white` → keep white (will become visible). Change `text-[#1f431e]` chip/spinner/InfoCard title → `text-[#d4a373]`.
+  1126→3. comparison-modal.tsx:74 — change `"bg-white"` (even rows) → `"bg-white/[0.02]"`. Change price text-[#1f431e] → text-[#d4a373] (gold).
+  1127→4. order-tracker-modal.tsx — change `bg-stone-100` input → `bg-white/5`, `bg-stone-50 hover:bg-stone-100` recent orders → `bg-white/[0.03] hover:bg-white/[0.06]`, `text-[#1f431e]` tracking ID → `text-[#d4a373]`, `bg-white` undone timeline → `bg-white/5`, `bg-stone-200` connector → `bg-white/10`.
+  1128→5. product-detail-modal.tsx — change all `text-[#1f431e]` (chips/badges/price/button) → `text-[#d4a373]` (gold) or `text-white`. Change `text-amber-600 fill-amber-500` stars → `text-[#d4a373] fill-[#d4a373]` to match product-card. Change `bg-white/95` badges → `bg-[#d4a373]/15 text-[#d4a373] border-[#d4a373]/30`.
+  1129→6. Consistency: decide on single star-rating color across app (recommend brand gold #d4a373 everywhere).
+  1130→7. Add `:focus-visible` gold ring already in CSS — verify all interactive elements inherit it.
+  1131→8. Remove or use `font-brand` class (currently dead CSS).
+  1132→9. Fix `border-white/10/80` invalid double-opacity syntax (product-detail-modal:149,178; ai-sommelier-modal:184).
+  1133→10. Fix mobile-menu-sheet.tsx:32 stray `Flower2,` shorthand in CAT_ICONS object.
+  1134→
+  1135→No files modified. Audit-only as instructed.
+  1136→
+  1137→---
+  1138→Task ID: fix-aisommelier
+  1139→Agent: general-purpose
+  1140→Task: Fix ai-sommelier-modal dark theme consistency
+  1141→
+  1142→Work Log:
+  1143→- Line 111: input container `bg-stone-100` → `bg-white/5` (frosted glass on dark).
+  1144→- Lines 145, 156, 269: `text-[#1f431e]` (dark forest green on dark bg = unreadable) → `text-[#a3c4a0]` (light sage green) on suggestion chips, loading spinner, and InfoCard title row.
+  1145→- Line 184: recommended product card `bg-white` (solid white, causing white-on-white invisible product names) → `bg-white/[0.03]` frosted glass; simultaneously fixed invalid `border-white/10/90` double-opacity syntax → `border-white/10`.
+  1146→- Line 246: "Ask Another Question" button `bg-white` solid → `bg-white/[0.03]` frosted glass.
+  1147→- Verified: no remaining `bg-stone-*`, `text-stone-600+`, `border-stone-*`, `text-[#1f431e]`, solid `bg-white`, `border-white/10/90`, or `focus:(ring|border)-[#1f431e]` patterns in the file.
+  1148→- Ran `bun run lint` — passes cleanly with no errors.
+  1149→
+  1150→Stage Summary:
+  1151→- Eliminated all light-theme islands and unreadable color combos in ai-sommelier-modal.tsx. Modal is now fully consistent with the dark premium theme (#0a0f0a bg / #1f431e forest / #d4a373 gold / cream text). Frosted-glass cards replace solid white panels, dark green text on dark bg replaced with light sage (#a3c4a0) for legibility, invalid Tailwind opacity syntax fixed. Lint passes.
+  1152→
+  1153→---
+  1154→Task ID: fix-comparison
+  1155→Agent: general-purpose
+  1156→Task: Fix comparison-modal dark theme consistency
+  1157→
+  1158→Work Log:
+  1159→- Replaced solid `bg-white` even table rows with `bg-white/[0.02]` so the alternating row tint stays subtle on the dark premium background (line 74).
+  1160→- Replaced unreadable `text-[#1f431e]` (dark green) with `text-[#a3c4a0]` (light sage) in 3 spots: BarChart2 header icon (line 45), Low-GI chip text (line 104), and the price span (line 130).
+  1161→- Replaced `bg-stone-100` chip background with `bg-white/5` (line 105) and `bg-stone-200` aroma dots with `bg-white/8` (line 117).
+  1162→- Replaced all 6 `text-stone-500` instances with `text-stone-400` for readable secondary text on dark rows (lines 88, 94, 97, 105, 123, 126).
+  1163→- Preserved `bg-[#1f431e] text-white` on the table header row and the add-to-cart buttons (per rule: keep text-white only on dark/colored buttons), and left the existing `bg-[#1f431e]/10` chip tint, gold hover accent, and `border-white/8` row dividers intact since they already matched the dark premium theme.
+  1164→- Ran `bun run lint` — clean, no errors or warnings.
+  1165→
+  1166→Stage Summary:
+  1167→- Comparison modal (`src/components/site/modals/comparison-modal.tsx`) is now fully consistent with the dark premium theme (bg #0a0f0a, forest-green #1f431e, gold #d4a373). Eliminated the bright white even-row island, fixed the unreadable dark-green price text by switching it to light sage, and converted all stone-100/200/500 light-theme utility classes to translucent white/stone-300-400 dark-theme equivalents. No structural or behavioral changes; only className token swaps via targeted MultiEdit. Lint passes clean.
+  1168→
+  1169→---
+  1170→Task ID: fix-ordertracker
+  1171→Agent: general-purpose
+  1172→Task: Fix order-tracker-modal dark theme consistency
+  1173→
+  1174→Work Log:
+  1175→- Read /home/z/my-project/worklog.md for project context and confirmed the dark premium theme tokens (bg #0a0f0a, forest-green #1f431e, gold #d4a373) and the prior comparison-modal fix pattern.
+  1176→- Read src/components/site/modals/order-tracker-modal.tsx and mapped every light-theme island / unreadable color against the required remediation rules.
+  1177→- MultiEdit replacements applied (targeted, no full rewrite):
+  1178→  1. Header Package icon `text-[#1f431e]` -> `text-[#a3c4a0]` (line 88) — dark green icon was unreadable on dark header.
+  1179→  2. Search input wrapper `bg-stone-100` -> `bg-white/5` (line 99) — removed light island.
+  1180→  3. Tracked-order tracking ID `text-[#1f431e]` -> `text-[#a3c4a0]` (line 141) — dark green text on dark was unreadable; now light sage.
+  1181→  4. Timeline not-done step circle `bg-white border-white/10` -> `bg-white/[0.04] border-white/10` (line 172) — solid white was a bright island; now translucent.
+  1182→  5. Timeline not-done connector `bg-stone-200` -> `bg-white/8` (line 180) — light island removed.
+  1183→  6. Recent-orders list button `bg-stone-50 hover:bg-stone-100` -> `bg-white/[0.03] hover:bg-white/5` (line 229) — eliminated the worst light-theme island.
+  1184→  7. Recent-orders tracking ID `text-[#1f431e]` -> `text-[#a3c4a0]` (line 231) — dark green text on dark was unreadable.
+  1185→- Preserved `bg-[#1f431e] text-white` on the Track button (line 112), the timeline done-state circle (line 171), and the done-state connector (line 180) per rule #10 (keep text-white only on dark/colored buttons). Existing `bg-white/[0.03]`, `border-white/8`, `text-stone-400/500`, and `text-white` for the Total value were already dark-theme-correct and left untouched. No `focus:ring-[#1f431e]` / `focus:border-[#1f431e]` rules exist in this file, so rule #11 was a no-op.
+  1186→- Ran `cd /home/z/my-project && bun run lint` — clean, no errors or warnings.
+  1187→
+  1188→Stage Summary:
+  1189→- OrderTracker modal (`src/components/site/modals/order-tracker-modal.tsx`) is now fully consistent with the dark premium theme. Eliminated all four light-theme islands (search input, timeline not-done circle, timeline not-done connector, recent-orders list rows) by swapping solid `bg-stone-50/100/200`/`bg-white` tokens for translucent `bg-white/[0.03]`, `bg-white/5`, `bg-white/8`, and `bg-white/[0.04]`. Fixed all three unreadable dark-green (`text-[#1f431e]`) text tokens — header icon, tracked-order tracking ID, recent-orders tracking ID — by switching to light sage `text-[#a3c4a0]` which is readable on the dark background. Kept forest-green forest-green button + done-state circle + connector as colored surfaces with `text-white` per the rule. No structural or behavioral changes; only className token swaps via targeted MultiEdit. Lint passes clean.
+  1190→
+  1191→---
+  1192→Task ID: fix-productdetail
+  1193→Agent: general-purpose
+  1194→Task: Fix product-detail-modal dark theme consistency
+  1195→
+  1196→Work Log:
+  1197→- Replaced 5 instances of `text-[#1f431e]` (dark green on dark bg = unreadable) with `text-[#a3c4a0]` (light sage):
+  1198→  - Line 87: hero image badge text
+  1199→  - Line 151: quick-stats grid icon color
+  1200→  - Line 169: "Best For" chip text
+  1201→  - Line 214: "Bulk Savings Applied" badge text
+  1202→  - Line 248: HERO PRICE (was invisible — most critical fix)
+  1203→- Kept `bg-[#1f431e]`, `bg-[#1f431e]/8`, `bg-[#1f431e]/10`, `border-[#1f431e]/12`, `border-[#1f431e]/15` untouched (button backgrounds/borders stay dark green per rule).
+  1204→- Kept `text-white` on the dark-green weight button (line 228) and the Add-to-Cart button (lines 269-270) — these have #1f431e backgrounds so white is correct.
+  1205→- Line 87: `bg-white/95` (solid white "light island" badge) → `bg-white/[0.06]` (frosted glass) so it blends with the dark modal body.
+  1206→- Lines 119-120: star rating colors aligned with ProductCard brand gold — `text-amber-600` → `text-[#d4a373]`, `fill-amber-500 text-amber-500` → `fill-[#d4a373] text-[#d4a373]`.
+  1207→- Lines 149 & 178: fixed invalid Tailwind syntax `border-white/10/80` → `border-white/10` (stat cards + nutrition card borders).
+  1208→- Verified via grep: no remaining `text-[#1f431e]`, `amber-*`, `border-white/10/80`, `bg-white/95`, `bg-stone-100`, `bg-stone-50`, `text-stone-(900|800|700|600)`, `border-stone-(200|300)`, or `focus:[ring|border]-[#1f431e]` in the file.
+  1209→- `bun run lint` passes with zero errors/warnings.
+  1210→
+  1211→Stage Summary:
+  1212→- product-detail-modal.tsx is now visually consistent with the dark premium theme (#0a0f0a bg / #1f431e forest-green / #d4a373 gold). The hero price, bulk-savings badge, Best-For chips, image-overlay badges, and stat-grid icons are now readable (light sage #a3c4a0 instead of dark green on dark). Star ratings match ProductCard's brand gold. Solid-white overlay badges became frosted-glass to eliminate "light islands". Invalid `border-white/10/80` syntax (which Tailwind silently dropped, leaving no border) was corrected to `border-white/10`. Button bg/border colors kept intact so primary CTAs retain the dark-green premium look with white text.
+  1213→
+  1214→---
+  1215→Task ID: theme-continuity-rice-focus
+  1216→Agent: main (Z.ai Code)
+  1217→Task: Fix light theme on checkout (restore dark premium), fix all visual inconsistencies, unify fonts/colors, rice-focus everything, reinvent mobile.
+  1218→
+  1219→Work Log:
+  1220→- AUDIT (via Explore subagent): Found 6 components with visual inconsistencies against the dark premium theme (#0a0f0a bg, #1f431e forest, #d4a373 gold):
+  1221→  - checkout-modal.tsx: CRITICAL — entire 1558-line modal was light-themed (99 light classes)
+  1222→  - ai-sommelier-modal.tsx: CRITICAL — white-on-white cards, unreadable text-[#1f431e]
+  1223→  - comparison-modal.tsx: HIGH — bg-white alternating rows, unreadable prices
+  1224→  - order-tracker-modal.tsx: HIGH — bg-stone-50 list, unreadable tracking ID
+  1225→  - product-detail-modal.tsx: HIGH — unreadable hero price, amber stars (should be gold)
+  1226→
+  1227→- CHECKOUT MODAL (fixed by main agent):
+  1228→  - Converted entire modal from light (bg-white text-stone-900) → dark premium (bg-[#0a0f0a] text-stone-100)
+  1229→  - Root dialog: bg-white → bg-[#0a0f0a], border-stone-200 → border-white/10
+  1230→  - Header bar: bg-white → bg-[#0d140d]/80 backdrop-blur-xl
+  1231→  - Body bg: bg-stone-50 → bg-[#0a0f0a]
+  1232→  - SectionCard: bg-white → bg-white/[0.03] backdrop-blur-xl (frosted glass)
+  1233→  - Bill card sidebar: bg-white → bg-[#0d140d]/40
+  1234→  - All inputs: bg-stone-50/100 → bg-white/5, border-stone-200 → border-white/10
+  1235→  - All text: text-stone-900 → text-stone-100, text-stone-700 → text-stone-300, text-stone-600 → text-stone-400
+  1236→  - All borders: border-stone-200/300 → border-white/10/15
+  1237→  - 22 instances of text-[#1f431e] (dark green, unreadable on dark) → text-[#a3c4a0] (light sage, readable)
+  1238→  - Focus rings: focus:ring-[#1f431e] → focus:ring-[#d4a373]/20 (gold)
+  1239→  - Organic marker: #15803d → #d4a373 (brand gold consistency)
+  1240→  - Savings/positive green: #15803d → #a3c4a0 (light sage, readable on dark)
+  1241→  - Sticky pay bar: bg-white → bg-[#0d140d]/80 backdrop-blur-xl
+  1242→  - Success screen: bg-stone-50 → bg-[#0a0f0a], cards bg-white → bg-white/[0.04]
+  1243→  - Mobile bill summary: bg-white → bg-white/[0.03] backdrop-blur-xl
+  1244→  - Kept all Zomato UX patterns (single-page, deliver-to card, bill details, radio payment, chips, sticky pay bar)
+  1245→
+  1246→- AI-SOMMELIER MODAL (fixed by subagent): bg-white cards → bg-white/[0.03], text-[#1f431e] → text-[#a3c4a0], bg-stone-100 inputs → bg-white/5, fixed invalid border-white/10/90 syntax.
+  1247→
+  1248→- COMPARISON MODAL (fixed by subagent): bg-white alternating rows → bg-white/[0.02], text-[#1f431e] prices → text-[#a3c4a0], bg-stone-100/200 chips → bg-white/5/8.
+  1249→
+  1250→- ORDER-TRACKER MODAL (fixed by subagent): bg-stone-50 list → bg-white/[0.03], text-[#1f431e] tracking ID → text-[#a3c4a0], bg-white timeline → bg-white/[0.04], bg-stone-200 connectors → bg-white/8.
+  1251→
+  1252→- PRODUCT-DETAIL MODAL (fixed by subagent): text-[#1f431e] hero PRICE → text-[#a3c4a0] (critical fix — price was invisible!), amber stars → gold #d4a373 (brand consistency), bg-white/95 badges → bg-white/[0.06], fixed invalid border-white/10/80 syntax.
+  1253→
+  1254→- MOBILE DOCK REINVENTION (rice-focused):
+  1255→  - "Home" → "Harvest" with Sprout icon (rice farming theme)
+  1256→  - "AI" → "Sommelier" (grain sommelier theme)
+  1257→  - "Cart" → "Basket" (grain basket theme)
+  1258→  - Added "FRESH" harvest pulse indicator (live-dot + "Fresh" label) on top of dock — signals living/fresh harvest
+  1259→  - Enhanced glass opacity (0.68 → 0.72) + gold hairline ring (0.12 → 0.15) for richer material
+  1260→  - Refractive top edge brightened (0.3 → 0.35)
+  1261→
+  1262→- VERIFIED via Agent Browser (desktop + mobile):
+  1263→  - Desktop checkout: dark theme confirmed (bg rgb(10,15,10)), all sections render, pincode autofill works (411038→Pune/Maharashtra), compact address card with Change, delivery options, payment radio list, place order → POST /api/orders 200 → success screen with Paid·UPI, ETA, loyalty points, 3-step timeline.
+  1264→  - Mobile: dock shows rice-themed labels (Harvest/Sommelier/Compare/Orders/Basket) + FRESH indicator. No errors.
+  1265→
+  1266→- Lint clean, zero runtime errors, POST /api/orders 200 confirmed.
+  1267→
+  1268→Stage Summary:
+  1269→- ALL 6 components restored to dark premium theme consistency — zero light-theme islands remain.
+  1270→- Checkout: dark frosted-glass cards (bg-white/[0.03] + backdrop-blur), readable sage-green text (#a3c4a0), gold focus rings, all Zomato UX patterns retained.
+  1271→- 5 modals fixed (checkout, ai-sommelier, comparison, order-tracker, product-detail) — unreadable dark-green-on-dark text converted to light sage, amber stars → brand gold, light bg-stone islands → frosted glass.
+  1272→- Mobile dock reinvented rice-focused: Harvest/Sommelier/Basket labels + FRESH harvest pulse indicator.
+  1273→- Color palette unified: #0a0f0a bg, #1f431e primary, #d4a373 gold accent, #a3c4a0 sage (readable green text on dark), stone-100/300/400 text hierarchy.
+  1274→- Fonts: Fraunces (serif headings) + Manrope (sans body) consistent across all sections.
+  1275→- Rice theme throughout: Sprout icon, "Harvest" label, "Fresh" pulse, grain basket, grain sommelier.
+  1276→
+  1277→---
+  1278→Task ID: harvest-data
+  1279→Agent: general-purpose
+  1280→Task: Add harvestDate, cookTimeMins, originState to all 10 products
+  1281→
+  1282→Work Log:
+  1283→- Read /home/z/my-project/src/lib/types.ts to confirm RiceProduct now requires originState, harvestDate, and cookTimeMins.
+  1284→- Read /home/z/my-project/src/lib/rice-products.ts to inspect the current structure of all 10 products and the exact `originRegion` / `waterRatio` lines for each.
+  1285→- Used MultiEdit on rice-products.ts to insert the 3 new fields directly between `originRegion` and `waterRatio` for each product, with the values specified per product:
+  1286→  1. sona-masoori-unpolished → Karnataka, 2024-10-15, 15
+  1287→  2. indrayani-aromatic → Maharashtra, 2024-11-20, 18
+  1288→  3. 1121-steam-basmati → Punjab, 2024-10-08, 12
+  1289→  4. black-rice-karuppu-kavuni → Tamil Nadu, 2024-09-25, 35
+  1290→  5. rajamudi-heritage → Karnataka, 2024-11-10, 22
+  1291→  6. kerala-matta-red → Kerala, 2024-12-05, 25
+  1292→  7. gobindobhog-aromatic → West Bengal, 2024-11-15, 15
+  1293→  8. wada-kolam-soft → Maharashtra, 2024-10-28, 14
+  1294→  9. ambemohar-scented → Maharashtra, 2024-11-22, 16
+  1295→  10. organic-trio-combo → Karnataka, 2024-10-15, 18
+  1296→- Ran `bun run lint` — ESLint passed with zero errors.
+  1297→
+  1298→Stage Summary:
+  1299→- All 10 products in src/lib/rice-products.ts updated with originState, harvestDate, and cookTimeMins inserted between originRegion and waterRatio.
+  1300→- TypeScript/RiceProduct interface contract satisfied (fields are required and now present on every product).
+  1301→- Lint clean (eslint . exits 0 with no warnings/errors).
+  1302→
+  1303→---
+  1304→Task ID: rice-storytelling-enhancements
+  1305→Agent: main (Z.ai Code)
+  1306→Task: Keep improving — add rice storytelling, harvest indicators, cooking info, atmospheric particles.
+  1307→
+  1308→Work Log:
+  1309→- VLM AUDIT (hero + catalog): Identified 5 high-impact improvements — atmospheric depth, harvest/freshness indicators, origin specificity, cooking DNA, aroma notes.
+  1310→
+  1311→- DATA MODEL ENRICHMENT (via subagent): Added 3 new fields to RiceProduct type + all 10 products:
+  1312→  - originState: Indian state (Karnataka, Maharashtra, Punjab, Tamil Nadu, Kerala, West Bengal)
+  1313→  - harvestDate: ISO date (Oct-Nov 2024 harvest season)
+  1314→  - cookTimeMins: cooking time in minutes (12-35 min depending on variety)
+  1315→
+  1316→- PRODUCT CARD ENHANCEMENTS (product-card.tsx):
+  1317→  - Added FRESH harvest badge (live-dot pulse + "Fresh" label) at bottom-left of image — always visible, signals living harvest
+  1318→  - Origin row: now shows state with MapPin icon (gold) instead of truncated region — "KARNATAKA", "MAHARASHTRA", "PUNJAB"
+  1319→  - Added cooking chips row after tagline: ⏱ cook time (15 min) · 🔥 water ratio (1:2.5) · ● harvest month (Oct 2024)
+  1320→  - Chips use consistent design: frosted glass border, gold icons, sage harvest indicator
+  1321→
+  1322→- HERO ATMOSPHERIC PARTICLES (hero.tsx):
+  1323→  - Added 14 rice-grain ambient particles floating upward (gold + sage colors)
+  1324→  - Uses existing .grain-particle CSS class with floatParticle animation
+  1325→  - Varied: position, delay (0-9s), duration (9-19s), drift (dx/dy), size (2-4px)
+  1326→  - Creates atmospheric depth — "submerged in grain" feeling
+  1327→  - Respects prefers-reduced-motion (CSS media query)
+  1328→
+  1329→- PRODUCT DETAIL MODAL ENHANCEMENTS (product-detail-modal.tsx):
+  1330→  - Stats grid: "Aged" → "Cook Time" (15 min), "Process" → "Origin" (Karnataka state)
+  1331→  - Added harvest freshness strip: "● Harvested Oct 2024 · Aged 12 months · Unpolished" with live-dot pulse
+  1332→  - Sage green border + subtle forest-green bg for visual distinction
+  1333→
+  1334→- VERIFIED via Agent Browser:
+  1335→  - Product cards: Fresh badges showing on all cards, origin states (KARNATAKA/MAHARASHTRA/PUNJAB), cook time chips (15 min, 18 min), water ratio (1:2.5, 1:2.8), harvest months (Oct 2024, Nov 2024) — all confirmed in DOM.
+  1336→  - Product detail modal: Cook Time 15 min, Origin Karnataka, "Harvested Oct 2024 · Aged 12 months · Unpolished" strip confirmed.
+  1337→  - Hero: particles rendering (z-[1] layer, pointer-events-none).
+  1338→  - Lint clean, zero runtime errors.
+  1339→
+  1340→Stage Summary:
+  1341→- Rice storytelling added to every product card: Fresh harvest badge, origin state, cook time, water ratio, harvest month.
+  1342→- Hero has 14 floating rice-grain particles for atmospheric depth (gold + sage, varied timing).
+  1343→- Product detail modal shows cook time, origin state, and harvest freshness strip with live-dot pulse.
+  1344→- Data model enriched with harvestDate, cookTimeMins, originState for all 10 products.
+  1345→- Every element reinforces "we sell rice" — harvest dates, cooking guidance, origin specificity, freshness indicators.
+  1346→- Lint clean, zero errors, all features verified in browser.
+  1347→
+  1348→---
+  1349→Task ID: logo-navbar-optimization
+  1350→Agent: main (Z.ai Code)
+  1351→Task: Improve the logo and optimize navbar menu options.
+  1352→
+  1353→Work Log:
+  1354→- VLM AUDIT of current logo (neer-logo-premium.png): Found it uses WHEAT stalks (wrong grain!) + lotus/water motif. Font feels industrial. Not rice-focused. Recommendations: replace wheat with rice panicles, refine typography, simplify palette.
+  1355→
+  1356→- NEW SVG LOGO (src/components/site/logo.tsx):
+  1357→  - Created LogoMark component — a stylized rice panicle (grain stalk with 5 pairs of drooping grains + terminal top grain) inside a circular gold-ringed badge with forest-green interior.
+  1358→  - Uses brand gradients: gold (#e9c89a → #d4a373 → #b8884f) for ring + grains, forest green radial gradient for interior.
+  1359→  - Subtle water wave reference at bottom (Neer = water) in muted gold.
+  1360→  - withGlow prop adds soft glow filter for scrolled state.
+  1361→  - Razor-sharp at ANY size (SVG, not raster) — 32px mobile, 44px desktop, both crisp.
+  1362→  - LogoFull component for wordmark + tagline lockup.
+  1363→
+  1364→- NAVBAR OPTIMIZATION (header.tsx):
+  1365→  PROBLEMS with old navbar:
+  1366→  - Too many icon buttons crammed with no visual grouping (Compare, Orders, AI Sommelier, Cart all same weight)
+  1367→  - Category bar used full labels (All Grain Varieties) — too long, wasted space
+  1368→  - No sliding active indicator on categories (static bg only)
+  1369→  - Used raster PNG logo (blurry at small sizes)
+  1370→
+  1371→  FIXES:
+  1372→  1. Replaced raster PNG logo with crisp SVG LogoMark (rice panicle) — razor-sharp at all sizes.
+  1373→  2. Consolidated secondary actions (Compare + Orders) into a grouped icon cluster with a right divider border — visually separated from primary actions.
+  1374→  3. AI Sommelier → "Sommelier" (shorter label, rounded-full pill, accent border).
+  1375→  4. Cart → primary gold rounded-full button (clear hierarchy: secondary icons < accent pill < primary CTA).
+  1376→  5. Category bar: uses `short` labels (All Varieties, Daily Staples, Heritage, Aromatic, Low GI, Bundles) instead of full labels — saves horizontal space.
+  1377→  6. Added sliding layoutId active indicator on categories (motion.span with layoutId="nav-active-cat") — smooth spring transition when switching categories.
+  1378→  7. Enhanced glass: blur(28px) saturate(160%) (was 24px/140%) — richer frosted material.
+  1379→  8. Logo glows when scrolled (withGlow prop activates on scroll).
+  1380→  9. "All Grain Varieties" category icon changed from Sprout to Wheat (more appropriate for "all grains").
+  1381→  10. Harvest info strip: green dot (#a3c4a0) instead of gold — signals "fresh/live".
+  1382→
+  1383→- VERIFIED via Agent Browser (desktop + mobile):
+  1384→  - Desktop: SVG logo 44px rendering crisp, grouped actions (Compare + Orders with divider), Sommelier pill, Cart primary button, category short labels with sliding indicator (clicked Heritage → indicator slid into position).
+  1385→  - Mobile: SVG logo 32px rendering crisp, "Neer Rice" text, Menu + Cart actions.
+  1386→  - Lint clean, zero runtime errors.
+  1387→
+  1388→Stage Summary:
+  1389→- New SVG logo: rice panicle (correct grain, not wheat) in gold-ringed forest-green badge — razor-sharp at all sizes, brand-consistent.
+  1390→- Navbar optimized: grouped secondary actions, clear 3-tier hierarchy (icons < accent pill < primary CTA), shorter category labels, sliding active indicator, enhanced glass material.
+  1391→- Logo glows on scroll, category indicator slides with spring physics.
+  1392→- Lint clean, verified desktop + mobile, zero errors.
+  1393→

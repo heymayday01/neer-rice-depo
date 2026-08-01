@@ -160,19 +160,12 @@
     scroll-padding-top: 5rem;
   }
 
-  /* GPU promotion for animated elements — reduces jank */
+  /* GPU promotion only for elements actively animating (opt-in, not blanket) */
   .glass,
   .glass-dark,
-  .pill,
-  img[loading="eager"] {
-    will-change: transform, opacity;
+  .pill {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-  }
-  /* Contain layout for scrolling sections */
-  section {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px;
   }
 }
 
@@ -354,41 +347,6 @@ body {
     radial-gradient(at 50% 85%, rgba(233, 196, 150, 0.12) 0px, transparent 45%);
 }
 
-/* ---------- Apple-style blur reveal (CSS) ---------- */
-@keyframes blurReveal {
-  0% {
-    opacity: 0;
-    filter: blur(14px);
-    transform: translateY(28px) scale(0.98);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0) scale(1);
-  }
-}
-.animate-blur-reveal {
-  animation: blurReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-/* ---------- Slow float ---------- */
-@keyframes slowFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-.animate-slow-float {
-  animation: slowFloat 5s ease-in-out infinite;
-}
-
-/* ---------- Marquee ---------- */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.animate-marquee {
-  animation: marquee 36s linear infinite;
-}
-
 /* ---------- Premium line clamp helpers ---------- */
 .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -413,19 +371,6 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* ---------- Gradient drift for ambient blobs ---------- */
-@keyframes gradientDrift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(3%, -2%) scale(1.05); }
-  66% { transform: translate(-2%, 3%) scale(0.97); }
-}
-.animate-gradient-drift {
-  animation: gradientDrift 18s ease-in-out infinite;
-}
-.animate-gradient-drift-slow {
-  animation: gradientDrift 26s ease-in-out infinite;
-}
-
 /* ---------- Primary button inner glow (2026 spec) ---------- */
 .btn-primary-glow {
   position: relative;
@@ -440,10 +385,6 @@ body {
     inset 0 2px 6px 0 rgba(0, 0, 0, 0.3),
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
     0 2px 8px -2px rgba(31, 67, 30, 0.3);
-}
-
-.animate-ring-pulse {
-  animation: ringPulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 /* ---------- 2026 Atmospheric Depth Utilities ---------- */
@@ -481,12 +422,6 @@ body {
   animation: livePulse 2s ease-in-out infinite;
   display: inline-block;
   box-shadow: 0 0 8px rgba(212, 163, 115, 0.6);
-}
-
-/* Liquid fill transition — for selection chips */
-@keyframes liquidFill {
-  0% { transform: translateY(100%); }
-  100% { transform: translateY(0); }
 }
 
 /* Monospace data label */

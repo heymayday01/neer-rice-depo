@@ -1390,3 +1390,291 @@ Stage Summary:
 - Navbar optimized: grouped secondary actions, clear 3-tier hierarchy (icons < accent pill < primary CTA), shorter category labels, sliding active indicator, enhanced glass material.
 - Logo glows on scroll, category indicator slides with spring physics.
 - Lint clean, verified desktop + mobile, zero errors.
+
+---
+Task ID: anim-audit
+Agent: Explore
+Task: Audit all animation code for jank/timing/bugs
+
+Work Log:
+- Read worklog.md to understand the project history (24 prior tasks, current state: cinematic dark theme, Fraunces/Manrope fonts, 3-color palette, framer-motion + Lenis + GSAP stack, dark-themed modals, vaul cart drawer, onboarding flow, command palette, 3D tilt cards).
+- Located all animation files via LS on /home/z/my-project/src. Note: src/components/site/reveal.tsx was deleted in an earlier refactor (codebase-refactor-optimize task) — confirmed via Glob. Replaced by inline motion.div + cleanRise variant from motion.ts. grain-wisdom.tsx and footer.tsx also were migrated off Reveal.
+- Read full source of: src/lib/motion.ts, src/components/site/hero.tsx, product-card.tsx, product-catalog.tsx, header.tsx, mobile-dock.tsx, all 6 modals (product-detail, cart-drawer, checkout, ai-sommelier, comparison, order-tracker), src/components/site/grain-wisdom.tsx, onboarding.tsx, command-palette.tsx, mobile-menu-sheet.tsx, footer.tsx, scroll-progress.tsx, radial-gauge.tsx, smart-image.tsx, motion-provider.tsx, pull-to-refresh.tsx, logo.tsx, plus shadcn primitives (dialog.tsx, drawer.tsx, sheet.tsx), src/app/globals.css, src/app/page.tsx, src/hooks/use-prefers-reduced-motion.ts, src/hooks/use-haptic.ts.
+- Grep-audited: motion prop usage patterns, SPRING/EASE/DURATION references, motion import statements vs SPRING usage (to find missing imports), delay-prop misuse, dead CSS classes, prefers-reduced-motion coverage, layoutId collisions.
+- Verified 5 categories of issues: (1) runtime crash bugs (missing imports), (2) timing inconsistencies (transition overrides), (3) GPU/jank hotspots (stacked backdrop-filters, infinite CSS animations, layout thrashing), (4) reduced-motion accessibility gaps (no MotionConfig wrapper), (5) dead code (unused CSS animations + blurReveal variant).
+
+Stage Summary:
+
+=== src/lib/motion.ts ===
+- MEDIUM — `blurReveal` variant (lines 67–76) still uses `filter: "blur(14px)"` (GPU-expensive per-frame). Worklog claims blur was removed from hero, but the variant is still exported. Currently zero JSX references (verified via Grep) → dead export. Either delete or document as hero-only.
+- LOW — `imageCrossfade` variant uses `scale: 1.02 → 1` (sub-pixel scale on a large hero image = significant compositing work each frame). Acceptable but worth noting.
+- LOW — `SPRING.bouncy` (damping 18, mass 0.7) is used for indicator dots/badges where overshoot looks intentional, but it's also used in mobile-menu-sheet.tsx line 145 for the sliding active dot — too wobbly for an indicator. Should use SPRING.dock there.
+- LOW — `SPRING.drawer` (stiffness 300, damping 38) is overridden in mobile-dock.tsx line 64 with `duration: 0.35` — mixing spring + duration creates a hybrid that may not behave intuitively.
+
+=== src/components/site/reveal.tsx ===
+- N/A — File does not exist (deleted in `codebase-refactor-optimize` task). All reveal functionality is now inline `motion.div` + `cleanRise` variant. No action needed; mentioning to confirm audit scope.
+
+=== src/components/site/hero.tsx ===
+- MEDIUM — Eyebrow line `motion.span` (lines 201–206) animates `scaleX: 0 → 1` over 0.8s with NO `usePrefersReducedMotion` check. Animates even when user prefers reduced motion. Other hero animations check `reduced` and set `initial="visible"` to skip — this one doesn't.
+- MEDIUM — 14 grain particles (lines 153–181) with infinite CSS `floatParticle` animation run forever on the hero. Each animates `transform: translate + scale + opacity` (GPU-friendly) but 14 simultaneous infinite animations add to first-paint jank budget. Combined with: scroll-linked `contentOpacity` useTransform, entrance stagger, floating leaf (line 436 infinite rotate+y), scroll hint (line 364 infinite y+opacity) = 5+ concurrent infinite animation systems on the hero alone.
+- MEDIUM — Easing arrays `[0.22, 1, 0.36, 1]` hardcoded inline 3 times (lines 100, 109, 119, 204) instead of using exported `EASE.out`. DRY violation — drift risk if EASE.out changes.
+- LOW — Entrance durations: `fadeUpItem` 0.7s, `headlineItem` 0.9s, `imageItem` 1.0s + 0.3s delay = 1.3s total for image card. At the upper limit of UI timing — feels slightly slow on repeat visits. Hero signature moments can justify this, but consider 0.6/0.8/0.9s for snappier feel.
+- LOW — `useScroll` + `useTransform` hooks (lines 129–133) run even when `reduced` is true (the result is just discarded via the ternary). Wasted work for reduced-motion users.
+- LOW — `style={{ opacity: reduced ? 1 : contentOpacity }}` switches between primitive and MotionValue. Could cause framer-motion internal re-initialization when toggling reduced-motion preference (rare).
+
+=== src/components/site/product-card.tsx ===
+- HIGH — Line 99: `transition={SPRING.gentle}` on `motion.article` OVERRIDES the `whileHover={hoverLift}` transition (which uses `SPRING.snappy` from motion.ts). Hover lift feels sluggish (stiffness 280 vs intended 420). Either remove the `transition` prop or change to `SPRING.snappy`.
+- MEDIUM — Same `transition={SPRING.gentle}` also overrides the `cleanRise` variant's explicit `transition: { duration: 0.7, ease: EASE.out }`. The editorial ease-out reveal becomes a spring. Inconsistent with the rest of the design language.
+- MEDIUM — 3D tilt: `useTransform(tiltX, [-50, 50], [2, -2])` is only ±2° rotation. With `transformPerspective: 800`, the effect is barely perceptible. Either increase to ±4° for visible effect or remove entirely (currently doing GPU work for invisible result). onMouseMove fires very frequently on desktop and calls `getBoundingClientRect()` each event (line 81) — minor layout read but cached so OK.
+- LOW — `handleMouseLeave` uses `animate(tiltX, 0, { duration: 0.4 })` (line 90) — direct framer-motion `animate()` call outside React state. Fine but mixes imperative animation with declarative `useTransform`. Acceptable.
+- LOW — Quick-add FAB uses `md:opacity-0 md:group-hover:opacity-100` (line 145) — CSS transition via Tailwind defaults. No explicit transition defined; relies on `transition-all` class absence. May snap instead of fade on hover.
+
+=== src/components/site/product-catalog.tsx ===
+- MEDIUM — Line 230: `transition={SPRING.gentle}` on grid items overrides `cleanRise` variant's explicit `transition: { duration: 0.7, ease: EASE.out }`. Same issue as product-card.
+- MEDIUM — Line 243: `transition={SPRING.gentle}` on promo card overrides `cleanRise`. Same issue.
+- MEDIUM — `<motion.div layout>` on the grid container + `<AnimatePresence mode="popLayout">` with 10+ cards. When filter/sort changes, ALL cards FLIP-animate simultaneously. Acceptable for 10 cards but a jank spike during filter changes on mobile.
+- LOW — Exit animation `{ opacity: 0, y: -16, transition: { duration: DURATION.fast, ease: EASE.io } }` (line 229) is correctly defined inside the exit variant (overrides global transition). Good pattern.
+- LOW — `whileInView` with `viewport={{ once: true, margin: "-60px" }}` is correct (no repeated triggers). Good.
+
+=== src/components/site/header.tsx ===
+- MEDIUM — `setScrolled(y > 8)` (line 65) runs inside `useMotionValueEvent` on EVERY scroll event. When at the top (y < 8), it sets `false` on every scroll event even when value doesn't change → unnecessary React re-renders. Should be `if ((y > 8) !== scrolled) setScrolled(y > 8);`.
+- MEDIUM — Mobile pill navbar (lines 106–183) uses inline `backdrop-filter: blur(40px) saturate(180%)` + 6-layer box-shadow on a sticky element. GPU-heavy during scroll on mobile.
+- LOW — `useScroll()` with no target listens to entire document scroll. Acceptable for header visibility logic.
+- LOW — Cart badge `key={count}` with `SPRING.bouncy` (damping 18) overshoots ~15% on every count change. Could feel jumpy if user spam-adds items.
+- LOW — `transition-transform duration-500` on logo (line 205) is a CSS transition (500ms). Slower than the rest of the UI's snappy springs. Inconsistent.
+
+=== src/components/site/mobile-dock.tsx ===
+- MEDIUM — Lines 113–115: `whileTap={{ scale: 0.88 }}` AND `animate={isPressed ? { scale: 0.88 } : { scale: 1 }}` BOTH control scale. They're synchronized but redundant — `whileTap` is intended for press feedback, the `animate`+`pressedId` state pattern is for the 110ms press-confirm delay. Both fighting over the same property could cause double-rendering or visual stutter. Recommend removing `whileTap` and relying solely on `animate` driven by `pressedId`.
+- MEDIUM — Press ripple (lines 138–145): `transition: { duration: 0.45, ease: EASE.out }` — 450ms is too slow for press feedback. iOS/Material standard is ≤300ms. Feels sluggish.
+- MEDIUM — Container has `backdrop-filter: blur(40px) saturate(180%)` + 6-layer box-shadow + refractive top edge + the "Fresh" pulse indicator (also has its own backdrop blur). On a fixed bottom-of-screen element, this is heavy mobile GPU load, especially during scroll.
+- LOW — `transition={{ ...SPRING.drawer, duration: 0.35 }}` (line 64) mixes spring physics with a `duration` override. Framer-motion will treat this as a duration-based spring, which can feel less natural than pure spring. Recommend using either pure spring OR pure duration.
+- LOW — `layoutId="dock-active"` (line 123) is unique — no conflicts. Good.
+
+=== src/components/site/modals/ai-sommelier-modal.tsx ===
+- HIGH — Line 167: `animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}` references `SPRING.gentle`, but line 25 only imports `tapPress` — `SPRING` is NOT imported. This is a runtime ReferenceError that will throw when the AI returns a recommendation and the result panel tries to animate in. The modal will crash/flash unstyled content. Fix: change import to `import { tapPress, SPRING } from "@/lib/motion";`.
+
+=== src/components/site/modals/cart-drawer.tsx ===
+- LOW — Each cart item has `layout` + spring entrance + scale animations. With many items (10+), `layout` causes all items to FLIP-animate on any add/remove. Fine for typical 1-5 item carts but can jank with large carts.
+- LOW — Line 107: `animate={{ ..., transition: SPRING.gentle }}` with `x: 40 → 0` — spring will overshoot slightly past x=0 (back to ~-5px) before settling. May look like a subtle "bounce" on entrance. Acceptable.
+- LOW — Vaul Drawer has built-in swipe physics. The custom `motion.div layout` items inside may conflict with vaul's drag transforms during swipe-to-dismiss. Visually verify drag-to-close doesn't fight the layout animation.
+
+=== src/components/site/modals/checkout-modal.tsx ===
+- HIGH (perf) — Heavy `backdrop-blur-xl` (24px) stacking:
+  - Dialog overlay (`bg-black/50 backdrop-blur-sm` from dialog.tsx) — 1 layer
+  - Sticky bottom pay bar (line 964: `bg-[#0d140d]/80 backdrop-blur-xl`) — 2nd layer
+  - Each `SectionCard` (line 1003: `bg-white/[0.03] backdrop-blur-xl`) — adds a layer PER section
+  - Mobile bill summary (line 1271: `bg-white/[0.03] backdrop-blur-xl`)
+  - Success screen tracking card (line 1474: `backdrop-blur-xl`)
+  Stacked backdrop-filters are one of the worst mobile jank sources — each creates a separate GPU layer + sampling pass. With 6+ sections visible, scrolling the form is likely janky on mid-range mobile.
+- MEDIUM — Multiple `initial={{ height: 0, opacity: 0 }} animate={{ height: "auto" }}` collapsibles (lines 615, 831, 908, 1089, 1129, 1170, 1294, 1377) — 8+ instances. Each `height: auto` animation forces per-frame layout measurement (ResizeObserver under the hood). When multiple expand/collapse simultaneously (e.g., opening payment method while gift wrap is open), can cause layout thrash.
+- MEDIUM — Lines 1468–1522: Success screen staggers 6 motion.divs with delays 0.15s → 0.55s. Total reveal time ~1.05s. Plus confetti at 1.2s gravity. Acceptable for celebration but pushes total success-screen reveal over 1s.
+- LOW — Line 1073: `<motion.div initial={{ width: 0 }} animate={{ width: `${...}%` }}>` animates `width` (non-GPU property). For a 1px-tall progress bar, this causes per-frame layout reflow. Better: animate `scaleX` with `transform-origin: left`.
+- LOW — Line 1083 + 1287: `motion.span animate={{ rotate: 180 }}` for chevron flip with `SPRING.snappy` — fine.
+
+=== src/components/site/modals/product-detail-modal.tsx ===
+- LOW — Line 246: `layoutId="detail-weight"` is unique within the modal but persists across modal remounts. If user opens Product A detail, closes, immediately opens Product B detail, framer-motion may try to fly the weight pill from A's last position to B's position. Usually invisible (modal unmounts in between) but can occasionally show a flying-pill artifact.
+- LOW — `staggerContainer(0.05, 0.05)` for content entrance (line 97) — only 50ms stagger between children. Very tight; children appear almost simultaneously rather than cascading. Consider 0.07–0.08s for more visible stagger.
+- LOW — Weight pill uses `SPRING.snappy` (line 247) while product-card.tsx uses `SPRING.dock` for the same pattern. Inconsistent spring choice for identical UX pattern.
+
+=== src/components/site/modals/comparison-modal.tsx ===
+- LOW — No framer-motion animations on rows (just CSS `transition-colors` on hover). Acceptable for a dense data table — animating rows would feel sluggish. Good restraint.
+- LOW — `tr:hover` uses `transition-colors` (Tailwind default 150ms). Fine.
+
+=== src/components/site/modals/order-tracker-modal.tsx ===
+- LOW — Result panel uses `motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}` (lines 130–133) with NO `transition` specified → defaults to framer-motion's default tween (0.3s ease). Inconsistent with the rest of the app's explicit SPRING/EASE usage.
+- LOW — Timeline step transitions use plain CSS `transition-all` (line 169). No animation on status change beyond color. Acceptable.
+
+=== src/components/site/grain-wisdom.tsx ===
+- MEDIUM — Lines 144, 187: `<motion.div ... delay={0.1}>` and `<motion.div ... delay={0.18}>` — `delay` is NOT a valid top-level motion prop. It gets passed through to the DOM as an unknown attribute (`delay="0.1"` on a div). React may warn; the delay does nothing. If delay is intended, use `transition={{ delay: 0.1 }}`. Currently these motion.divs have no `initial`/`animate`/`variants` so they don't animate at all — `motion.div` is overkill, plain `<div>` would suffice.
+- LOW — Line 192: `animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}` — spring on tab content swap. Gentle spring (damping 26) will overshoot slightly, may feel wobbly for content swap. Consider `SPRING.snappy` or a tween.
+- LOW — `delay={0.18}` on the content panel (line 187) is meant to delay content until tabs finish sliding, but since `delay` is ignored, content swaps immediately. Probably not the intended behavior.
+
+=== src/components/site/onboarding.tsx ===
+- MEDIUM — Line 90: `setTimeout(() => onComplete(), 1600)` after celebration starts. The 24-particle burst has max stagger delay `23 * 0.015 = 0.345s` + duration 0.9s = ~1.25s total. So there's a ~340ms gap where the celebration has visually finished but onComplete hasn't fired — user may think app is frozen. Tighten to 1300ms or extend the celebration.
+- LOW — 24-particle celebration burst (lines 358–382) animates 24 absolutely-positioned elements simultaneously. Each animates x, y, scale (3-stop array), opacity (3-stop). 24 × 4 properties = 96 simultaneous animated values. Brief but heavy. Reduced-motion users skip it (line 356 check). Good.
+- LOW — Segmented progress bar (lines 233–247): `animate={{ scaleX: active ? 1 : 0, opacity: active ? 1 : 0.3 }}` with spring — fine.
+- LOW — `transition={{ duration: 0.8, ease: EASE.out }}` on image scale-in (line 139) — 0.8s is at the upper limit but OK for onboarding hero image.
+
+=== src/components/site/command-palette.tsx ===
+- LOW — Line 133: `transition={SPRING.gentle}` on the panel — gentle spring (stiffness 280, damping 26) for a quick utility overlay. Should use `SPRING.snappy` for a snappier, more "command palette" feel (Raycast/Linear use ~200ms tweens or very stiff springs).
+- LOW — Overlay backdrop `transition={{ duration: 0.2 }}` (line 125) — quick fade. Good.
+- LOW — No `usePrefersReducedMotion` check. Cmd+K palette animates regardless of user preference.
+
+=== src/components/site/mobile-menu-sheet.tsx ===
+- MEDIUM — Line 32: `aromatic: BrainCircuit, Flower2,` — comma expression in object literal. `aromatic` gets `BrainCircuit` (WRONG icon for fragrance category — BrainCircuit is the AI icon), and `Flower2` becomes a stray shorthand property key on the record. Worklog claims this exact bug was fixed in `navbar-dock-redesign` task, but the fix was only applied to `header.tsx` (line 41: `aromatic: Flower2`). mobile-menu-sheet.tsx still has the bug. Fix: `aromatic: Flower2,` (drop BrainCircuit).
+- LOW — `layoutId="mobile-cat-dot"` (line 144) with `SPRING.bouncy` (damping 18) — too wobbly for an indicator dot. Will visibly oscillate when switching categories. Use `SPRING.dock` for tighter feel.
+- LOW — `staggerContainer(0.05)` (line 109) — 50ms stagger between categories. Tight but acceptable for 6 items.
+- LOW — Sheet open duration is 500ms (from sheet.tsx) — see sheet.tsx finding below.
+
+=== src/components/site/footer.tsx ===
+- LOW — Two `<motion.div>` wrappers (lines 21, 60) with no `initial`/`animate`/`variants`/`whileInView` — they don't animate. Plain `<div>` would suffice. Minor overkill.
+- LOW — `animate-pulse` on the "Verified Farm-to-Table" dot (line 125) — Tailwind's default pulse is 2s opacity fade. Acceptable.
+
+=== src/components/site/scroll-progress.tsx ===
+- LOW — `useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.5 })` — spring constants don't match any SPRING preset. Custom one-off. Acceptable for a unique element.
+- LOW — `style={{ scaleX }}` with `origin-left` — correct GPU-friendly approach. Good.
+
+=== src/components/site/radial-gauge.tsx ===
+- LOW — `whileInView={{ strokeDashoffset: dashOffset }}` with `transition: { duration: 1, ease: [0.22, 1, 0.36, 1] }` (lines 52–54) — 1s duration for a small gauge ring is at the upper limit. With 10 product cards each having a RadialGauge, that's 10 simultaneous 1s animations when the catalog scrolls into view. Acceptable but adds to scroll-in animation budget.
+- LOW — Hardcoded easing array `[0.22, 1, 0.36, 1]` (line 54) instead of imported `EASE.out`. DRY violation.
+- LOW — `viewport={{ once: true }}` — correct, no repeat triggers. Good.
+
+=== src/components/site/motion-provider.tsx ===
+- LOW — Two MutationObservers (lines 48 and 63) observing the same `document.body` for `style` attribute changes. Redundant — one observer checking both `data-scroll-locked` attribute AND `overflow` style would suffice.
+- LOW — `gsap.ticker.lagSmoothing(0)` (line 45) disables lag smoothing globally. Good for consistent timing but can cause animation catch-up spikes after tab switches. Acceptable tradeoff.
+- LOW — Lenis `duration: 1.1` (line 31) — at the upper limit. Some users find 1.1s smooth-scroll duration too "floaty". 0.8–1.0s is more common.
+
+=== src/components/site/pull-to-refresh.tsx ===
+- LOW — `onTouchMove` calls `setPullDistance(elastic)` on every touchmove event (line 46) — high-frequency React state updates during drag. Could cause jank during pull. Should throttle via rAF or use a ref + direct DOM manipulation for the indicator height.
+- LOW — `style={{ height: \`${pullDistance}px\` }}` (line 92) on the indicator — animates `height` (non-GPU). For a small indicator this is OK but combined with the per-frame setState, can compound jank.
+- LOW — `animate-spin` on the SVG when refreshing (line 103) — Tailwind's spin is 1s linear infinite. Fine.
+
+=== src/components/site/smart-image.tsx ===
+- LOW — No animation at all (worklog notes this was deliberate after the chicken-and-egg bug with motion.img + lazy + opacity-0). Good — reliable image loading is more important than animation here.
+
+=== src/components/ui/dialog.tsx ===
+- LOW — Overlay `backdrop-blur-sm` (4px) — light blur, acceptable.
+- LOW — Content uses `data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 ... duration-300` — 300ms zoom is good. Transform-based (GPU-friendly). Good.
+
+=== src/components/ui/sheet.tsx ===
+- MEDIUM — Line 61: `data-[state=open]:duration-500 data-[state=closed]:duration-300` — 500ms OPEN duration is too long for a UI sheet. Apple HIG recommends 250–400ms for sheet presentation. Affects mobile-menu-sheet.tsx (the only Sheet user). Feels slow. Recommend 350ms open / 250ms close.
+
+=== src/components/ui/drawer.tsx ===
+- LOW — Uses vaul's native spring physics. No custom animations. Good — vaul handles drag/snap well.
+
+=== src/app/globals.css ===
+- HIGH (perf) — Dead CSS animations still shipping in bundle:
+  - `.animate-blur-reveal` (lines 370–372) + `@keyframes blurReveal` (lines 358–369) — uses GPU-expensive `filter: blur(14px)`. ZERO JSX references (verified via Grep). Should be deleted.
+  - `.animate-slow-float` (line 379) + `@keyframes slowFloat` (lines 375–381) — ZERO JSX references. Delete.
+  - `.animate-marquee` (line 388) + `@keyframes marquee` (lines 384–390) — ZERO JSX references. Delete.
+  - `.animate-gradient-drift` (line 422), `.animate-gradient-drift-slow` (line 425) + `@keyframes gradientDrift` (lines 417–424) — ZERO JSX references. Delete.
+  - `.animate-ring-pulse` (line 445) — ZERO JSX references (the `live-dot` class uses `livePulse`, not `ringPulse`). Delete.
+  - `@keyframes liquidFill` (lines 487–490) — no class uses it. Delete.
+  - `.bg-aurora`, `.bg-dotgrid`, `.bg-grain-paper`, `.gold-glow-hover`, `.shadow-luxe`, `.shadow-luxe-lg`, `.shadow-glow-gold`, `.eco-badge` — verify usage; many appear unused after the dark-theme migration.
+- MEDIUM — Line 173: `section { content-visibility: auto; contain-intrinsic-size: auto 500px; }` applies GLOBALLY to all `<section>` elements. Can cause:
+  - Scrollbar jumps when sections lazily render.
+  - Scroll-anchoring issues (clicking anchor links may land off-target).
+  - `contain-intrinsic-size: auto 500px` is a poor guess for tall sections (hero is 100svh, catalog is much taller).
+  Should be opt-in via a class, not global.
+- MEDIUM — Line 167: `will-change: transform, opacity` applied to ALL `.glass`, `.glass-dark`, `.pill`, and `img[loading="eager"]`. Persistent `will-change` on elements that don't always animate causes excessive GPU memory use (browser keeps a compositor layer for each). `will-change` should be added right before animation and removed after. The mobile-dock and header have these classes on sticky/fixed elements that are GPU-heavy enough already.
+- LOW — `@media (prefers-reduced-motion: reduce)` (lines 541–550) only affects CSS animations/transitions. Does NOT affect framer-motion JS animations (no `<MotionConfig reducedMotion="user">` wrapper exists anywhere — verified via Grep). Most JS animations run regardless of user preference. See global accessibility finding below.
+
+=== GLOBAL / CROSS-CUTTING ===
+- HIGH — Missing `<MotionConfig reducedMotion="user">` wrapper. Only 3 components (hero, onboarding, motion-provider) check `usePrefersReducedMotion()`. ALL other animations (catalog reveals, product card hovers, dock transitions, modal entrances, command palette, mobile menu, grain-wisdom tab swaps, scroll-progress, etc.) IGNORE prefers-reduced-motion. This is a significant accessibility regression — users with vestibular disorders or motion sensitivity still see full spring animations everywhere. Fix: wrap the app in `<MotionConfig reducedMotion="user">` in layout.tsx (or MotionProvider).
+- MEDIUM — `usePrefersReducedMotion()` is called in only 3 of ~15 animation-using components. Even when called (hero, onboarding), coverage is partial — hero's eyebrow line and grain particles don't fully respect it; onboarding's progress bar and CTA pulse don't check it.
+- LOW — Inconsistent spring selection for identical UX patterns:
+  - Sliding active indicator: header uses SPRING.dock, mobile-dock uses SPRING.dock, mobile-menu-sheet uses SPRING.bouncy, product-card weight uses SPRING.dock, product-detail weight uses SPRING.snappy. Should standardize on SPRING.dock for all indicator slides.
+  - Hover lift: motion.ts exports `hoverLift` with SPRING.snappy, but product-card.tsx overrides to SPRING.gentle via the `transition` prop. Should let `hoverLift`'s built-in transition apply.
+- LOW — No layoutId collisions found (verified all 6 layoutIds: `meal-pill`, `nav-active-cat`, `mobile-cat-dot`, `weight-${product.id}`, `dock-active`, `detail-weight` — all unique or scoped). Good.
+
+=== Summary by Severity ===
+HIGH (3):
+  1. ai-sommelier-modal.tsx line 167 — `SPRING.gentle` used but `SPRING` not imported → runtime ReferenceError when AI returns recommendations.
+  2. Missing `<MotionConfig reducedMotion="user">` — most animations ignore prefers-reduced-motion (accessibility regression).
+  3. globals.css — dead `.animate-blur-reveal` (and 5 other dead animations) shipping in bundle; the blur variant is GPU-expensive even when unused (browser still parses the keyframes).
+
+MEDIUM (15):
+  - product-card.tsx: `transition={SPRING.gentle}` overrides `whileHover` snappy transition → sluggish hover.
+  - product-card.tsx: same override breaks `cleanRise` editorial ease-out.
+  - product-card.tsx: 3D tilt ±2° too subtle to be visible.
+  - product-catalog.tsx: `transition={SPRING.gentle}` overrides `cleanRise` (×2 instances).
+  - product-catalog.tsx: `motion.div layout` + `popLayout` AnimatePresence causes FLIP on all 10 cards during filter.
+  - header.tsx: `setScrolled(y > 8)` runs every scroll event without change-check.
+  - header.tsx: mobile pill navbar — 40px backdrop-blur + 6 box-shadows on sticky element.
+  - mobile-dock.tsx: redundant `whileTap` + `animate` both controlling scale.
+  - mobile-dock.tsx: press ripple 450ms too slow (should be ≤300ms).
+  - mobile-dock.tsx: 40px backdrop-blur + 6 box-shadows on fixed bottom element.
+  - sheet.tsx: 500ms open duration too long for UI sheet.
+  - checkout-modal.tsx: stacked `backdrop-blur-xl` across 6+ surfaces — major mobile jank.
+  - checkout-modal.tsx: 8+ simultaneous `height: auto` collapsibles risk layout thrash.
+  - grain-wisdom.tsx: invalid `delay` prop on motion.div (no-op, may React-warn).
+  - mobile-menu-sheet.tsx: `aromatic: BrainCircuit, Flower2,` comma-expression bug (wrong icon + stray key).
+  - onboarding.tsx: 340ms gap between celebration end and onComplete().
+  - globals.css: global `section { content-visibility: auto }` causes scrollbar/anchor issues.
+  - globals.css: persistent `will-change` on all `.glass`/`.pill`/eager images.
+
+LOW (20+):
+  - Hero: hardcoded easing arrays (DRY), entrance durations at upper limit, useScroll runs even when reduced.
+  - Cart drawer: `layout` on items may jank with 10+ items, spring x-overshoot.
+  - Checkout: width animation (non-GPU) on free-ship progress bar.
+  - Product detail: layoutId persists across remounts, stagger too tight, inconsistent spring vs product-card.
+  - Comparison: no issues (good restraint).
+  - Order tracker: missing explicit transition (uses framer default).
+  - Grain wisdom: `motion.div` without animation props (overkill), spring on tab swap may wobble.
+  - Onboarding: 24-particle burst heavy but reduced-motion-safe.
+  - Command palette: SPRING.gentle too soft for utility overlay, no reduced-motion check.
+  - Mobile menu: SPRING.bouncy too wobbly for indicator dot.
+  - Footer: motion.div without animation (overkill).
+  - Scroll progress: custom spring constants (not a preset).
+  - Radial gauge: 1s duration × 10 instances, hardcoded easing.
+  - Motion provider: 2 redundant MutationObservers, Lenis 1.1s floaty.
+  - Pull to refresh: per-frame setState on touchmove (jank risk), height animation (non-GPU).
+  - Smart image: no animation (deliberate, good).
+  - Dialog: zoom + 300ms is good.
+  - Drawer (vaul): no custom animation, good.
+  - Various: inconsistent spring choices for identical UX patterns.
+
+=== Top 5 Recommended Fixes (priority order) ===
+1. Add `SPRING` to ai-sommelier-modal.tsx imports (1-line fix, prevents runtime crash).
+2. Wrap app in `<MotionConfig reducedMotion="user">` in MotionProvider (accessibility).
+3. Fix mobile-menu-sheet.tsx `aromatic: BrainCircuit, Flower2,` → `aromatic: Flower2,` (wrong icon bug).
+4. Remove `transition={SPRING.gentle}` from product-card.tsx motion.article and product-catalog.tsx grid items (restores snappy hover + editorial ease-out reveal).
+5. Delete dead CSS animations in globals.css (especially `.animate-blur-reveal` which ships GPU-expensive keyframes for nothing).
+
+---
+Task ID: animation-logo-fix
+Agent: main (Z.ai Code)
+Task: Fix and improve animations + fix the logo.
+
+Work Log:
+- AUDIT (via Explore subagent): Found 3 HIGH + 15 MEDIUM animation issues across the site:
+  HIGH: (1) ai-sommelier-modal missing SPRING import → runtime crash, (2) no MotionConfig reducedMotion="user" — accessibility gap, (3) dead CSS animations shipping in bundle.
+  MEDIUM: product-card/catalog transition={SPRING.gentle} overrides hover (sluggish), header setScrolled every scroll event, mobile-dock whileTap + animate conflict, press ripple 450ms too slow, sheet 500ms too long, global content-visibility: auto causes scrollbar jumps, excessive will-change on all glass elements.
+
+- LOGO FIX (critical bug):
+  - PROBLEM: SVG gradient IDs (logo-gold, logo-forest, logo-grain, logo-glow) were hardcoded. When LogoMark rendered multiple times in DOM (mobile 32px + desktop 44px header), SVG ID collisions broke gradients on subsequent instances.
+  - FIX: Used React's useId() hook to generate unique gradient IDs per instance (lg-{uid}, lf-{uid}, lgm-{uid}, lgw-{uid}). Verified: 2 logo instances now have unique IDs (lg-_r_0_, lg-_r_1_).
+  - IMPROVED rice grain shape: replaced blobby ellipses with path-based grains (pointed top + bottom for realistic rice grain silhouette).
+  - Refined central stalk: gentler S-curve.
+  - Verified: 2 circles (ring + badge), 13 paths (11 grains + stalk + water wave), 3 gradients — all rendering correctly.
+
+- ANIMATION FIXES (10 issues resolved):
+
+  1. AI SOMMELIER CRASH FIXED: Added SPRING to imports in ai-sommelier-modal.tsx (was missing → ReferenceError when recommendations rendered). Verified: asked "biryani for 4 people" → returned Royal 1121 Basmati recommendations without crashing.
+
+  2. MOTIONCONFIG reducedMotion="user": Wrapped app in MotionConfig with reducedMotion="user" in motion-provider.tsx. Now ALL framer-motion animations respect OS reduced-motion setting globally. Also set a default spring transition (stiffness 380, damping 30) for consistent feel.
+
+  3. PRODUCT CARD HOVER FIXED: Removed transition={SPRING.gentle} from motion.article in product-card.tsx. This was overriding both the cleanRise entrance variant AND the hoverLift (SPRING.snappy) — hover was sluggish. Now entrance uses cleanRise's built-in ease, hover uses snappy spring.
+
+  4. CATALOG FILTER JANK FIXED: Removed transition={SPRING.gentle} + layout from grid items in product-catalog.tsx. Removed layout from individual items (was causing all 10 cards to FLIP-animate simultaneously on filter changes). Now cleanRise variant handles enter/exit smoothly.
+
+  5. MOBILE DOCK CONFLICT FIXED: Removed redundant animate={isPressed ? {scale:0.88} : {scale:1}} that was fighting with whileTap={{scale:0.88}}. whileTap handles the press natively — no need for manual animate override.
+
+  6. PRESS RIPPLE SPED UP: Reduced press ripple duration from 0.45s → 0.28s (iOS/Material standard ≤300ms). Press feedback now feels snappy.
+
+  7. SHEET DURATION REDUCED: Reduced sheet open duration from 500ms → 350ms (Apple HIG: 250-400ms for UI sheets). Close stays at 300ms.
+
+  8. HEADER SCROLL RE-RENDERS FIXED: setScrolled and setVisible now use functional updates with change-check (prev !== newValue ? newValue : prev) — avoids unnecessary re-renders on every scroll event.
+
+  9. LENIS SMOOTH SCROLL TUNED: Reduced duration from 1.1s → 0.9s (less floaty, more responsive). Removed redundant second MutationObserver (two observers were watching the same body element).
+
+  10. DEAD CSS REMOVED + GPU OPTIMIZATION:
+    - Removed 5 dead CSS animations: animate-blur-reveal (GPU-expensive filter:blur), animate-slow-float, animate-marquee, animate-gradient-drift/slow, animate-ring-pulse, @keyframes liquidFill — none were referenced in any TSX.
+    - Removed global section { content-visibility: auto } — caused scrollbar jumps and scroll-anchoring issues.
+    - Removed blanket will-change: transform, opacity from .glass/.glass-dark/.pill/img[eager] — excessive GPU memory. Now only backface-visibility is set (needed for 3D transforms).
+
+  11. MOBILE MENU ICON BUG FIXED: Fixed `aromatic: BrainCircuit, Flower2,` comma expression in mobile-menu-sheet.tsx (aromatic was getting BrainCircuit icon instead of Flower2). Also synced all category icons with header (Wheat, Layers, Sprout, Flower2, HeartHandshake, Package).
+
+- VERIFIED via Agent Browser (desktop + mobile):
+  - Logo: 2 instances with unique gradient IDs, 13 paths rendering, no SVG conflicts.
+  - AI sommelier: asked "biryani for 4 people" → returned Basmati recommendations without crash.
+  - Catalog filter: clicked Heritage → smooth transition, no errors, no FLIP jank.
+  - Mobile: dock animations working, no errors.
+  - Lint clean, zero runtime errors across all flows.
+
+Stage Summary:
+- Logo: Fixed critical SVG gradient ID conflict (useId for unique IDs per instance) + improved rice grain shape (path-based pointed grains).
+- Animations: Fixed 10 issues — AI sommelier crash (missing SPRING), MotionConfig reducedMotion accessibility, product card hover sluggishness, catalog filter FLIP jank, mobile dock whileTap conflict, press ripple timing, sheet duration, header scroll re-renders, Lenis tuning, dead CSS removal + GPU optimization.
+- Accessibility: ALL animations now respect prefers-reduced-motion globally via MotionConfig.
+- Performance: Removed GPU-expensive blanket will-change, dead CSS animations, global content-visibility.
+- Lint clean, verified desktop + mobile, zero runtime errors.

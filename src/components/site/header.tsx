@@ -62,9 +62,10 @@ export function Header({
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => {
-    setScrolled(y > 8);
-    if (y > 140 && y > lastY.current) setVisible(false);
-    else setVisible(true);
+    // Only update state when the threshold actually changes — avoids re-renders
+    setScrolled((prev) => (prev !== (y > 8) ? y > 8 : prev));
+    if (y > 140 && y > lastY.current) setVisible((prev) => (prev !== false ? false : prev));
+    else setVisible((prev) => (prev !== true ? true : prev));
     lastY.current = y;
   });
 

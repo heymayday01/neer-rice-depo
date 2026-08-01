@@ -96,11 +96,10 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
       ref={cardRef}
       variants={cleanRise}
       whileHover={hoverLift}
-      transition={SPRING.gentle}
       onMouseMove={isDesktop ? handleMouseMove : undefined}
       onMouseLeave={isDesktop ? handleMouseLeave : undefined}
       style={isDesktop ? { rotateX, rotateY, transformPerspective: 800 } : undefined}
-      className="rounded-3xl flex flex-col justify-between overflow-hidden group relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/20 transition-colors"
+      className="rounded-3xl flex flex-col justify-between overflow-hidden group relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/20 transition-colors duration-300"
     >
       <div>
         {/* Image — tappable + long-press quick-add */}
