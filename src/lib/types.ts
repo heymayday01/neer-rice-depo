@@ -35,6 +35,9 @@ export interface RiceProduct {
   giIndex: GILevel;
   agingMonths: number;
   originRegion: string;
+  originState: string;
+  harvestDate: string;
+  cookTimeMins: number;
   waterRatio: string;
   description: string;
   bestFor: string[];

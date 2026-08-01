@@ -17,6 +17,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Low (<55)",
     agingMonths: 12,
     originRegion: "Koppal, Karnataka & Tungabhadra Belt",
+    originState: "Karnataka",
+    harvestDate: "2024-10-15",
+    cookTimeMins: 15,
     waterRatio: "1 : 2.5",
     description:
       "Directly sourced from organic paddy farms in Karnataka. Unpolished to preserve the natural bran layer rich in dietary fiber, B-vitamins, and minerals. Exceptionally light on digestion.",
@@ -52,6 +55,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Medium (55-69)",
     agingMonths: 9,
     originRegion: "Maval & Pune Valley, Maharashtra",
+    originState: "Maharashtra",
+    harvestDate: "2024-11-20",
+    cookTimeMins: 18,
     waterRatio: "1 : 2.8",
     description:
       "Renowned for its heavenly floral aroma and delightfully sticky, soft texture when cooked. Perfect for traditional Varan Bhaat, Masale Bhaat, and soul-soothing Khichdi.",
@@ -86,6 +92,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Medium (55-69)",
     agingMonths: 24,
     originRegion: "Tarori & Karnal, Haryana",
+    originState: "Punjab",
+    harvestDate: "2024-10-08",
+    cookTimeMins: 12,
     waterRatio: "1 : 2.0",
     description:
       "Aged for 2 full years in traditional grain granaries. Each grain cooks into a slender, non-sticky masterpiece that expands to twice its raw length. Scented with natural 2-acetyl-1-pyrroline.",
@@ -120,6 +129,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Low (<55)",
     agingMonths: 6,
     originRegion: "Chettinad & Madurai, Tamil Nadu",
+    originState: "Tamil Nadu",
+    harvestDate: "2024-09-25",
+    cookTimeMins: 35,
     waterRatio: "1 : 3.5",
     description:
       "Historically reserved for royalty. Packed with powerful antioxidants (anthocyanins), iron, and fiber. Deep purple-black hue that delivers a nutty flavor and chewy texture.",
@@ -161,6 +173,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Low (<55)",
     agingMonths: 12,
     originRegion: "Hassan & Mandya, Karnataka",
+    originState: "Karnataka",
+    harvestDate: "2024-11-10",
+    cookTimeMins: 22,
     waterRatio: "1 : 2.8",
     description:
       "A prized red-and-white striped heirloom grain cultivated since the 17th century under Wodeyar patronage. Exceptionally nutrient-dense, promoting immunity and bone strength.",
@@ -196,6 +211,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Low (<55)",
     agingMonths: 10,
     originRegion: "Palakkad Gap, Kerala",
+    originState: "Kerala",
+    harvestDate: "2024-12-05",
+    cookTimeMins: 25,
     waterRatio: "1 : 3.5",
     description:
       "Distinctive thick red grain with a robust earthy taste. Double-parboiled with husk intact to retain essential minerals, Vitamin B6, and complex carbohydrates for sustained energy.",
@@ -230,6 +248,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Medium (55-69)",
     agingMonths: 12,
     originRegion: "Burdwan & Hooghly, West Bengal",
+    originState: "West Bengal",
+    harvestDate: "2024-11-15",
+    cookTimeMins: 15,
     waterRatio: "1 : 2.2",
     description:
       "Traditionally offered to Lord Krishna in temples. Short, plump white grains infused with a natural ghee-like aroma and rich flavor that turns any dish into a festive celebration.",
@@ -264,6 +285,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Medium (55-69)",
     agingMonths: 12,
     originRegion: "Wada, Palghar & South Gujarat",
+    originState: "Maharashtra",
+    harvestDate: "2024-10-28",
+    cookTimeMins: 14,
     waterRatio: "1 : 2.4",
     description:
       "Tiny, smooth white grains that cook fluffy and remain tender all day long. A beloved household classic for daily lunches, dal chawal, and gentle light meals.",
@@ -298,6 +322,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Medium (55-69)",
     agingMonths: 12,
     originRegion: "Western Ghats, Maharashtra",
+    originState: "Maharashtra",
+    harvestDate: "2024-11-22",
+    cookTimeMins: 16,
     waterRatio: "1 : 2.5",
     description:
       "An ancient scented short-grain rice that releases an intoxicating natural aroma during boiling. Soft, comforting, and easily digestible, favored for baby food and festive feasts.",
@@ -333,6 +360,9 @@ export const RICE_PRODUCTS: RiceProduct[] = [
     giIndex: "Low (<55)",
     agingMonths: 12,
     originRegion: "Multi-State Farmer Cooperative",
+    originState: "Karnataka",
+    harvestDate: "2024-10-15",
+    cookTimeMins: 18,
     waterRatio: "Varies by grain",
     description:
       "Experience the best of ancient Indian rice diversity! Contains 5kg Organic Black Rice (antioxidant power), 5kg Rajamudi Unpolished (iron & zinc), and 5kg Indrayani Aromatic (comfort meal). Save 18% over individual purchases.",

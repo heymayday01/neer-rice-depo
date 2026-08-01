@@ -140,9 +140,9 @@ export function ProductDetailModal({ product, onClose }: Props) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {[
                 { icon: Droplets, label: "Water Ratio", value: product.waterRatio },
-                { icon: Timer, label: "Aged", value: `${product.agingMonths} mo` },
+                { icon: Timer, label: "Cook Time", value: `${product.cookTimeMins} min` },
                 { icon: Sprout, label: "Grain", value: product.grainType },
-                { icon: MapPin, label: "Process", value: product.processing },
+                { icon: MapPin, label: "Origin", value: product.originState },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -155,6 +155,18 @@ export function ProductDetailModal({ product, onClose }: Props) {
                   <div className="text-xs font-bold text-white">{s.value}</div>
                 </div>
               ))}
+            </div>
+
+            {/* Harvest freshness + cooking guide strip */}
+            <div className="flex items-center gap-3 rounded-xl border border-[#a3c4a0]/15 bg-[#1f431e]/6 px-4 py-2.5">
+              <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#a3c4a0]">
+                <span className="live-dot" style={{ width: 5, height: 5 }} />
+                Harvested {new Date(product.harvestDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
+              </span>
+              <span className="text-stone-500">·</span>
+              <span className="text-[11px] font-semibold text-stone-400">
+                Aged {product.agingMonths} months · {product.processing}
+              </span>
             </div>
 
             {/* Best for */}

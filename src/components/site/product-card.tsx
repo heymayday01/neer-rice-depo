@@ -2,7 +2,7 @@
 
 import { useState, memo, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
-import { Star, ShoppingBag, Eye, Check, ChevronRight, Plus } from "lucide-react";
+import { Star, ShoppingBag, Eye, Check, ChevronRight, Plus, Clock, MapPin, Flame } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
@@ -10,6 +10,17 @@ import { SPRING, swapUp, hoverLift, tapPress, cleanRise } from "@/lib/motion";
 import { SmartImage } from "./smart-image";
 import { RadialGauge } from "./radial-gauge";
 import { useHaptic } from "@/hooks/use-haptic";
+
+/* Calculate days since harvest for freshness badge */
+function getFreshnessDays(harvestDate: string): number {
+  const harvest = new Date(harvestDate);
+  const now = new Date();
+  return Math.max(0, Math.floor((now.getTime() - harvest.getTime()) / (1000 * 60 * 60 * 24)));
+}
+
+function getHarvestMonth(harvestDate: string): string {
+  return new Date(harvestDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
+}
 
 interface ProductCardProps {
   product: RiceProduct;
@@ -159,11 +170,15 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           </motion.button>
 
           {/* Bottom image meta */}
-          <div className="absolute bottom-3 left-3 z-10 pointer-events-none">
+          <div className="absolute bottom-3 left-3 z-10 pointer-events-none flex items-center gap-2">
+            <span className="flex items-center gap-1 text-[#a3c4a0] text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-[#a3c4a0]/25 bg-[#1f431e]/30 backdrop-blur-sm uppercase tracking-wider">
+              <span className="live-dot" style={{ width: 3, height: 3 }} />
+              Fresh
+            </span>
             <span className="text-stone-400 text-[10px] font-mono tracking-wide">
               {product.grainType} · {product.agingMonths}m
             </span>
-            <span className={`ml-2 text-[10px] font-mono tracking-wide ${
+            <span className={`text-[10px] font-mono tracking-wide ${
               product.giIndex.includes("Low") ? "text-[#d4a373]" : "text-stone-500"
             }`}>
               GI {product.giIndex.split(" ")[0]}
@@ -175,8 +190,9 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
         <div className="p-4 space-y-2.5">
           {/* Origin + stock */}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500 truncate">
-              {product.originRegion.split(",")[0]}
+            <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500 truncate">
+              <MapPin className="h-2.5 w-2.5 text-[#d4a373] shrink-0" />
+              {product.originState}
             </span>
             <div className="flex items-center gap-1.5">
               <span className="live-dot" />
@@ -202,6 +218,22 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">
             {product.tagline}
           </p>
+
+          {/* Cooking chips — cook time + water ratio */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.03] px-2 py-0.5 text-[9px] font-bold text-stone-300">
+              <Clock className="h-2.5 w-2.5 text-[#d4a373]" />
+              {product.cookTimeMins} min
+            </span>
+            <span className="flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.03] px-2 py-0.5 text-[9px] font-bold text-stone-300">
+              <Flame className="h-2.5 w-2.5 text-[#d4a373]" />
+              {product.waterRatio}
+            </span>
+            <span className="flex items-center gap-1 rounded-full border border-[#a3c4a0]/15 bg-[#1f431e]/8 px-2 py-0.5 text-[9px] font-bold text-[#a3c4a0]">
+              <span className="live-dot" style={{ width: 3, height: 3 }} />
+              {getHarvestMonth(product.harvestDate)}
+            </span>
+          </div>
 
           {/* Rating + Aroma */}
           <div className="flex items-center justify-between pt-2 border-t border-white/8">

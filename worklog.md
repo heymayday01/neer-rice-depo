@@ -1273,3 +1273,74 @@ Stage Summary:
 - Color palette unified: #0a0f0a bg, #1f431e primary, #d4a373 gold accent, #a3c4a0 sage (readable green text on dark), stone-100/300/400 text hierarchy.
 - Fonts: Fraunces (serif headings) + Manrope (sans body) consistent across all sections.
 - Rice theme throughout: Sprout icon, "Harvest" label, "Fresh" pulse, grain basket, grain sommelier.
+
+---
+Task ID: harvest-data
+Agent: general-purpose
+Task: Add harvestDate, cookTimeMins, originState to all 10 products
+
+Work Log:
+- Read /home/z/my-project/src/lib/types.ts to confirm RiceProduct now requires originState, harvestDate, and cookTimeMins.
+- Read /home/z/my-project/src/lib/rice-products.ts to inspect the current structure of all 10 products and the exact `originRegion` / `waterRatio` lines for each.
+- Used MultiEdit on rice-products.ts to insert the 3 new fields directly between `originRegion` and `waterRatio` for each product, with the values specified per product:
+  1. sona-masoori-unpolished → Karnataka, 2024-10-15, 15
+  2. indrayani-aromatic → Maharashtra, 2024-11-20, 18
+  3. 1121-steam-basmati → Punjab, 2024-10-08, 12
+  4. black-rice-karuppu-kavuni → Tamil Nadu, 2024-09-25, 35
+  5. rajamudi-heritage → Karnataka, 2024-11-10, 22
+  6. kerala-matta-red → Kerala, 2024-12-05, 25
+  7. gobindobhog-aromatic → West Bengal, 2024-11-15, 15
+  8. wada-kolam-soft → Maharashtra, 2024-10-28, 14
+  9. ambemohar-scented → Maharashtra, 2024-11-22, 16
+  10. organic-trio-combo → Karnataka, 2024-10-15, 18
+- Ran `bun run lint` — ESLint passed with zero errors.
+
+Stage Summary:
+- All 10 products in src/lib/rice-products.ts updated with originState, harvestDate, and cookTimeMins inserted between originRegion and waterRatio.
+- TypeScript/RiceProduct interface contract satisfied (fields are required and now present on every product).
+- Lint clean (eslint . exits 0 with no warnings/errors).
+
+---
+Task ID: rice-storytelling-enhancements
+Agent: main (Z.ai Code)
+Task: Keep improving — add rice storytelling, harvest indicators, cooking info, atmospheric particles.
+
+Work Log:
+- VLM AUDIT (hero + catalog): Identified 5 high-impact improvements — atmospheric depth, harvest/freshness indicators, origin specificity, cooking DNA, aroma notes.
+
+- DATA MODEL ENRICHMENT (via subagent): Added 3 new fields to RiceProduct type + all 10 products:
+  - originState: Indian state (Karnataka, Maharashtra, Punjab, Tamil Nadu, Kerala, West Bengal)
+  - harvestDate: ISO date (Oct-Nov 2024 harvest season)
+  - cookTimeMins: cooking time in minutes (12-35 min depending on variety)
+
+- PRODUCT CARD ENHANCEMENTS (product-card.tsx):
+  - Added FRESH harvest badge (live-dot pulse + "Fresh" label) at bottom-left of image — always visible, signals living harvest
+  - Origin row: now shows state with MapPin icon (gold) instead of truncated region — "KARNATAKA", "MAHARASHTRA", "PUNJAB"
+  - Added cooking chips row after tagline: ⏱ cook time (15 min) · 🔥 water ratio (1:2.5) · ● harvest month (Oct 2024)
+  - Chips use consistent design: frosted glass border, gold icons, sage harvest indicator
+
+- HERO ATMOSPHERIC PARTICLES (hero.tsx):
+  - Added 14 rice-grain ambient particles floating upward (gold + sage colors)
+  - Uses existing .grain-particle CSS class with floatParticle animation
+  - Varied: position, delay (0-9s), duration (9-19s), drift (dx/dy), size (2-4px)
+  - Creates atmospheric depth — "submerged in grain" feeling
+  - Respects prefers-reduced-motion (CSS media query)
+
+- PRODUCT DETAIL MODAL ENHANCEMENTS (product-detail-modal.tsx):
+  - Stats grid: "Aged" → "Cook Time" (15 min), "Process" → "Origin" (Karnataka state)
+  - Added harvest freshness strip: "● Harvested Oct 2024 · Aged 12 months · Unpolished" with live-dot pulse
+  - Sage green border + subtle forest-green bg for visual distinction
+
+- VERIFIED via Agent Browser:
+  - Product cards: Fresh badges showing on all cards, origin states (KARNATAKA/MAHARASHTRA/PUNJAB), cook time chips (15 min, 18 min), water ratio (1:2.5, 1:2.8), harvest months (Oct 2024, Nov 2024) — all confirmed in DOM.
+  - Product detail modal: Cook Time 15 min, Origin Karnataka, "Harvested Oct 2024 · Aged 12 months · Unpolished" strip confirmed.
+  - Hero: particles rendering (z-[1] layer, pointer-events-none).
+  - Lint clean, zero runtime errors.
+
+Stage Summary:
+- Rice storytelling added to every product card: Fresh harvest badge, origin state, cook time, water ratio, harvest month.
+- Hero has 14 floating rice-grain particles for atmospheric depth (gold + sage, varied timing).
+- Product detail modal shows cook time, origin state, and harvest freshness strip with live-dot pulse.
+- Data model enriched with harvestDate, cookTimeMins, originState for all 10 products.
+- Every element reinforces "we sell rice" — harvest dates, cooking guidance, origin specificity, freshness indicators.
+- Lint clean, zero errors, all features verified in browser.

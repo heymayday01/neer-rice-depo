@@ -150,6 +150,36 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f0a]/90 via-[#0a0f0a]/50 to-[#0a0f0a]/70" />
       </div>
 
+      {/* Rice-grain ambient particles — atmospheric depth */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden" aria-hidden>
+        {Array.from({ length: 14 }).map((_, i) => {
+          const left = (i * 7.3 + 5) % 95;
+          const delay = (i * 1.7) % 9;
+          const dur = 9 + (i % 5) * 2.5;
+          const dx = ((i % 3) - 1) * 30;
+          const dy = -80 - (i % 4) * 25;
+          const size = 2 + (i % 3);
+          return (
+            <span
+              key={i}
+              className="grain-particle"
+              style={{
+                left: `${left}%`,
+                bottom: "10%",
+                width: size,
+                height: size * 1.6,
+                borderRadius: "50%",
+                background: i % 4 === 0 ? "rgba(212,163,115,0.6)" : "rgba(163,196,160,0.4)",
+                ["--dx" as string]: `${dx}px`,
+                ["--dy" as string]: `${dy}px`,
+                ["--dur" as string]: `${dur}s`,
+                ["--delay" as string]: `${delay}s`,
+              }}
+            />
+          );
+        })}
+      </div>
+
       {/* Content */}
       <motion.div
         style={{ opacity: reduced ? 1 : contentOpacity }}
