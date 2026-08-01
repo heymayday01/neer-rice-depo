@@ -5,7 +5,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   ShoppingBag,
   Search,
-  BrainCircuit, Flower2,
+  BrainCircuit,
   Package,
   Sprout,
   Layers,
@@ -14,6 +14,7 @@ import {
   BarChart2,
   X,
   Menu,
+  Flower2,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { CATEGORIES } from "@/lib/rice-products";
@@ -35,7 +36,7 @@ const CAT_ICONS: Record<string, typeof Sprout> = {
   all: Sprout,
   daily: Layers,
   heritage: Sprout,
-  aromatic: BrainCircuit, Flower2,
+  aromatic: Flower2,
   superfood: HeartHandshake,
   combos: Package,
 };
@@ -74,50 +75,50 @@ export function Header({
       }`}
     >
       {/* Top micro-banner (desktop only) */}
-      <div className="hidden md:block bg-[#0a0f0a] text-stone-300 text-[11px] py-1.5 px-6 border-b border-[#1f431e]/30">
+      <div className="hidden md:block bg-[#0a0f0a] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2.5 mx-auto sm:mx-0">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
-            <span className="font-semibold uppercase tracking-[0.2em] text-[9px] text-stone-200">
+            <span className="font-medium uppercase tracking-[0.2em] text-[9px] text-stone-300">
               Direct-Sourced Organic Rice
             </span>
-            <span className="text-stone-400">•</span>
+            <span className="text-stone-600">•</span>
             <span className="text-stone-400">Free Express Delivery Above ₹999</span>
           </div>
           <a
             href="tel:+919823011022"
             className="flex items-center gap-1.5 hover:text-white transition-colors"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-[#d4a373]" />
-            <span className="font-semibold tracking-tight">+91 98230 11022</span>
+            <PhoneCall className="w-3.5 h-3.5 text-[#d4a373]" strokeWidth={1.5} />
+            <span className="font-medium tracking-tight">+91 98230 11022</span>
           </a>
         </div>
       </div>
 
-      {/* Main bar — cinematic dark glass */}
+      {/* Main bar */}
       <div
         className={`border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#0a0f0a]/85 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]"
-            : "bg-[#0a0f0a]/60 border-white/5"
+            ? "bg-[#0a0f0a]/90 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
+            : "bg-[#0a0f0a]/70 border-white/5"
         }`}
         style={{
-          backdropFilter: "blur(24px) saturate(160%)",
-          WebkitBackdropFilter: "blur(24px) saturate(160%)",
+          backdropFilter: "blur(24px) saturate(140%)",
+          WebkitBackdropFilter: "blur(24px) saturate(140%)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-[4.5rem] gap-2 sm:gap-3">
+          <div className="flex items-center justify-between h-14 md:h-16 gap-3">
             {/* Brand */}
             <button
               onClick={() => {
                 setActiveCategory("all");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
+              className="flex items-center gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
               aria-label="Neer Rice Depo home"
             >
-              <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl overflow-hidden border border-[#d4a373]/20 group-hover:border-[#d4a373]/50 transition-all duration-300 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] shadow-sm">
+              <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl overflow-hidden border border-[#d4a373]/20 group-hover:border-[#d4a373]/50 transition-all duration-300 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a]">
                 <img
                   src="/neer-logo-premium.png"
                   alt="Neer Rice Depo"
@@ -125,26 +126,26 @@ export function Header({
                 />
               </div>
               <div className="text-left">
-                <span className="text-sm md:text-lg font-serif font-bold text-white tracking-tight block leading-none">
+                <span className="text-sm md:text-base font-serif font-bold text-white tracking-tight block leading-none">
                   <span className="md:hidden">Neer Rice</span>
                   <span className="hidden md:inline">Neer Rice Depo</span>
                 </span>
-                <span className="text-[9px] text-[#d4a373] font-bold uppercase tracking-[0.2em] hidden md:block mt-1">
+                <span className="text-[9px] text-[#d4a373] font-medium uppercase tracking-[0.2em] hidden md:block mt-1">
                   Farm Direct · Heirloom
                 </span>
               </div>
             </button>
 
-            {/* Desktop search — pill shape with Cmd+K hint */}
-            <div className="hidden sm:block flex-1 max-w-xs md:max-w-md relative">
+            {/* Desktop search */}
+            <div className="hidden sm:block flex-1 max-w-xs md:max-w-sm relative">
               <input
                 type="text"
                 placeholder="Search grains, regions, dishes…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-16 py-2.5 bg-white/5 border border-white/10 focus:border-[#d4a373]/40 rounded-full text-xs text-white placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#d4a373]/20 transition-all font-medium"
+                className="w-full pl-9 pr-14 h-10 bg-white/5 border border-white/10 focus:border-[#d4a373]/40 rounded-full text-xs text-white placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#d4a373]/20 transition-all font-medium"
               />
-              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-stone-500 pointer-events-none" strokeWidth={1.5} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500 pointer-events-none" strokeWidth={1.5} />
               {!searchQuery && (
                 <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-500 border border-white/10 rounded px-1.5 py-0.5 data-mono pointer-events-none">
                   ⌘K
@@ -153,7 +154,7 @@ export function Header({
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-2.5 text-stone-500 hover:text-white bg-white/5 hover:bg-white/10 p-1 rounded-full cursor-pointer transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-white bg-white/5 hover:bg-white/10 p-1 rounded-full cursor-pointer transition-colors"
                   aria-label="Clear search"
                 >
                   <X className="w-3 h-3" />
@@ -164,10 +165,9 @@ export function Header({
             {/* Mobile: menu + cart */}
             <div className="flex sm:hidden items-center gap-2">
               <motion.button
-                whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenMobileMenu}
-                className="p-2.5 text-stone-300 hover:text-white border border-white/10 hover:border-white/25 rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+                className="p-2.5 text-stone-300 hover:text-white rounded-xl cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
                 aria-label="Open menu"
               >
                 <Menu className="w-5 h-5" strokeWidth={1.5} />
@@ -175,7 +175,7 @@ export function Header({
               <motion.button
                 whileTap={tapPress}
                 onClick={onOpenCart}
-                className="relative p-2.5 bg-[#d4a373]/10 border border-[#d4a373]/30 text-[#d4a373] rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/20"
+                className="relative p-2.5 bg-[#d4a373]/10 border border-[#d4a373]/25 text-[#d4a373] rounded-xl cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/15"
                 aria-label={`Cart with ${count} items`}
               >
                 <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
@@ -193,26 +193,24 @@ export function Header({
               </motion.button>
             </div>
 
-            {/* Desktop actions — ghost pills */}
-            <div className="hidden sm:flex items-center gap-1.5">
+            {/* Desktop actions */}
+            <div className="hidden sm:flex items-center gap-2">
               <button
                 onClick={onOpenComparison}
                 title="Compare Grains"
                 aria-label="Compare grains"
-                className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden lg:flex items-center gap-2 rounded-full transition-colors"
+                className="p-2.5 text-stone-400 hover:text-white cursor-pointer hidden lg:flex items-center justify-center rounded-xl transition-colors"
               >
-                <BarChart2 className="w-4 h-4" strokeWidth={1.5} />
-                <span className="hidden xl:inline tracking-tight">Matrix</span>
+                <BarChart2 className="w-[18px] h-[18px]" strokeWidth={1.5} />
               </button>
 
               <button
                 onClick={onOpenOrders}
                 title="Track Orders"
                 aria-label="Track orders"
-                className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden md:flex items-center gap-2 rounded-full transition-colors"
+                className="p-2.5 text-stone-400 hover:text-white cursor-pointer hidden md:flex items-center justify-center rounded-xl transition-colors"
               >
-                <Package className="w-4 h-4" strokeWidth={1.5} />
-                <span className="hidden lg:inline tracking-tight">Orders</span>
+                <Package className="w-[18px] h-[18px]" strokeWidth={1.5} />
               </button>
 
               <motion.button
@@ -220,10 +218,10 @@ export function Header({
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
                 aria-label="Ask AI grain sommelier"
-                className="px-4 py-2.5 text-[#d4a373] border border-[#d4a373]/30 hover:bg-[#d4a373]/10 text-xs font-bold tracking-tight cursor-pointer flex items-center gap-2 rounded-full transition-colors"
+                className="flex items-center gap-2 px-3.5 h-10 text-[#d4a373] border border-[#d4a373]/25 hover:bg-[#d4a373]/8 text-xs font-bold tracking-tight cursor-pointer rounded-xl transition-colors"
               >
                 <BrainCircuit className="w-4 h-4" strokeWidth={1.5} />
-                <span>AI Sommelier</span>
+                <span className="hidden lg:inline">AI Sommelier</span>
               </motion.button>
 
               <motion.button
@@ -231,9 +229,9 @@ export function Header({
                 whileTap={tapPress}
                 onClick={onOpenCart}
                 aria-label={`Cart with ${count} items`}
-                className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white rounded-full text-xs font-bold transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-xl text-xs font-bold transition-all cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4 text-[#d4a373]" strokeWidth={1.5} />
+                <ShoppingBag className="w-4 h-4" strokeWidth={2} />
                 <span className="hidden md:inline">Cart</span>
                 {count > 0 && (
                   <motion.span
@@ -241,13 +239,13 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    className="bg-[#0a0f0a] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
                     {count}
                   </motion.span>
                 )}
                 {subtotal > 0 && (
-                  <span className="text-[11px] font-bold text-[#d4a373] border-l border-white/20 pl-1.5 ml-0.5">
+                  <span className="text-[11px] font-bold text-[#0a0f0a]/70 border-l border-[#0a0f0a]/20 pl-1.5 ml-0.5 hidden xl:inline">
                     ₹{subtotal}
                   </span>
                 )}
@@ -255,30 +253,27 @@ export function Header({
             </div>
           </div>
 
-          {/* Desktop category bar — ghost pills */}
-          <nav aria-label="Product categories" className="hidden md:flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar border-t border-white/5">
+          {/* Desktop category bar */}
+          <nav aria-label="Product categories" className="hidden md:flex items-center gap-1 py-2 overflow-x-auto no-scrollbar border-t border-white/5">
             {CATEGORIES.map((cat) => {
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;
               return (
-                <motion.button
+                <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  whileTap={{ scale: 0.94 }}
-                  transition={SPRING.dock}
-                  className={`relative px-4 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${
+                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                     selected
-                      ? "text-white border border-[#d4a373]/50 bg-[#d4a373]/10"
-                      : "text-stone-400 hover:text-white border border-white/10 hover:border-white/25"
+                      ? "text-[#d4a373] bg-[#d4a373]/8"
+                      : "text-stone-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
-                  {selected && <span className="w-1 h-1 rounded-full bg-[#d4a373]" />}
                   <Icon
                     className={`w-3.5 h-3.5 ${selected ? "text-[#d4a373]" : "text-stone-500"}`}
-                    strokeWidth={1.5}
+                    strokeWidth={selected ? 2 : 1.5}
                   />
                   <span className="tracking-tight">{cat.label}</span>
-                </motion.button>
+                </button>
               );
             })}
           </nav>

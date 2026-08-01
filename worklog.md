@@ -609,3 +609,39 @@ Stage Summary:
 - 60 buttons with aria-labels, 49 with aria-pressed states.
 - Skip-to-content link, ARIA landmarks, focus-visible rings, contrast ratios all compliant.
 - VLM 9/10 — modern, smooth, accessible.
+
+---
+Task ID: navbar-dock-redesign
+Agent: main (Z.ai Code)
+Task: Fix all issues, redesign dock and navbar for best attractive look.
+
+Work Log:
+- FIXED BUGS: CAT_ICONS had syntax error (line 38: `BrainCircuit, Flower2` — two values for one key). Desktop cart button used `from-[#1f431e] to-[#1f431e]` (same color = no gradient, looked flat).
+- NAVBAR REDESIGN:
+  - Reduced height: h-14 mobile / h-16 desktop (was h-16/h-[4.5rem] — too tall)
+  - Logo container: rounded-xl (was rounded-2xl — too rounded for small size), w-9 mobile / w-11 desktop (was w-10/w-12 — slightly smaller for better proportion)
+  - Brand text: text-sm mobile / text-base desktop (was text-sm/text-lg — desktop was too large)
+  - Search: h-10 with pl-9 pr-14 (was py-2.5 — inconsistent height). Search icon centered with top-1/2 -translate-y-1/2 (was top-3.5 — misaligned)
+  - Desktop actions: icon-only buttons use p-2.5 rounded-xl (was px-3.5 py-2.5 border rounded-full — too busy). Matrix/Orders are now pure icon buttons (no border) — cleaner
+  - AI Sommelier: h-10 rounded-xl border (was rounded-full — inconsistent with other buttons)
+  - Cart: SOLID GOLD (#d4a373) button with dark text (was gradient green — blended into bg). Now stands out as the primary CTA. Badge inverted (dark bg, gold text)
+  - Category bar: simplified to text-only active state (was bordered pills — too heavy). Active = gold text + subtle bg, inactive = stone-400. Removed motion.button (plain button — less overhead)
+  - Mobile buttons: rounded-xl (was rounded-full — inconsistent with desktop)
+
+- DOCK REDESIGN:
+  - All tabs now UNIFORM w-12 h-12 rounded-xl (was w-10/w-11 mix with rounded-full — misaligned)
+  - NO special cart styling — cart uses same container as all other tabs (was different size + gradient bg — caused alignment issues)
+  - All icons: uniform 20x20 via inline style (was 17px/18px mix — inconsistent)
+  - Active state: bg-[#d4a373]/10 border border-[#d4a373]/15 on ALL tabs (was only on non-cart tabs — inconsistent)
+  - Container: rounded-2xl (was rounded-full — more modern)
+  - Gap: 1 (was 0.5 — too tight)
+  - Cart badge: positioned top-1.5 right-2 (was -top-1 -right-1 — floated outside the container)
+  - Press ripple: scale 1.5 (was 1.8 — too large)
+  - Entry animation: y:100 (was y:120 — slightly less travel)
+
+- Verified: lint clean, all routes 200, no errors. VLM: desktop navbar 9/10 ("exceptionally clean, modern, well-aligned, attractive cart button"), mobile navbar 8/10, dock 7/10 (minor: needs more bottom padding — already addressed with h-32 spacer).
+
+Stage Summary:
+- Navbar: shorter, cleaner, gold cart CTA, simplified category bar, consistent button styles.
+- Dock: all tabs uniform 48px, same active state, cart no longer special-cased, rounded-2xl container.
+- Fixed CAT_ICONS syntax bug and flat cart gradient.

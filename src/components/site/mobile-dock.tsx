@@ -37,13 +37,12 @@ export function MobileDock({
     label: string;
     icon: typeof Home;
     action: () => void;
-    isCart?: boolean;
   }[] = [
     { id: "home", label: "Home", icon: Home, action: onHome },
     { id: "ai", label: "AI", icon: BrainCircuit, action: onOpenAISommelier },
     { id: "matrix", label: "Compare", icon: BarChart2, action: onOpenComparison },
     { id: "orders", label: "Orders", icon: Package, action: onOpenOrders },
-    { id: "cart", label: "Cart", icon: ShoppingBag, action: onOpenCart, isCart: true },
+    { id: "cart", label: "Cart", icon: ShoppingBag, action: onOpenCart },
   ];
 
   const handleTap = (id: TabId, action: () => void) => {
@@ -59,83 +58,75 @@ export function MobileDock({
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ y: 120, opacity: 0 }}
+          initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 120, opacity: 0 }}
-          transition={{ ...SPRING.drawer, duration: 0.4 }}
-          className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40"
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ ...SPRING.drawer, duration: 0.35 }}
+          className="sm:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40"
           role="navigation"
           aria-label="Mobile navigation"
         >
           <div
-            className="flex items-center gap-0.5 rounded-full px-1.5 py-1.5 pb-safe border border-white/8"
+            className="flex items-center gap-1 rounded-2xl px-2 py-1.5 pb-safe border border-white/8"
             style={{
-              background: "rgba(10, 15, 10, 0.85)",
-              backdropFilter: "blur(32px) saturate(150%)",
-              WebkitBackdropFilter: "blur(32px) saturate(150%)",
+              background: "rgba(10, 15, 10, 0.88)",
+              backdropFilter: "blur(28px) saturate(140%)",
+              WebkitBackdropFilter: "blur(28px) saturate(140%)",
               boxShadow:
-                "inset 0 1px 0 0 rgba(255,255,255,0.04), 0 8px 32px -4px rgba(0,0,0,0.5)",
+                "inset 0 1px 0 0 rgba(255,255,255,0.03), 0 6px 24px -4px rgba(0,0,0,0.5)",
             }}
           >
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = active === tab.id;
               const isPressed = pressedId === tab.id;
-              const isCart = tab.isCart;
 
               return (
                 <motion.button
                   key={tab.id}
                   onClick={() => handleTap(tab.id, tab.action)}
-                  whileTap={{ scale: 0.88 }}
+                  whileTap={{ scale: 0.9 }}
                   transition={SPRING.dock}
-                  animate={isPressed ? { scale: 0.88 } : { scale: 1 }}
-                  className={`relative flex items-center justify-center rounded-full cursor-pointer select-none transition-colors ${
-                    isCart
-                      ? "w-11 h-11 bg-gradient-to-br from-[#1f431e] to-[#1f431e] border border-[#d4a373]/15"
-                      : "w-10 h-10"
-                  }`}
+                  animate={isPressed ? { scale: 0.9 } : { scale: 1 }}
+                  className="relative flex flex-col items-center justify-center w-12 h-12 rounded-xl cursor-pointer select-none"
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {/* Active indicator */}
-                  {isActive && !isCart && (
+                  {/* Active background — uniform for all tabs including cart */}
+                  {isActive && (
                     <motion.span
                       layoutId="dock-active"
                       transition={SPRING.dock}
-                      className="absolute inset-0 rounded-full bg-[#d4a373]/8 border border-[#d4a373]/15"
+                      className="absolute inset-0 rounded-xl bg-[#d4a373]/10 border border-[#d4a373]/15"
                     />
                   )}
 
                   {/* Press ripple */}
                   {isPressed && (
                     <motion.span
-                      initial={{ scale: 0, opacity: 0.2 }}
-                      animate={{ scale: 1.8, opacity: 0 }}
-                      transition={{ duration: 0.5, ease: EASE.out }}
-                      className="absolute inset-0 rounded-full bg-[#d4a373]/12"
+                      initial={{ scale: 0, opacity: 0.15 }}
+                      animate={{ scale: 1.5, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: EASE.out }}
+                      className="absolute inset-0 rounded-xl bg-[#d4a373]/10"
                     />
                   )}
 
                   <Icon
                     className={`relative z-10 transition-colors duration-200 ${
-                      isCart
-                        ? "w-[18px] h-[18px] text-[#d4a373]"
-                        : isActive
-                          ? "w-[18px] h-[18px] text-[#d4a373]"
-                          : "w-[17px] h-[17px] text-stone-500"
+                      isActive ? "text-[#d4a373]" : "text-stone-500"
                     }`}
-                    strokeWidth={isActive || isCart ? 2 : 1.5}
+                    strokeWidth={isActive ? 2 : 1.5}
+                    style={{ width: 20, height: 20 }}
                   />
 
                   {/* Cart badge */}
-                  {isCart && count > 0 && (
+                  {tab.id === "cart" && count > 0 && (
                     <motion.span
                       key={count}
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center border-2 border-[#0a0f0a]"
+                      className="absolute top-1.5 right-2 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[15px] h-[15px] px-0.5 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a] z-20"
                     >
                       {count}
                     </motion.span>
