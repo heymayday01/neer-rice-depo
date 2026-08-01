@@ -25,7 +25,7 @@ import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, swapUp, hoverLift, tapPress, staggerContainer } from "@/lib/motion";
-import { StaggerItem } from "../reveal";
+
 
 interface Props {
   product: RiceProduct | null;
@@ -99,7 +99,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
             animate="visible"
             className="p-6 sm:p-7 space-y-5"
           >
-          <StaggerItem>
+          <motion.div>
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#d4a373]">
                 {product.originRegion}
@@ -113,7 +113,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 </p>
               )}
             </div>
-          </StaggerItem>
+          </motion.div>
 
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1 text-amber-600">

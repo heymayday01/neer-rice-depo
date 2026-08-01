@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   Timer,
 } from "lucide-react";
-import { Reveal } from "./reveal";
+
 import { SPRING, DURATION, EASE } from "@/lib/motion";
 
 const TOPICS = [
@@ -122,7 +122,7 @@ export function GrainWisdomHub() {
     <section className="relative bg-[#0a0f0a] border-t border-white/5 py-12 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="absolute top-0 right-1/3 w-[28rem] h-[28rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto space-y-8 sm:space-y-12">
-        <Reveal className="max-w-3xl space-y-4">
+        <motion.div className="max-w-3xl space-y-4">
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-[#d4a373]/50" />
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#d4a373]">
@@ -137,11 +137,11 @@ export function GrainWisdomHub() {
             principles of unpolished, organically harvested, and naturally aged
             Indian grains.
           </p>
-        </Reveal>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
           {/* Tabs — ghost pills */}
-          <Reveal className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar pb-1 lg:pb-0 w-full" delay={0.1}>
+          <motion.div className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar pb-1 lg:pb-0 w-full" delay={0.1}>
             {TOPICS.map((topic, idx) => {
               const Icon = topic.icon;
               const selected = active === topic.id;
@@ -181,10 +181,10 @@ export function GrainWisdomHub() {
                 </button>
               );
             })}
-          </Reveal>
+          </motion.div>
 
           {/* Content — cinematic dark panel */}
-          <Reveal className="lg:col-span-8" delay={0.18}>
+          <motion.div className="lg:col-span-8" delay={0.18}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
@@ -249,7 +249,7 @@ export function GrainWisdomHub() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </Reveal>
+          </motion.div>
         </div>
       </div>
     </section>

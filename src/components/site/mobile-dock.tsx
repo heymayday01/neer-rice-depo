@@ -5,7 +5,7 @@ import { Home, ShoppingBag, BrainCircuit, Package, BarChart2 } from "lucide-reac
 import { useCart } from "@/lib/cart-store";
 import { SPRING, EASE } from "@/lib/motion";
 import { useHaptic } from "@/hooks/use-haptic";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 interface MobileDockProps {
   active: "home" | "ai" | "matrix" | "orders" | "cart";

@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ArrowRight, CornerDownLeft, X } from "lucide-react";
+import { Search, CornerDownLeft, X } from "lucide-react";
 import { RICE_PRODUCTS } from "@/lib/rice-products";
-import { SPRING, EASE } from "@/lib/motion";
+import { SPRING } from "@/lib/motion";
 
 interface CommandPaletteProps {
   open: boolean;

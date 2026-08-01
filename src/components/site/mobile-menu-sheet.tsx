@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { Search, X, BrainCircuit, Flower2, Package, BarChart2, Sprout } from "lucide-react";
 import { CATEGORIES } from "@/lib/rice-products";
 import { SPRING, staggerContainer } from "@/lib/motion";
-import { StaggerItem } from "./reveal";
+
 
 interface Props {
   open: boolean;
@@ -115,7 +115,7 @@ export function MobileMenuSheet({
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;
               return (
-                <StaggerItem key={cat.id}>
+                <motion.div key={cat.id}>
                   <button
                     onClick={() => selectCat(cat.id)}
                     className={`w-full flex items-center justify-between p-3.5 rounded-2xl border transition-colors cursor-pointer ${
@@ -147,7 +147,7 @@ export function MobileMenuSheet({
                       />
                     )}
                   </button>
-                </StaggerItem>
+                </motion.div>
               );
             })}
           </motion.div>

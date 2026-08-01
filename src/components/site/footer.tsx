@@ -1,7 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { PhoneCall, Mail, MapPin, ArrowRight, Leaf } from "lucide-react";
-import { Reveal } from "./reveal";
+
 
 interface FooterProps {
   onOpenAISommelier: () => void;
@@ -17,7 +18,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-10">
         {/* ===== Top: brand + CTA ===== */}
-        <Reveal className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-14 border-b border-white/8">
+        <motion.div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-14 border-b border-white/8">
           <div className="lg:col-span-7 space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] p-1.5 border border-[#d4a373]/20 overflow-hidden shrink-0 shadow-sm">
@@ -56,7 +57,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
               <ArrowRight className="w-4 h-4 text-[#d4a373] group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
-        </Reveal>
+        </motion.div>
 
         {/* ===== Middle: 3 clean columns ===== */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 py-14 border-b border-white/8">

@@ -15,7 +15,6 @@ import {
   Droplets,
 } from "lucide-react";
 import {
-  EASE,
   SPRING,
   swapUp,
   hoverLift,

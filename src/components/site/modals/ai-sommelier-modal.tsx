@@ -22,7 +22,7 @@ import {
 import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
-import { SPRING, hoverLift, tapPress } from "@/lib/motion";
+import { tapPress } from "@/lib/motion";
 
 interface Props {
   open: boolean;

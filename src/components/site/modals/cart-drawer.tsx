@@ -8,10 +8,10 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag, X } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Tag } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useState } from "react";
-import { SPRING, swapUp, hoverLift, tapPress } from "@/lib/motion";
+import { SPRING, hoverLift, tapPress } from "@/lib/motion";
 import { useHaptic } from "@/hooks/use-haptic";
 
 interface Props {
