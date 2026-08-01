@@ -1344,3 +1344,49 @@ Stage Summary:
 - Data model enriched with harvestDate, cookTimeMins, originState for all 10 products.
 - Every element reinforces "we sell rice" — harvest dates, cooking guidance, origin specificity, freshness indicators.
 - Lint clean, zero errors, all features verified in browser.
+
+---
+Task ID: logo-navbar-optimization
+Agent: main (Z.ai Code)
+Task: Improve the logo and optimize navbar menu options.
+
+Work Log:
+- VLM AUDIT of current logo (neer-logo-premium.png): Found it uses WHEAT stalks (wrong grain!) + lotus/water motif. Font feels industrial. Not rice-focused. Recommendations: replace wheat with rice panicles, refine typography, simplify palette.
+
+- NEW SVG LOGO (src/components/site/logo.tsx):
+  - Created LogoMark component — a stylized rice panicle (grain stalk with 5 pairs of drooping grains + terminal top grain) inside a circular gold-ringed badge with forest-green interior.
+  - Uses brand gradients: gold (#e9c89a → #d4a373 → #b8884f) for ring + grains, forest green radial gradient for interior.
+  - Subtle water wave reference at bottom (Neer = water) in muted gold.
+  - withGlow prop adds soft glow filter for scrolled state.
+  - Razor-sharp at ANY size (SVG, not raster) — 32px mobile, 44px desktop, both crisp.
+  - LogoFull component for wordmark + tagline lockup.
+
+- NAVBAR OPTIMIZATION (header.tsx):
+  PROBLEMS with old navbar:
+  - Too many icon buttons crammed with no visual grouping (Compare, Orders, AI Sommelier, Cart all same weight)
+  - Category bar used full labels (All Grain Varieties) — too long, wasted space
+  - No sliding active indicator on categories (static bg only)
+  - Used raster PNG logo (blurry at small sizes)
+
+  FIXES:
+  1. Replaced raster PNG logo with crisp SVG LogoMark (rice panicle) — razor-sharp at all sizes.
+  2. Consolidated secondary actions (Compare + Orders) into a grouped icon cluster with a right divider border — visually separated from primary actions.
+  3. AI Sommelier → "Sommelier" (shorter label, rounded-full pill, accent border).
+  4. Cart → primary gold rounded-full button (clear hierarchy: secondary icons < accent pill < primary CTA).
+  5. Category bar: uses `short` labels (All Varieties, Daily Staples, Heritage, Aromatic, Low GI, Bundles) instead of full labels — saves horizontal space.
+  6. Added sliding layoutId active indicator on categories (motion.span with layoutId="nav-active-cat") — smooth spring transition when switching categories.
+  7. Enhanced glass: blur(28px) saturate(160%) (was 24px/140%) — richer frosted material.
+  8. Logo glows when scrolled (withGlow prop activates on scroll).
+  9. "All Grain Varieties" category icon changed from Sprout to Wheat (more appropriate for "all grains").
+  10. Harvest info strip: green dot (#a3c4a0) instead of gold — signals "fresh/live".
+
+- VERIFIED via Agent Browser (desktop + mobile):
+  - Desktop: SVG logo 44px rendering crisp, grouped actions (Compare + Orders with divider), Sommelier pill, Cart primary button, category short labels with sliding indicator (clicked Heritage → indicator slid into position).
+  - Mobile: SVG logo 32px rendering crisp, "Neer Rice" text, Menu + Cart actions.
+  - Lint clean, zero runtime errors.
+
+Stage Summary:
+- New SVG logo: rice panicle (correct grain, not wheat) in gold-ringed forest-green badge — razor-sharp at all sizes, brand-consistent.
+- Navbar optimized: grouped secondary actions, clear 3-tier hierarchy (icons < accent pill < primary CTA), shorter category labels, sliding active indicator, enhanced glass material.
+- Logo glows on scroll, category indicator slides with spring physics.
+- Lint clean, verified desktop + mobile, zero errors.

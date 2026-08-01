@@ -15,10 +15,12 @@ import {
   X,
   Menu,
   Flower2,
+  Wheat,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { CATEGORIES } from "@/lib/rice-products";
 import { SPRING, hoverLift, tapPress } from "@/lib/motion";
+import { LogoMark } from "./logo";
 
 interface HeaderProps {
   searchQuery: string;
@@ -33,7 +35,7 @@ interface HeaderProps {
 }
 
 const CAT_ICONS: Record<string, typeof Sprout> = {
-  all: Sprout,
+  all: Wheat,
   daily: Layers,
   heritage: Sprout,
   aromatic: Flower2,
@@ -66,6 +68,11 @@ export function Header({
     lastY.current = y;
   });
 
+  const goHome = () => {
+    setActiveCategory("all");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header
       role="banner"
@@ -74,11 +81,11 @@ export function Header({
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      {/* Top micro-banner (desktop only) */}
+      {/* Top micro-banner (desktop only) — harvest info strip */}
       <div className="hidden md:block bg-[#0a0f0a] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2.5 mx-auto sm:mx-0">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a3c4a0] animate-pulse" />
             <span className="font-medium uppercase tracking-[0.2em] text-[9px] text-stone-300">
               Direct-Sourced Organic Rice
             </span>
@@ -100,7 +107,7 @@ export function Header({
         <div
           className="flex items-center justify-between rounded-full px-3 py-2 relative"
           style={{
-            background: "rgba(10, 15, 10, 0.65)",
+            background: "rgba(10, 15, 10, 0.72)",
             backdropFilter: "blur(40px) saturate(180%)",
             WebkitBackdropFilter: "blur(40px) saturate(180%)",
             boxShadow: [
@@ -109,7 +116,7 @@ export function Header({
               "inset 1px 0 0 0 rgba(255,255,255,0.03)",
               "0 1px 3px rgba(0,0,0,0.3)",
               "0 8px 28px -4px rgba(0,0,0,0.5)",
-              "0 0 0 0.5px rgba(212,163,115,0.12)",
+              "0 0 0 0.5px rgba(212,163,115,0.15)",
             ].join(", "),
           }}
         >
@@ -117,31 +124,18 @@ export function Header({
           <div
             className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.25), transparent)",
+              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.3), transparent)",
             }}
           />
 
-          {/* Brand */}
+          {/* Brand — SVG logo mark */}
           <button
-            onClick={() => {
-              setActiveCategory("all");
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+            onClick={goHome}
             className="flex items-center gap-2 shrink-0 cursor-pointer"
             aria-label="Neer Rice Depo home"
           >
-            <div
-              className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"
-              style={{
-                background: "linear-gradient(135deg, #0f1a0d, #0a0f0a)",
-                boxShadow: "inset 0 1px 0 0 rgba(212,163,115,0.1), 0 0 0 1px rgba(212,163,115,0.15)",
-              }}
-            >
-              <img
-                src="/neer-logo-premium.png"
-                alt="Neer Rice Depo"
-                className="w-full h-full object-contain p-0.5"
-              />
+            <div className="shrink-0">
+              <LogoMark size={32} />
             </div>
             <span className="text-xs font-serif font-bold text-white tracking-tight">
               Neer Rice
@@ -192,31 +186,24 @@ export function Header({
       <div
         className={`hidden sm:block border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#0a0f0a]/90 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
-            : "bg-[#0a0f0a]/70 border-white/5"
+            ? "bg-[#0a0f0a]/92 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
+            : "bg-[#0a0f0a]/75 border-white/5"
         }`}
         style={{
-          backdropFilter: "blur(24px) saturate(140%)",
-          WebkitBackdropFilter: "blur(24px) saturate(140%)",
+          backdropFilter: "blur(28px) saturate(160%)",
+          WebkitBackdropFilter: "blur(28px) saturate(160%)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 md:h-16 gap-3">
-            {/* Brand */}
+            {/* Brand — SVG logo + wordmark */}
             <button
-              onClick={() => {
-                setActiveCategory("all");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+              onClick={goHome}
               className="flex items-center gap-2.5 group shrink-0 cursor-pointer min-h-[44px]"
               aria-label="Neer Rice Depo home"
             >
-              <div className="relative w-9 h-9 md:w-11 md:h-11 rounded-xl overflow-hidden border border-[#d4a373]/20 group-hover:border-[#d4a373]/50 transition-all duration-300 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a]">
-                <img
-                  src="/neer-logo-premium.png"
-                  alt="Neer Rice Depo"
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-1"
-                />
+              <div className="transition-transform duration-500 group-hover:scale-105 shrink-0">
+                <LogoMark size={44} withGlow={scrolled} />
               </div>
               <div className="text-left">
                 <span className="text-sm md:text-base font-serif font-bold text-white tracking-tight block leading-none">
@@ -255,43 +242,47 @@ export function Header({
               )}
             </div>
 
-            {/* Desktop actions */}
-            <div className="hidden sm:flex items-center gap-2">
-              <button
-                onClick={onOpenComparison}
-                title="Compare Grains"
-                aria-label="Compare grains"
-                className="p-2.5 text-stone-400 hover:text-white cursor-pointer hidden lg:flex items-center justify-center rounded-xl transition-colors"
-              >
-                <BarChart2 className="w-[18px] h-[18px]" strokeWidth={1.5} />
-              </button>
+            {/* Desktop actions — consolidated: Compare + Orders as icon group, AI Sommelier as pill, Cart as primary */}
+            <div className="hidden sm:flex items-center gap-1.5">
+              {/* Secondary actions — icon group with divider */}
+              <div className="hidden md:flex items-center gap-0.5 mr-1 pr-2 border-r border-white/8">
+                <button
+                  onClick={onOpenComparison}
+                  title="Compare Grains"
+                  aria-label="Compare grains"
+                  className="p-2 text-stone-400 hover:text-[#d4a373] cursor-pointer flex items-center justify-center rounded-lg transition-colors"
+                >
+                  <BarChart2 className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                </button>
+                <button
+                  onClick={onOpenOrders}
+                  title="Track Orders"
+                  aria-label="Track orders"
+                  className="p-2 text-stone-400 hover:text-[#d4a373] cursor-pointer flex items-center justify-center rounded-lg transition-colors"
+                >
+                  <Package className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                </button>
+              </div>
 
-              <button
-                onClick={onOpenOrders}
-                title="Track Orders"
-                aria-label="Track orders"
-                className="p-2.5 text-stone-400 hover:text-white cursor-pointer hidden md:flex items-center justify-center rounded-xl transition-colors"
-              >
-                <Package className="w-[18px] h-[18px]" strokeWidth={1.5} />
-              </button>
-
+              {/* AI Sommelier — accent pill */}
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
                 aria-label="Ask AI grain sommelier"
-                className="flex items-center gap-2 px-3.5 h-10 text-[#d4a373] border border-[#d4a373]/25 hover:bg-[#d4a373]/8 text-xs font-bold tracking-tight cursor-pointer rounded-xl transition-colors"
+                className="flex items-center gap-2 px-3.5 h-10 text-[#d4a373] border border-[#d4a373]/25 hover:bg-[#d4a373]/8 text-xs font-bold tracking-tight cursor-pointer rounded-full transition-colors"
               >
                 <BrainCircuit className="w-4 h-4" strokeWidth={1.5} />
-                <span className="hidden lg:inline">AI Sommelier</span>
+                <span className="hidden lg:inline">Sommelier</span>
               </motion.button>
 
+              {/* Cart — primary gold button */}
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenCart}
                 aria-label={`Cart with ${count} items`}
-                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-xl text-xs font-bold transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />
                 <span className="hidden md:inline">Cart</span>
@@ -315,8 +306,8 @@ export function Header({
             </div>
           </div>
 
-          {/* Desktop category bar */}
-          <nav aria-label="Product categories" className="hidden md:flex items-center gap-1 py-2 overflow-x-auto no-scrollbar border-t border-white/5">
+          {/* Desktop category bar — compact, with active sliding indicator */}
+          <nav aria-label="Product categories" className="hidden md:flex items-center gap-0.5 py-2 overflow-x-auto no-scrollbar border-t border-white/5">
             {CATEGORIES.map((cat) => {
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;
@@ -324,17 +315,25 @@ export function Header({
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+                  className={`relative px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                     selected
-                      ? "text-[#d4a373] bg-[#d4a373]/8"
+                      ? "text-[#d4a373]"
                       : "text-stone-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
+                  {selected && (
+                    <motion.span
+                      layoutId="nav-active-cat"
+                      transition={SPRING.dock}
+                      className="absolute inset-0 rounded-full bg-[#d4a373]/10"
+                      style={{ boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.25)" }}
+                    />
+                  )}
                   <Icon
-                    className={`w-3.5 h-3.5 ${selected ? "text-[#d4a373]" : "text-stone-500"}`}
+                    className={`relative z-10 w-3.5 h-3.5 ${selected ? "text-[#d4a373]" : "text-stone-500"}`}
                     strokeWidth={selected ? 2 : 1.5}
                   />
-                  <span className="tracking-tight">{cat.label}</span>
+                  <span className="relative z-10 tracking-tight">{cat.short ?? cat.label}</span>
                 </button>
               );
             })}
