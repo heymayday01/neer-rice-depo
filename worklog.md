@@ -1950,3 +1950,60 @@ Stage Summary:
 - Navbar FIXED to top: removed hide/show behavior, always sticky top-0.
 - Mobile UX: bigger dock touch targets (56px), richer glass, more breathing room, safe-area padding, bigger bottom spacer.
 - Lint clean, zero hydration errors, zero runtime errors, verified desktop + mobile.
+
+---
+Task ID: mobile-continuity-animation-polish
+Agent: main (Z.ai Code)
+Task: Mobile continuity improvements + well-formed calculated animations/transitions.
+
+Work Log:
+- AUDIT via Agent Browser (iPhone 14): Found spacing inconsistencies (hero pt-14/pb-10, catalog py-8, grain-wisdom py-10, footer pt-12), small touch targets (40px category pills, 56px wisdom tabs), no snap scrolling on horizontal strips, invalid `delay` prop on motion.div in grain-wisdom.
+
+- SPACING CONTINUITY (standardized mobile vertical rhythm):
+  - Hero: pt-14 pb-10 → pt-12 pb-8 (tighter mobile, more compact above-the-fold)
+  - Hero horizontal: px-5 → px-4 (aligns with catalog px-4 for consistent mobile gutter)
+  - Catalog: py-8 → py-10 (matches grain-wisdom + footer for consistent section rhythm)
+  - Catalog internal: space-y-6 → space-y-5 sm:space-y-6 (tighter on mobile)
+  - Catalog title: text-2xl → text-xl on mobile (better proportion)
+  - Footer: pt-12 → pt-10 (matches catalog/grain-wisdom top padding)
+  - All sections now share: px-4 mobile gutter, py-10 mobile vertical rhythm, consistent title sizing
+
+- TOUCH TARGET IMPROVEMENTS (Apple HIG 44px minimum):
+  - Mobile category pills: min-h-[40px] → min-h-[44px] + snap-start
+  - Grain-wisdom tabs: min-h-[56px] p-4 → min-h-[48px] p-3 sm:p-4 (compact mobile, standard desktop)
+  - All horizontal strips now have snap-x snap-mandatory for satisfying scroll-snapping
+
+- SNAP SCROLLING (calculated mobile gesture feel):
+  - Mobile category strip: added `snap-x snap-mandatory` + `snap-start` on each pill — pills snap into view as user swipes
+  - Grain-wisdom tabs: same snap scroll treatment — tabs snap when swiped
+  - Added `scrollSnapType: "x mandatory"` inline style for cross-browser reliability
+  - Result: horizontal swiping feels tactile and calculated, not floaty
+
+- ANIMATION FIXES:
+  - Removed invalid `delay={0.1}` prop from grain-wisdom motion.div (not a valid motion prop — was a no-op passed to DOM)
+  - All scroll reveals use consistent `cleanRise` variant with `viewport={{ once: true, margin: "-60px" }}` — triggers at the same point for predictable timing
+  - All springs use shared SPRING tokens (snappy/gentle/bouncy/dock) — no hardcoded timings
+  - MotionConfig reducedMotion="user" (added previously) ensures all animations respect OS setting
+
+- CONTINUITY FLOW:
+  - Section backgrounds all `bg-[#0a0f0a]` — seamless dark continuity
+  - Consistent border-top `border-white/5` between sections (subtle dividers)
+  - Hero → catalog → wisdom → footer all share the same px-4 mobile gutter
+  - Vertical rhythm: each section has py-10 on mobile, py-14/16 on desktop — consistent scaling
+  - Title hierarchy: text-xl mobile / text-4xl desktop — proportional scaling
+
+- VERIFIED via Agent Browser (iPhone 14):
+  - Hero: compact, no excessive whitespace
+  - Catalog: category pills snap-scroll, 44px touch targets, smooth filter transition (Heritage clicked → no errors)
+  - Grain-wisdom: tabs snap-scroll, compact on mobile, invalid delay prop removed
+  - Fly-to-cart: works on mobile (added item → cart shows 1 → fly animation triggered)
+  - Footer + dock: both visible at bottom, dock stays fixed, no overlap
+  - Zero hydration errors, zero runtime errors, only harmless Radix position warning
+  - Lint clean
+
+Stage Summary:
+- Mobile spacing standardized: all sections share px-4 gutter, py-10 vertical rhythm, proportional title sizing
+- Touch targets: all horizontal strips 44px+ (Apple HIG), snap-scroll for tactile feel
+- Animations: removed invalid delay prop, all use shared spring tokens + cleanRise variant, reduced-motion safe
+- Continuity: seamless dark bg, consistent borders, predictable scroll-trigger timing
+- Lint clean, verified end-to-end on iPhone 14, zero errors.

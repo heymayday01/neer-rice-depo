@@ -16,7 +16,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
       {/* Ambient glow */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-[#1f431e]/8 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-8">
         {/* ===== Top: brand + CTA ===== */}
         <motion.div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pb-10 border-b border-white/8">
           <div className="lg:col-span-7 space-y-5">

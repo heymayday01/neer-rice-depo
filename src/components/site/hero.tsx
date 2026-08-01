@@ -183,7 +183,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       {/* Content */}
       <motion.div
         style={{ opacity: reduced ? 1 : contentOpacity }}
-        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-14 sm:pt-16 lg:pt-20 pb-10 lg:pb-16 min-h-[100svh] flex flex-col justify-center"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-10 lg:pb-16 min-h-[100svh] flex flex-col justify-center"
       >
         <motion.div
           variants={container}

@@ -141,7 +141,7 @@ export function GrainWisdomHub() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
           {/* Tabs — ghost pills */}
-          <motion.div className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar pb-1 lg:pb-0 w-full" delay={0.1}>
+          <motion.div className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible no-scrollbar pb-2 lg:pb-0 w-full snap-x snap-mandatory" style={{ scrollSnapType: "x mandatory" }}>
             {TOPICS.map((topic, idx) => {
               const Icon = topic.icon;
               const selected = active === topic.id;
@@ -150,7 +150,7 @@ export function GrainWisdomHub() {
                   key={topic.id}
                   onClick={() => setActive(topic.id)}
                   aria-pressed={selected}
-                  className={`relative p-4 rounded-2xl text-left cursor-pointer flex items-center justify-between shrink-0 lg:w-full min-h-[56px] transition-all border ${
+                  className={`relative p-3 sm:p-4 rounded-2xl text-left cursor-pointer flex items-center justify-between shrink-0 lg:w-full min-h-[48px] snap-start transition-all border ${
                     selected
                       ? "border-[#d4a373]/40 bg-[#d4a373]/8 text-white"
                       : "border-white/8 hover:border-white/20 text-stone-400 hover:text-white"

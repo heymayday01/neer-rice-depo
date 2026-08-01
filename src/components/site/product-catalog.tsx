@@ -99,19 +99,19 @@ export function ProductCatalog({
   };
 
   return (
-    <section className="relative bg-[#0a0f0a] py-8 sm:py-14">
+    <section className="relative bg-[#0a0f0a] py-10 sm:py-14">
       {/* Ambient glow */}
       <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] bg-[#1f431e]/8 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[26rem] h-[26rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 sm:space-y-6">
         {/* Section eyebrow + title */}
         <motion.div
           variants={cleanRise}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="space-y-3"
+          className="space-y-2.5"
         >
           <div className="flex items-center gap-3">
             <span className="h-px w-10 bg-[#d4a373]/50" />
@@ -120,7 +120,7 @@ export function ProductCatalog({
             </span>
           </div>
           <div className="flex items-end justify-between gap-4 flex-wrap">
-            <h2 className="font-serif font-bold text-white text-2xl sm:text-4xl tracking-tight">
+            <h2 className="font-serif font-bold text-white text-xl sm:text-4xl tracking-tight">
               {TITLES[activeCategory] ?? "All Grain Varieties"}
             </h2>
             <span className="text-[11px] font-mono text-stone-400 tracking-wide">
@@ -129,8 +129,12 @@ export function ProductCatalog({
           </div>
         </motion.div>
 
-        {/* Mobile category strip — ghost pills */}
-        <nav aria-label="Product categories" className="md:hidden flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
+        {/* Mobile category strip — snap scroll, larger touch targets */}
+        <nav
+          aria-label="Product categories"
+          className="md:hidden flex gap-2 overflow-x-auto pb-2 no-scrollbar -mx-4 px-4 snap-x snap-mandatory"
+          style={{ scrollSnapType: "x mandatory" }}
+        >
           {CATEGORIES.map((cat) => {
             const Icon = CAT_ICONS[cat.id] ?? Sprout;
             const selected = activeCategory === cat.id;
@@ -139,7 +143,7 @@ export function ProductCatalog({
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 aria-pressed={selected}
-                className={`relative px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shrink-0 cursor-pointer transition-all min-h-[40px] ${
+                className={`relative px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shrink-0 cursor-pointer transition-all min-h-[44px] snap-start ${
                   selected
                     ? "text-white border border-[#d4a373]/60 bg-[#d4a373]/10"
                     : "text-stone-400 hover:text-white border border-white/12 hover:border-white/25"
