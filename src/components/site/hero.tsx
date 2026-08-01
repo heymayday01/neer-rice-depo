@@ -131,7 +131,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       <motion.div
         ref={heroRootRef}
         style={{ opacity: reduced ? 1 : contentOpacity }}
-        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-24 sm:pt-28 lg:pt-32 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
+        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           {/* Left — editorial content */}
