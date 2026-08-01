@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import gsap from "gsap";
 import {
-  Wheat, BrainCircuit,
+  Wheat,
+  BrainCircuit,
   ShieldCheck,
   Truck,
   Sprout,
@@ -81,30 +81,51 @@ const PILLARS = [
   { icon: HeartHandshake, title: "Bulk Savings", desc: "Up to 10% off" },
 ];
 
+// Framer Motion entrance variants — precisely timed, no GSAP needed
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const headlineItem = {
+  hidden: { opacity: 0, y: 32 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const imageItem = {
+  hidden: { opacity: 0, y: 30, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] as const, delay: 0.3 },
+  },
+};
+
 export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: HeroProps) {
   const [meal, setMeal] = useState<Meal>("biryani");
   const rec = MEALS[meal];
   const sectionRef = useRef<HTMLElement>(null);
-  const heroRootRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
-  // GSAP timeline — staggered, breathing entrance
-  useLayoutEffect(() => {
-    if (reduced || !heroRootRef.current) return;
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from(".hero-eyebrow", { y: 12, opacity: 0, duration: 0.6 })
-        .from(".hero-headline-line", { y: 30, opacity: 0, stagger: 0.12, duration: 0.9 }, "-=0.3")
-        .from(".hero-desc", { y: 16, opacity: 0, duration: 0.6 }, "-=0.5")
-        .from(".hero-image-card", { y: 24, opacity: 0, scale: 0.98, duration: 1.0 }, "-=0.9")
-        .from(".hero-selector", { y: 20, opacity: 0, duration: 0.6 }, "-=0.5")
-        .from(".hero-cta", { y: 14, opacity: 0, stagger: 0.08, duration: 0.5 }, "-=0.4")
-        .from(".hero-pillar", { y: 18, opacity: 0, stagger: 0.06, duration: 0.5 }, "-=0.3");
-    }, heroRootRef);
-    return () => ctx.revert();
-  }, [reduced]);
-
-  // Scroll-linked content fade (lightweight — no parallax transforms to avoid jank)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -112,8 +133,12 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
-    <section ref={sectionRef} aria-label="Hero section" className="relative overflow-hidden min-h-[100svh]">
-      {/* ===== Static cinematic background (no parallax — prevents jello jank) ===== */}
+    <section
+      ref={sectionRef}
+      aria-label="Hero section"
+      className="relative overflow-hidden min-h-[100svh]"
+    >
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <img
           src="/hero-bg-clean.jpg"
@@ -121,45 +146,64 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           className="w-full h-full object-cover"
           loading="eager"
         />
-        {/* Strong depth gradients for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0a]/85 via-[#0a0f0a]/65 to-[#0a0f0a]/97" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f0a]/90 via-[#0a0f0a]/50 to-[#0a0f0a]/70" />
       </div>
 
-      {/* ===== Content layer ===== */}
+      {/* Content */}
       <motion.div
-        ref={heroRootRef}
         style={{ opacity: reduced ? 1 : contentOpacity }}
         className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-          {/* Left — editorial content */}
-          <div className="lg:col-span-7 space-y-7 sm:space-y-8">
+        <motion.div
+          variants={container}
+          initial={reduced ? "visible" : "hidden"}
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
+        >
+          {/* Left */}
+          <div className="lg:col-span-7 space-y-6 sm:space-y-7">
             {/* Eyebrow */}
-            <div className="hero-eyebrow flex items-center gap-3">
-              <span className="h-px w-10 bg-[#d4a373]/60" />
+            <motion.div
+              variants={fadeUpItem}
+              className="flex items-center gap-3"
+            >
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="h-px w-10 bg-[#d4a373]/60 origin-left"
+              />
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#d4a373]">
                 Farm-Direct · Heirloom · Aged
               </span>
-            </div>
+            </motion.div>
 
-            {/* Headline — single serif voice, refined */}
+            {/* Headline */}
             <h1 className="font-serif font-bold leading-[0.95] tracking-tight text-white text-[2.5rem] xs:text-[3rem] sm:text-[4.5rem] lg:text-[5.5rem]">
-              <span className="hero-headline-line block">Pristine Indian</span>
-              <span className="hero-headline-line block italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#d4a373] to-[#d4a373]">
+              <motion.span variants={headlineItem} className="block">
+                Pristine Indian
+              </motion.span>
+              <motion.span
+                variants={headlineItem}
+                className="block italic font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#d4a373] via-[#d4a373] to-[#d4a373]"
+              >
                 Organic Grains
-              </span>
+              </motion.span>
             </h1>
 
-            {/* Description — generous letter spacing, warm grey */}
-            <p className="hero-desc text-sm sm:text-base text-stone-300/90 leading-relaxed max-w-xl tracking-wide font-light">
+            {/* Description */}
+            <motion.p
+              variants={fadeUpItem}
+              className="text-sm sm:text-base text-stone-300/90 leading-relaxed max-w-xl tracking-wide font-light"
+            >
               Unpolished, single-origin heirloom rice and naturally aged Basmati —
               sourced directly from verified organic cooperatives across Karnataka,
               Maharashtra, Bengal &amp; Tamil Nadu.
-            </p>
+            </motion.p>
 
-            {/* Meal selector — minimal, jewelry-like */}
-            <div className="hero-selector space-y-3">
+            {/* Meal selector */}
+            <motion.div variants={fadeUpItem} className="space-y-3">
               <div className="flex items-center gap-3">
                 <Wheat className="w-3.5 h-3.5 text-[#d4a373]" strokeWidth={1.5} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">
@@ -185,7 +229,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                         <motion.span
                           layoutId="meal-pill"
                           transition={SPRING.dock}
-                          className="absolute inset-0 rounded-full shadow-[0_0_20px_rgba(212,163,115,0.25)]"
+                          className="absolute inset-0 rounded-full"
                           style={{ boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.4)" }}
                         />
                       )}
@@ -198,7 +242,6 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 })}
               </div>
 
-              {/* Selected grain — minimal text, no heavy badge */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={meal}
@@ -217,7 +260,6 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                     </span>
                   </div>
                   <div className="flex items-center gap-4 shrink-0">
-                    {/* Water ratio — minimal text, no background */}
                     <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#d4a373]">
                       <Droplets className="w-3 h-3" />
                       {rec.water}
@@ -234,15 +276,15 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                   </div>
                 </motion.div>
               </AnimatePresence>
-            </div>
+            </motion.div>
 
-            {/* CTAs — primary glow + ghost secondary */}
-            <div className="hero-cta flex flex-wrap items-center gap-3 pt-2">
+            {/* CTAs */}
+            <motion.div variants={fadeUpItem} className="flex flex-wrap items-center gap-3 pt-1">
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="btn-primary-glow px-6 sm:px-7 py-4 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="btn-primary-glow px-6 sm:px-7 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
               >
                 <BrainCircuit className="w-4 h-4 text-[#d4a373] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
                 Ask AI Grain Sommelier
@@ -253,33 +295,32 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenComparison}
-                className="px-6 py-4 text-white font-bold rounded-full text-sm tracking-wide border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-3.5 text-white font-bold rounded-full text-sm tracking-wide border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Compass className="w-4 h-4" />
                 Compare Grains
               </motion.button>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right — floating glass info card (desktop) */}
-          <div className="hidden lg:block lg:col-span-5">
+          {/* Right — desktop glass panel */}
+          <motion.div variants={imageItem} className="hidden lg:block lg:col-span-5">
             <HeroGlassPanel rec={rec} reduced={reduced} />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* ===== Value pillars — minimal, hairline dividers ===== */}
+        {/* Value pillars */}
         <motion.div
-          variants={staggerContainer(0.07)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
+          variants={staggerContainer(0.07, 0.8)}
+          initial={reduced ? "visible" : "hidden"}
+          animate="visible"
           className="grid grid-cols-4 gap-4 sm:gap-8 mt-14 sm:mt-20 pt-8 border-t border-white/10"
         >
           {PILLARS.map((p) => (
             <motion.div
               key={p.title}
               variants={cleanRise}
-              className="hero-pillar flex flex-col gap-2"
+              className="flex flex-col gap-2"
             >
               <p.icon className="w-5 h-5 text-[#d4a373] mb-1" strokeWidth={1.5} />
               <h4 className="text-xs sm:text-sm font-bold text-white tracking-wide">{p.title}</h4>
@@ -291,12 +332,12 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
       {/* Scroll hint */}
       <motion.div
-        animate={reduced ? {} : { y: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        animate={reduced ? {} : { y: [0, 8, 0], opacity: [0.3, 0.7, 0.3] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-1.5"
       >
-        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/50">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-white/50 to-transparent" />
+        <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/40">Scroll</span>
+        <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent" />
       </motion.div>
     </section>
   );
@@ -311,9 +352,8 @@ function HeroGlassPanel({
   reduced: boolean;
 }) {
   return (
-    <div className="hero-image-card relative">
+    <div className="relative">
       <div className="relative rounded-[1.5rem] overflow-hidden shadow-2xl border border-white/15 backdrop-blur-2xl bg-white/5">
-        {/* Image */}
         <div className="relative h-[420px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.img
@@ -329,7 +369,7 @@ function HeroGlassPanel({
           </AnimatePresence>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a]/80 via-transparent to-[#0a0f0a]/20" />
 
-          {/* Floating official seal — dark glass sticker */}
+          {/* Seal */}
           <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#0a0f0a]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
             <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] border border-[#d4a373]/15">
               <img
@@ -339,7 +379,7 @@ function HeroGlassPanel({
               />
             </div>
             <div>
-              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#d4a373] block leading-none">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#d4a373] block leading-none">
                 Certified
               </span>
               <p className="text-[11px] font-bold font-serif text-white leading-tight">
@@ -348,7 +388,7 @@ function HeroGlassPanel({
             </div>
           </div>
 
-          {/* Bottom — grain name, minimal */}
+          {/* Bottom info */}
           <div className="absolute bottom-0 left-0 right-0 p-5">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d4a373] block mb-1">
               Featured
@@ -361,7 +401,7 @@ function HeroGlassPanel({
         </div>
       </div>
 
-      {/* Floating leaf accent */}
+      {/* Floating leaf */}
       <motion.div
         animate={reduced ? {} : { rotate: [0, 8, 0], y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -369,37 +409,6 @@ function HeroGlassPanel({
       >
         <Leaf className="w-6 h-6 text-[#d4a373]" />
       </motion.div>
-    </div>
-  );
-}
-
-function TrustMarquee() {
-  const items = [
-    "100% Organic Certified",
-    "Naturally Aged 9–24 Months",
-    "Zero Pesticide Residue",
-    "Direct from Farmer Cooperatives",
-    "GI-Tagged Heritage Grains",
-    "Lab-Tested Purity",
-    "Pan-India Express Delivery",
-  ];
-  const doubled = [...items, ...items];
-
-  return (
-    <div className="relative border-t border-[#d4a373]/20 bg-[#1f431e] py-3 overflow-hidden">
-      <div className="flex w-max animate-marquee gap-8 whitespace-nowrap">
-        {doubled.map((item, i) => (
-          <span
-            key={i}
-            className="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#d4a373]"
-          >
-            <Leaf className="w-3 h-3 text-[#d4a373]" />
-            {item}
-          </span>
-        ))}
-      </div>
-      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#1f431e] to-transparent pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#1f431e] to-transparent pointer-events-none" />
     </div>
   );
 }

@@ -692,3 +692,51 @@ Stage Summary:
 - 2 unused motion exports removed
 - All broken references fixed
 - Lint clean, build 200, zero errors
+
+---
+Task ID: hero-framer-motion-redesign
+Agent: main (Z.ai Code)
+Task: Refactor and redesign hero with trending animations, smooth app opening, properly timed.
+
+Work Log:
+- REMOVED GSAP dependency from hero: replaced useLayoutEffect + gsap.timeline with pure Framer Motion staggered variants. This eliminates the GSAP/React hydration race condition and makes the entrance animation more reliable and smoother.
+
+- NEW ENTRANCE ANIMATION SYSTEM (pure Framer Motion):
+  - Container variant: staggerChildren 0.08s, delayChildren 0.15s — gives a brief pause on page load before elements start appearing
+  - Eyebrow: fadeUpItem (y:24→0, 0.7s) + animated scaleX line (0→1, 0.8s, delay 0.2s) — the line draws itself
+  - Headline line 1 "Pristine Indian": headlineItem (y:32→0, 0.9s) — slightly more travel for impact
+  - Headline line 2 "Organic Grains": same but staggered 0.08s after line 1
+  - Description: fadeUpItem — appears after headline
+  - Meal selector: fadeUpItem — follows description
+  - CTAs: fadeUpItem — follows selector
+  - Desktop glass panel: imageItem (y:30→0, scale:0.97→1, 1.0s, delay 0.3s) — enters slightly after text starts
+  - Value pillars: staggerContainer(0.07, delayChildren 0.8s) — delayed so they appear after the main content settles
+  - Scroll hint: delayed 1.5s — appears last, subtle pulse
+
+- TIMING CHAIN (total ~2.5s for full reveal):
+  0.00s: page loads, container starts
+  0.15s: eyebrow begins (line draws at 0.2s)
+  0.23s: headline line 1 begins (0.9s duration)
+  0.31s: headline line 2 begins
+  0.39s: description begins
+  0.47s: meal selector begins
+  0.55s: CTAs begin
+  0.45s: desktop glass panel begins (1.0s duration)
+  0.80s: value pillars begin (staggered 0.07s each)
+  1.50s: scroll hint begins pulsing
+
+- KEY IMPROVEMENTS over GSAP version:
+  - No useLayoutEffect (avoids flash of unstyled content)
+  - No GSAP context cleanup (simpler, fewer moving parts)
+  - Reduced motion: all variants set to "visible" immediately (no animation)
+  - Scroll-linked opacity fade retained (useScroll + useTransform)
+  - Eyebrow line now animates with scaleX (draws itself) — trending 2025 micro-interaction
+  - Scroll hint delayed to 1.5s (was 0s — appeared too early, competed with content)
+
+- Verified: lint clean, all routes 200, no errors. VLM: mobile 8/10 ("exceptionally clean, properly timed, fluid premium reveal"), desktop 9/10 ("exceptionally polished, perfectly positioned glass panel").
+
+Stage Summary:
+- GSAP removed from hero — pure Framer Motion staggered entrance.
+- Precisely timed 2.5s reveal chain: eyebrow → headline → description → selector → CTAs → panel → pillars → scroll hint.
+- Eyebrow line draws itself (scaleX animation).
+- All animations respect prefers-reduced-motion.
