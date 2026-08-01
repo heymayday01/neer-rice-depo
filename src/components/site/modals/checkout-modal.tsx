@@ -21,7 +21,7 @@ import {
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { tapPress } from "@/lib/motion";
+import { tapPress, hoverLift } from "@/lib/motion";
 
 interface Props {
   open: boolean;

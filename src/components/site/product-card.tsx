@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, memo, useRef } from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { useState, memo, useRef, useEffect } from "react";
+import { motion, useMotionValue, useTransform, animate, AnimatePresence } from "framer-motion";
 import { Star, ShoppingBag, Eye, Check, ChevronRight, Plus } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
@@ -20,11 +20,20 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
   const [weight, setWeight] = useState<number>(product.availableWeights[0] ?? 1);
   const [added, setAdded] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const add = useCart((s) => s.add);
   const haptic = useHaptic();
   const cardRef = useRef<HTMLElement>(null);
 
-  // Tilt-on-press physics (subtle 3D feel)
+  // Only enable 3D tilt on desktop (mouse), not mobile (touch causes jank)
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Tilt-on-press physics (desktop only)
   const tiltX = useMotionValue(0);
   const tiltY = useMotionValue(0);
   const rotateX = useTransform(tiltX, [-50, 50], [2, -2]);
@@ -77,9 +86,9 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
       variants={cleanRise}
       whileHover={hoverLift}
       transition={SPRING.gentle}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformPerspective: 800 }}
+      onMouseMove={isDesktop ? handleMouseMove : undefined}
+      onMouseLeave={isDesktop ? handleMouseLeave : undefined}
+      style={isDesktop ? { rotateX, rotateY, transformPerspective: 800 } : undefined}
       className="rounded-3xl flex flex-col justify-between overflow-hidden group relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/20 transition-colors"
     >
       <div>
@@ -304,9 +313,6 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
     </motion.article>
   );
 }
-
-// Need AnimatePresence import
-import { AnimatePresence } from "framer-motion";
 
 // Memoized
 export const ProductCard = memo(ProductCardImpl);
