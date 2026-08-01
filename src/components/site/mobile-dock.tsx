@@ -5,6 +5,7 @@ import { ShoppingBag, BrainCircuit, Package, BarChart2, Sprout } from "lucide-re
 import { useCart } from "@/lib/cart-store";
 import { SPRING, EASE } from "@/lib/motion";
 import { useHaptic } from "@/hooks/use-haptic";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useState } from "react";
 
 interface MobileDockProps {
@@ -28,7 +29,9 @@ export function MobileDock({
   onOpenComparison,
   onHome,
 }: MobileDockProps) {
+  const hydrated = useHydrated();
   const count = useCart((s) => s.count());
+  const displayCount = hydrated ? count : 0;
   const [pressedId, setPressedId] = useState<TabId | null>(null);
   const haptic = useHaptic();
 
@@ -62,23 +65,23 @@ export function MobileDock({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ ...SPRING.drawer, duration: 0.35 }}
-          className="sm:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40"
+          className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 px-2"
           role="navigation"
           aria-label="Mobile navigation"
         >
           <div
-            className="flex items-center justify-around rounded-full px-3 py-2 pb-safe relative"
+            className="flex items-center justify-around rounded-full px-4 py-2.5 pb-safe relative"
             style={{
-              background: "rgba(10, 15, 10, 0.72)",
-              backdropFilter: "blur(40px) saturate(180%)",
-              WebkitBackdropFilter: "blur(40px) saturate(180%)",
+              background: "rgba(10, 15, 10, 0.78)",
+              backdropFilter: "blur(44px) saturate(180%)",
+              WebkitBackdropFilter: "blur(44px) saturate(180%)",
               boxShadow: [
-                "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+                "inset 0 1px 0 0 rgba(255,255,255,0.09)",
                 "inset 0 -1px 0 0 rgba(0,0,0,0.3)",
                 "inset 1px 0 0 0 rgba(255,255,255,0.03)",
                 "0 1px 3px rgba(0,0,0,0.3)",
-                "0 12px 40px -6px rgba(0,0,0,0.6)",
-                "0 0 0 0.5px rgba(212,163,115,0.15)",
+                "0 14px 44px -6px rgba(0,0,0,0.65)",
+                "0 0 0 0.5px rgba(212,163,115,0.2)",
               ].join(", "),
             }}
           >
@@ -112,7 +115,7 @@ export function MobileDock({
                   onClick={() => handleTap(tab.id, tab.action)}
                   whileTap={{ scale: 0.88 }}
                   transition={SPRING.dock}
-                  className="relative flex flex-col items-center justify-center gap-0.5 w-[52px] h-[52px] cursor-pointer select-none"
+                  className="relative flex flex-col items-center justify-center gap-0.5 w-[56px] h-[56px] cursor-pointer select-none"
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
@@ -161,9 +164,9 @@ export function MobileDock({
                   </div>
 
                   {/* Cart badge */}
-                  {tab.id === "cart" && count > 0 && (
+                  {tab.id === "cart" && displayCount > 0 && (
                     <motion.span
-                      key={count}
+                      key={displayCount}
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
@@ -172,7 +175,7 @@ export function MobileDock({
                         boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
                       }}
                     >
-                      {count}
+                      {displayCount}
                     </motion.span>
                   )}
                 </motion.button>

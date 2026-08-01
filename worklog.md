@@ -1908,3 +1908,45 @@ Stage Summary:
 - Payment section: "REQUIRED TO PLACE ORDER" indicator makes it obvious the input is mandatory.
 - Address section REWRITTEN: 4 grouped sections (Address Type / Contact / Shipping / Location), progress bar, auto-fill badges, "Verified" badge, larger touch targets, "Save Address & Continue" button.
 - Lint clean, full flow verified end-to-end.
+
+---
+Task ID: hydration-fix-navbar-mobile-ux
+Agent: main (Z.ai Code)
+Task: Fix hydration error once and for all, fix navbar to top, make app mobile-friendly.
+
+Work Log:
+- ROOT CAUSE of hydration error: The cart store uses Zustand `persist` middleware which restores cart count from localStorage on the CLIENT only. Server renders "Cart with 0 items", client hydrates with "Cart with 2 items" → React hydration mismatch error.
+  - FIX: Created `useHydrated` hook using `useSyncExternalStore` (React 18+ lint-clean pattern). Returns `false` during SSR and first client render, `true` after mount.
+  - Applied to header.tsx: `displayCount = hydrated ? count : 0` and `displaySubtotal = hydrated ? subtotal : 0`. All cart badges/aria-labels now use displayCount/displaySubtotal.
+  - Applied to mobile-dock.tsx: same pattern for the cart badge.
+  - Result: Server and first client render both show 0 → match → no hydration error. After mount, effect runs and actual persisted value shows.
+  - Verified: opened page, added item, reloaded — ZERO hydration errors in console/errors.
+
+- NAVBAR FIXED TO TOP:
+  - Removed the scroll hide/show behavior (was hiding on scroll-down, showing on scroll-up — felt janky)
+  - Removed `visible` state + `translate-y` conditional + `lastY` ref
+  - Header is now always `sticky top-0 z-40` — stays fixed at top permanently
+  - Verified: scrolled 600px+ on desktop + mobile, header stays at top: 0, always visible
+  - Kept the `scrolled` state for the glass background change (transparent → blurred) — still works
+
+- MOBILE UX IMPROVEMENTS:
+  1. Mobile dock touch targets: 52px → 56px (exceeds Apple HIG 44px minimum)
+  2. Dock position: bottom-3 → bottom-4 (more breathing room from edge)
+  3. Dock padding: px-3 py-2 → px-4 py-2.5 (more spacious)
+  4. Dock glass: blur(40px) → blur(44px), opacity 0.72 → 0.78 (richer, more opaque)
+  5. Dock shadow: deeper (12px → 14px, 0.6 → 0.65 opacity) + gold ring brighter (0.15 → 0.2)
+  6. Bottom spacer: h-28 → h-32 + pb-safe (clears the bigger dock + safe area)
+  7. Added px-2 to dock container (prevents edge touching on narrow phones)
+
+- VERIFIED via Agent Browser (desktop + mobile iPhone 14):
+  - Hydration: ZERO errors after page load, after add-to-cart, after reload
+  - Navbar: stays fixed at top: 0 when scrolling (desktop + mobile)
+  - Mobile dock: stays visible at bottom when scrolling, 56px touch targets
+  - Cart count: shows correctly (1 item after add), no mismatch
+  - Lint clean, zero runtime errors
+
+Stage Summary:
+- Hydration error FIXED once and for all: useHydrated hook (useSyncExternalStore) gates cart count display — server and client both render 0 on first paint, persisted value shows after mount.
+- Navbar FIXED to top: removed hide/show behavior, always sticky top-0.
+- Mobile UX: bigger dock touch targets (56px), richer glass, more breathing room, safe-area padding, bigger bottom spacer.
+- Lint clean, zero hydration errors, zero runtime errors, verified desktop + mobile.

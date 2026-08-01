@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   ShoppingBag,
@@ -21,6 +21,7 @@ import { useCart } from "@/lib/cart-store";
 import { CATEGORIES } from "@/lib/rice-products";
 import { SPRING, hoverLift, tapPress } from "@/lib/motion";
 import { LogoMark } from "./logo";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 interface HeaderProps {
   searchQuery: string;
@@ -54,19 +55,18 @@ export function Header({
   onOpenComparison,
   onOpenMobileMenu,
 }: HeaderProps) {
-  const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const lastY = useRef(0);
+  const hydrated = useHydrated();
   const count = useCart((s) => s.count());
   const subtotal = useCart((s) => s.subtotal());
+  // Guard against hydration mismatch — server renders 0, client renders persisted value after mount
+  const displayCount = hydrated ? count : 0;
+  const displaySubtotal = hydrated ? subtotal : 0;
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => {
     // Only update state when the threshold actually changes — avoids re-renders
     setScrolled((prev) => (prev !== (y > 8) ? y > 8 : prev));
-    if (y > 140 && y > lastY.current) setVisible((prev) => (prev !== false ? false : prev));
-    else setVisible((prev) => (prev !== true ? true : prev));
-    lastY.current = y;
   });
 
   const goHome = () => {
@@ -78,9 +78,7 @@ export function Header({
     <header
       role="banner"
       aria-label="Site header"
-      className={`sticky top-0 z-40 transition-transform duration-300 pt-safe ${
-        visible ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className="sticky top-0 z-40 pt-safe"
     >
       {/* Top micro-banner (desktop only) — harvest info strip */}
       <div className="hidden md:block bg-[#0a0f0a] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
@@ -157,7 +155,7 @@ export function Header({
               whileTap={tapPress}
               onClick={onOpenCart}
               className="relative p-2.5 text-[#d4a373] rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/8"
-              aria-label={`Cart with ${count} items`}
+              aria-label={`Cart with ${displayCount} items`}
               data-cart-target="true"
               style={{
                 background: "rgba(212,163,115,0.08)",
@@ -165,9 +163,9 @@ export function Header({
               }}
             >
               <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
-              {count > 0 && (
+              {displayCount > 0 && (
                 <motion.span
-                  key={count}
+                  key={displayCount}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={SPRING.bouncy}
@@ -176,7 +174,7 @@ export function Header({
                     boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
                   }}
                 >
-                  {count}
+                  {displayCount}
                 </motion.span>
               )}
             </motion.button>
@@ -283,26 +281,26 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenCart}
-                aria-label={`Cart with ${count} items`}
+                aria-label={`Cart with ${displayCount} items`}
                 data-cart-target="true"
                 className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />
                 <span className="hidden md:inline">Cart</span>
-                {count > 0 && (
+                {displayCount > 0 && (
                   <motion.span
-                    key={count}
+                    key={displayCount}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
                     className="bg-[#0a0f0a] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
-                    {count}
+                    {displayCount}
                   </motion.span>
                 )}
-                {subtotal > 0 && (
+                {displaySubtotal > 0 && (
                   <span className="text-[11px] font-bold text-[#0a0f0a]/70 border-l border-[#0a0f0a]/20 pl-1.5 ml-0.5 hidden xl:inline">
-                    ₹{subtotal}
+                    ₹{displaySubtotal}
                   </span>
                 )}
               </motion.button>
