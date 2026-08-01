@@ -159,7 +159,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                       whileTap={{ scale: 0.85 }}
                       transition={SPRING.dock}
                       onClick={() => handleRemove(item.productId, item.selectedWeightKg)}
-                      className="self-start p-1.5 text-stone-600 hover:text-red-400 transition-colors cursor-pointer"
+                      className="self-start p-1.5 text-stone-400 hover:text-red-400 transition-colors cursor-pointer"
                       aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" />

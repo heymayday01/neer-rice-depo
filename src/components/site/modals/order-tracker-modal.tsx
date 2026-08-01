@@ -202,7 +202,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                   {result.items.map((it, i) => (
                     <div
                       key={i}
-                      className="flex justify-between text-[11px] text-stone-600"
+                      className="flex justify-between text-[11px] text-stone-400"
                     >
                       <span>
                         {it.quantity}× {it.product?.name} ({it.selectedWeightKg}kg)

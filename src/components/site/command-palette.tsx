@@ -177,7 +177,7 @@ export function CommandPalette({
                           ? "text-[#d4a373]"
                           : item.type === "category"
                             ? "text-stone-500"
-                            : "text-stone-600"
+                            : "text-stone-400"
                       }`}
                     >
                       {item.hint.split(" · ")[0] === item.hint ? item.type : item.hint.split(" · ")[0]}
@@ -194,7 +194,7 @@ export function CommandPalette({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-white/8 text-[10px] text-stone-600">
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-white/8 text-[10px] text-stone-400">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <kbd className="data-mono border border-white/10 rounded px-1 py-0.5">↑↓</kbd>

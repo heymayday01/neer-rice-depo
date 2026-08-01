@@ -130,7 +130,7 @@ export function ProductCatalog({
         </motion.div>
 
         {/* Mobile category strip — ghost pills */}
-        <div className="md:hidden flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
+        <nav aria-label="Product categories" className="md:hidden flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
           {CATEGORIES.map((cat) => {
             const Icon = CAT_ICONS[cat.id] ?? Sprout;
             const selected = activeCategory === cat.id;
@@ -151,7 +151,7 @@ export function ProductCatalog({
               </button>
             );
           })}
-        </div>
+        </nav>
 
         {/* Filter bar — minimal, jewelry-like */}
         <motion.div

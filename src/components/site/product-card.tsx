@@ -98,7 +98,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             </span>
             <div className="flex items-center gap-1.5">
               <span className="live-dot" />
-              <span className="text-[8px] font-bold uppercase tracking-wider text-stone-600 font-mono">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400 font-mono">
                 {product.stockKg > 1000 ? "In stock" : "Limited"}
               </span>
             </div>
@@ -110,7 +110,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
               {product.name}
             </h3>
             {product.nativeName && (
-              <p className="text-[11px] text-stone-600 font-serif italic mt-0.5">
+              <p className="text-[11px] text-stone-400 font-serif italic mt-0.5">
                 {product.nativeName}
               </p>
             )}
@@ -126,7 +126,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             <div className="flex items-center gap-1.5">
               <Star className="w-3.5 h-3.5 fill-[#d4a373] text-[#d4a373]" />
               <span className="font-bold text-white font-mono text-xs">{product.rating}</span>
-              <span className="text-stone-600 text-[10px] font-mono">({product.reviewsCount})</span>
+              <span className="text-stone-400 text-[10px] font-mono">({product.reviewsCount})</span>
             </div>
             <RadialGauge value={product.aromaLevel} max={5} size={26} label="Aroma" />
           </div>
@@ -134,7 +134,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           {/* Weight selector — uniform height */}
           <div className="pt-1">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-stone-600">Weight</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-stone-400">Weight</span>
               {weight >= 10 && (
                 <span className="text-[9px] font-bold text-[#d4a373] uppercase tracking-wider">
                   Bulk savings
@@ -180,9 +180,9 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black font-serif text-white">₹{final}</span>
             {savings > 0 && (
-              <span className="text-xs text-stone-600 line-through font-mono">₹{original}</span>
+              <span className="text-xs text-stone-400 line-through font-mono">₹{original}</span>
             )}
-            <span className="text-[10px] text-stone-600 font-mono">
+            <span className="text-[10px] text-stone-400 font-mono">
               ₹{perKg}/kg
             </span>
           </div>

@@ -9,7 +9,7 @@ interface FooterProps {
 
 export function Footer({ onOpenAISommelier }: FooterProps) {
   return (
-    <footer className="relative bg-[#0a0f0a] border-t border-white/8 overflow-hidden mt-auto">
+    <footer className="relative bg-[#0a0f0a] border-t border-white/8 overflow-hidden mt-auto" role="contentinfo" aria-label="Site footer">
       {/* Top hairline accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4a373]/40 to-transparent" />
       {/* Ambient glow */}
@@ -129,7 +129,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
 
         {/* ===== Bottom: minimal ===== */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <p className="text-[11px] text-stone-600 font-light tracking-wide">
+          <p className="text-[11px] text-stone-400 font-light tracking-wide">
             © {new Date().getFullYear()} Neer Rice Depo · Handcrafted with reverence for India's farming legacy
           </p>
           <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500">

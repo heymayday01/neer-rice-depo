@@ -67,6 +67,8 @@ export function Header({
 
   return (
     <header
+      role="banner"
+      aria-label="Site header"
       className={`sticky top-0 z-40 transition-transform duration-300 pt-safe ${
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
@@ -79,7 +81,7 @@ export function Header({
             <span className="font-semibold uppercase tracking-[0.2em] text-[9px] text-stone-200">
               Direct-Sourced Organic Rice
             </span>
-            <span className="text-stone-600">•</span>
+            <span className="text-stone-400">•</span>
             <span className="text-stone-400">Free Express Delivery Above ₹999</span>
           </div>
           <a
@@ -196,6 +198,7 @@ export function Header({
               <button
                 onClick={onOpenComparison}
                 title="Compare Grains"
+                aria-label="Compare grains"
                 className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden lg:flex items-center gap-2 rounded-full transition-colors"
               >
                 <BarChart2 className="w-4 h-4" strokeWidth={1.5} />
@@ -205,6 +208,7 @@ export function Header({
               <button
                 onClick={onOpenOrders}
                 title="Track Orders"
+                aria-label="Track orders"
                 className="px-3.5 py-2.5 text-stone-400 hover:text-white border border-white/10 hover:border-white/25 text-xs font-bold cursor-pointer hidden md:flex items-center gap-2 rounded-full transition-colors"
               >
                 <Package className="w-4 h-4" strokeWidth={1.5} />
@@ -215,6 +219,7 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
+                aria-label="Ask AI grain sommelier"
                 className="px-4 py-2.5 text-[#d4a373] border border-[#d4a373]/30 hover:bg-[#d4a373]/10 text-xs font-bold tracking-tight cursor-pointer flex items-center gap-2 rounded-full transition-colors"
               >
                 <BrainCircuit className="w-4 h-4" strokeWidth={1.5} />
@@ -225,6 +230,7 @@ export function Header({
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenCart}
+                aria-label={`Cart with ${count} items`}
                 className="relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4 text-[#d4a373]" strokeWidth={1.5} />
@@ -250,7 +256,7 @@ export function Header({
           </div>
 
           {/* Desktop category bar — ghost pills */}
-          <nav className="hidden md:flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar border-t border-white/5">
+          <nav aria-label="Product categories" className="hidden md:flex items-center gap-1.5 py-2.5 overflow-x-auto no-scrollbar border-t border-white/5">
             {CATEGORIES.map((cat) => {
               const Icon = CAT_ICONS[cat.id] ?? Sprout;
               const selected = activeCategory === cat.id;

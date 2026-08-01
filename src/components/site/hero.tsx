@@ -113,7 +113,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden min-h-[100svh]">
+    <section ref={sectionRef} aria-label="Hero section" className="relative overflow-hidden min-h-[100svh]">
       {/* ===== Static cinematic background (no parallax — prevents jello jank) ===== */}
       <div className="absolute inset-0 z-0">
         <img
@@ -174,6 +174,8 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                     <button
                       key={m.id}
                       onClick={() => setMeal(m.id)}
+                      aria-pressed={selected}
+                      aria-label={`Select ${m.label} grain type`}
                       className={`relative py-2.5 px-4 rounded-full text-xs font-bold cursor-pointer transition-all min-h-[40px] ${
                         selected
                           ? "text-white border border-[#d4a373]/60 bg-[#d4a373]/10"

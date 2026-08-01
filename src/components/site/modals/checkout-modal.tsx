@@ -231,7 +231,7 @@ export function CheckoutModal({
                   key={`${i.productId}-${i.selectedWeightKg}`}
                   className="flex items-center justify-between text-xs"
                 >
-                  <span className="text-stone-600">
+                  <span className="text-stone-400">
                     {i.quantity}× {i.product.name} ({i.selectedWeightKg}kg)
                   </span>
                   <span className="font-bold text-white">₹{i.totalPrice}</span>
@@ -310,7 +310,7 @@ export function CheckoutModal({
                       className={`p-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                         sel
                           ? "bg-[#1f431e] text-white border-[#1f431e] shadow-sm"
-                          : "bg-white text-stone-600 border-white/10 hover:border-white/25"
+                          : "bg-white text-stone-400 border-white/10 hover:border-white/25"
                       }`}
                     >
                       <Icon className="w-4 h-4" />

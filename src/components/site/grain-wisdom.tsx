@@ -175,7 +175,7 @@ export function GrainWisdomHub() {
                   </div>
                   <ChevronRight
                     className={`w-4 h-4 transition-transform shrink-0 ${
-                      selected ? "text-[#d4a373] translate-x-0.5" : "text-stone-600"
+                      selected ? "text-[#d4a373] translate-x-0.5" : "text-stone-400"
                     }`}
                   />
                 </button>

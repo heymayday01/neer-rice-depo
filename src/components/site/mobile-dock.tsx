@@ -64,6 +64,8 @@ export function MobileDock({
           exit={{ y: 120, opacity: 0 }}
           transition={{ ...SPRING.drawer, duration: 0.4 }}
           className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40"
+          role="navigation"
+          aria-label="Mobile navigation"
         >
           <div
             className="flex items-center gap-0.5 rounded-full px-1.5 py-1.5 pb-safe border border-white/8"
