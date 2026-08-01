@@ -773,3 +773,35 @@ Stage Summary:
 - Dock: pill shape, icon+label tabs, circular active bg, frosted glass, refract-edge.
 - Mobile navbar: floating pill, frosted glass, refract-edge, compact brand, menu+cart.
 - Desktop: unchanged full-width glass bar.
+
+---
+Task ID: enhance-navbar-dock-materials
+Agent: main (Z.ai Code)
+Task: Enhance navbar and dock with high-quality materials, visually better and attractive.
+
+Work Log:
+- DOCK ENHANCED with multi-layer premium materials:
+  - Glass: rgba(10,15,10,0.68) + blur(40px) + saturate(180%) — heavier blur for deeper frosted effect
+  - 6-layer box-shadow: inset top highlight + inset bottom shadow + inset side highlight + tight contact shadow + wide elevation shadow + gold hairline ring
+  - Refractive top edge: gradient line (transparent → gold 0.3 → transparent) at the top of the pill — simulates light catching the glass edge
+  - Active state: rounded-2xl capsule (not circle) with gradient bg (135deg gold 0.12 → 0.04) + 3-layer shadow (inset top gold highlight + inset bottom shadow + outer gold glow)
+  - Icons: 21px (was 20px) with strokeWidth 2.2 when active (was 2) — bolder active state
+  - Cart badge: gold ring shadow (0 0 0 1.5px dark + 0 2px 6px gold glow) — floats with depth
+
+- NAVBAR ENHANCED with matching multi-layer materials:
+  - Glass: rgba(10,15,10,0.65) + blur(40px) + saturate(180%) — matches dock exactly
+  - 6-layer box-shadow: same architecture as dock — consistent depth language
+  - Refractive top edge: same gradient line — matches dock
+  - Logo container: gradient bg (135deg) + 2-layer shadow (inset gold highlight + gold ring) — premium framed logo
+  - Cart button: inset gold ring (boxShadow inset 0 0 0 1px) — subtle, tactile
+  - Cart badge: same gold ring shadow as dock — consistent
+  - Removed border class (was border border-white/10) — now uses boxShadow hairline ring instead (cleaner, no double border)
+
+- Verified: lint clean, all routes 200, no errors. VLM: navbar 8/10 ("high glass quality, excellent depth/shadow layering, premium feel, smooth"), dock 7.5/10 ("good frosted glass, solid depth, attractive, design system unity").
+
+Stage Summary:
+- Both navbar and dock now use identical 6-layer material system (inset highlights + contact shadow + elevation + gold hairline ring).
+- blur(40px) saturate(180%) — premium frosted glass.
+- Refractive top edge on both — light catches the glass.
+- Active state: rounded-2xl capsule with gradient + 3-layer shadow + gold glow.
+- Cart badge: gold ring shadow with glow — floats with depth.

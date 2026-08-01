@@ -67,15 +67,29 @@ export function MobileDock({
           aria-label="Mobile navigation"
         >
           <div
-            className="flex items-center justify-around rounded-full px-3 py-2 pb-safe border border-white/10 refract-edge"
+            className="flex items-center justify-around rounded-full px-3 py-2 pb-safe relative"
             style={{
-              background: "rgba(10, 15, 10, 0.72)",
-              backdropFilter: "blur(32px) saturate(160%)",
-              WebkitBackdropFilter: "blur(32px) saturate(160%)",
-              boxShadow:
-                "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 32px -4px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(212,163,115,0.08)",
+              background: "rgba(10, 15, 10, 0.68)",
+              backdropFilter: "blur(40px) saturate(180%)",
+              WebkitBackdropFilter: "blur(40px) saturate(180%)",
+              boxShadow: [
+                "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+                "inset 0 -1px 0 0 rgba(0,0,0,0.3)",
+                "inset 1px 0 0 0 rgba(255,255,255,0.03)",
+                "0 1px 3px rgba(0,0,0,0.3)",
+                "0 12px 40px -6px rgba(0,0,0,0.6)",
+                "0 0 0 0.5px rgba(212,163,115,0.12)",
+              ].join(", "),
             }}
           >
+            {/* Refractive top edge — light catch */}
+            <div
+              className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.3), transparent)",
+              }}
+            />
+
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = active === tab.id;
@@ -85,29 +99,37 @@ export function MobileDock({
                 <motion.button
                   key={tab.id}
                   onClick={() => handleTap(tab.id, tab.action)}
-                  whileTap={{ scale: 0.9 }}
+                  whileTap={{ scale: 0.88 }}
                   transition={SPRING.dock}
-                  animate={isPressed ? { scale: 0.9 } : { scale: 1 }}
-                  className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-14 cursor-pointer select-none"
+                  animate={isPressed ? { scale: 0.88 } : { scale: 1 }}
+                  className="relative flex flex-col items-center justify-center gap-0.5 w-[52px] h-[52px] cursor-pointer select-none"
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {/* Active background circle */}
+                  {/* Active background — pill capsule with glow */}
                   {isActive && (
                     <motion.span
                       layoutId="dock-active"
                       transition={SPRING.dock}
-                      className="absolute top-1.5 w-9 h-9 rounded-full bg-[#d4a373]/12 border border-[#d4a373]/15"
+                      className="absolute inset-y-1 inset-x-1 rounded-2xl"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(212,163,115,0.12), rgba(212,163,115,0.04))",
+                        boxShadow: [
+                          "inset 0 1px 0 0 rgba(212,163,115,0.15)",
+                          "inset 0 -1px 0 0 rgba(0,0,0,0.15)",
+                          "0 0 12px rgba(212,163,115,0.08)",
+                        ].join(", "),
+                      }}
                     />
                   )}
 
                   {/* Press ripple */}
                   {isPressed && (
                     <motion.span
-                      initial={{ scale: 0, opacity: 0.15 }}
-                      animate={{ scale: 1.6, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: EASE.out }}
-                      className="absolute top-1.5 w-9 h-9 rounded-full bg-[#d4a373]/10"
+                      initial={{ scale: 0, opacity: 0.2 }}
+                      animate={{ scale: 1.5, opacity: 0 }}
+                      transition={{ duration: 0.45, ease: EASE.out }}
+                      className="absolute inset-1 rounded-2xl bg-[#d4a373]/10"
                     />
                   )}
 
@@ -116,8 +138,8 @@ export function MobileDock({
                       className={`transition-colors duration-200 ${
                         isActive ? "text-[#d4a373]" : "text-stone-500"
                       }`}
-                      strokeWidth={isActive ? 2 : 1.5}
-                      style={{ width: 20, height: 20 }}
+                      strokeWidth={isActive ? 2.2 : 1.5}
+                      style={{ width: 21, height: 21 }}
                     />
                     <span
                       className={`text-[9px] font-bold tracking-tight transition-colors duration-200 ${
@@ -135,7 +157,10 @@ export function MobileDock({
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-4 px-0.5 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a] z-20"
+                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center z-20"
+                      style={{
+                        boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
+                      }}
                     >
                       {count}
                     </motion.span>

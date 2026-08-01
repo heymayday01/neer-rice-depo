@@ -98,16 +98,30 @@ export function Header({
       {/* === MOBILE: Floating pill navbar === */}
       <div className="sm:hidden px-3 pt-2">
         <div
-          className="flex items-center justify-between rounded-full px-3 py-2 border border-white/10 refract-edge"
+          className="flex items-center justify-between rounded-full px-3 py-2 relative"
           style={{
-            background: "rgba(10, 15, 10, 0.72)",
-            backdropFilter: "blur(28px) saturate(160%)",
-            WebkitBackdropFilter: "blur(28px) saturate(160%)",
-            boxShadow:
-              "inset 0 1px 0 0 rgba(255,255,255,0.05), 0 4px 20px -4px rgba(0,0,0,0.5)",
+            background: "rgba(10, 15, 10, 0.65)",
+            backdropFilter: "blur(40px) saturate(180%)",
+            WebkitBackdropFilter: "blur(40px) saturate(180%)",
+            boxShadow: [
+              "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+              "inset 0 -1px 0 0 rgba(0,0,0,0.2)",
+              "inset 1px 0 0 0 rgba(255,255,255,0.03)",
+              "0 1px 3px rgba(0,0,0,0.3)",
+              "0 8px 28px -4px rgba(0,0,0,0.5)",
+              "0 0 0 0.5px rgba(212,163,115,0.12)",
+            ].join(", "),
           }}
         >
-          {/* Brand — compact */}
+          {/* Refractive top edge */}
+          <div
+            className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.25), transparent)",
+            }}
+          />
+
+          {/* Brand */}
           <button
             onClick={() => {
               setActiveCategory("all");
@@ -116,7 +130,13 @@ export function Header({
             className="flex items-center gap-2 shrink-0 cursor-pointer"
             aria-label="Neer Rice Depo home"
           >
-            <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-[#d4a373]/20 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a]">
+            <div
+              className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0"
+              style={{
+                background: "linear-gradient(135deg, #0f1a0d, #0a0f0a)",
+                boxShadow: "inset 0 1px 0 0 rgba(212,163,115,0.1), 0 0 0 1px rgba(212,163,115,0.15)",
+              }}
+            >
               <img
                 src="/neer-logo-premium.png"
                 alt="Neer Rice Depo"
@@ -129,7 +149,7 @@ export function Header({
           </button>
 
           {/* Actions */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <motion.button
               whileTap={tapPress}
               onClick={onOpenMobileMenu}
@@ -141,8 +161,12 @@ export function Header({
             <motion.button
               whileTap={tapPress}
               onClick={onOpenCart}
-              className="relative p-2 bg-[#d4a373]/10 border border-[#d4a373]/25 text-[#d4a373] rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/15"
+              className="relative p-2 text-[#d4a373] rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/8"
               aria-label={`Cart with ${count} items`}
+              style={{
+                background: "rgba(212,163,115,0.08)",
+                boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.2)",
+              }}
             >
               <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
               {count > 0 && (
@@ -151,7 +175,10 @@ export function Header({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={SPRING.bouncy}
-                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a]"
+                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center z-20"
+                  style={{
+                    boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 4px rgba(212,163,115,0.3)",
+                  }}
                 >
                   {count}
                 </motion.span>
