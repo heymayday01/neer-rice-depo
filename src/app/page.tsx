@@ -16,6 +16,7 @@ import { PullToRefresh } from "@/components/site/pull-to-refresh";
 import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { RiceProduct } from "@/lib/types";
 import { useOrders } from "@/lib/cart-store";
+import { useModalBackHandler } from "@/hooks/use-modal-back-handler";
 
 // Lazy-load modals — they only enter the bundle when opened (code-splitting)
 const ProductDetailModal = lazy(() =>
@@ -97,6 +98,17 @@ export default function Home() {
   }, []);
 
   const addOrder = useOrders((s) => s.add);
+
+  // Back-gesture handling — back button closes modals instead of navigating away
+  useModalBackHandler(!!detailProduct, () => setDetailProduct(null));
+  useModalBackHandler(cartOpen, () => setCartOpen(false));
+  useModalBackHandler(checkoutOpen, () => setCheckoutOpen(false));
+  useModalBackHandler(ordersOpen, () => setOrdersOpen(false));
+  useModalBackHandler(aiOpen, () => setAiOpen(false));
+  useModalBackHandler(compareOpen, () => setCompareOpen(false));
+  useModalBackHandler(mobileMenuOpen, () => setMobileMenuOpen(false));
+  useModalBackHandler(cmdOpen, () => setCmdOpen(false));
+  useModalBackHandler(showOnboarding, dismissOnboarding);
 
   // Dock active state — memoized to avoid recompute on every render
   const dockActive: DockTab = useMemo(

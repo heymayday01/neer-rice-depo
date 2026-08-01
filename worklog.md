@@ -2007,3 +2007,41 @@ Stage Summary:
 - Animations: removed invalid delay prop, all use shared spring tokens + cleanRise variant, reduced-motion safe
 - Continuity: seamless dark bg, consistent borders, predictable scroll-trigger timing
 - Lint clean, verified end-to-end on iPhone 14, zero errors.
+
+---
+Task ID: back-gesture-ux-fixes
+Agent: main (Z.ai Code)
+Task: Optimize back gesture calibration + fix known UX issues for best experience.
+
+Work Log:
+- BACK GESTURE OPTIMIZATION (useModalBackHandler hook):
+  - PROBLEM: On mobile, swiping back or pressing the back button navigated away from the page instead of closing the open modal. Users lost their cart/checkout progress.
+  - SOLUTION: Created a centralized, race-condition-free hook that intercepts the back gesture:
+    - Module-level shared stack tracks all open modals by unique ID
+    - When the first modal opens, pushes a sentinel history state
+    - Global popstate listener: when back is pressed and a modal is open, re-pushes the sentinel (prevents navigation) and closes the topmost modal
+    - When a modal closes via UI, removes from stack — does NOT call history.back() (avoids race conditions during cart→checkout transitions)
+    - Multiple modals stack naturally (LIFO) — back closes the topmost first
+  - RACE CONDITION FIX: Initial approach used history.back() on cleanup, which caused the cart→checkout transition to fail (cart's back() popped checkout's sentinel). Fixed by NOT calling history.back() — orphan sentinels are consumed harmlessly on next back press.
+  - Applied to ALL 9 modals: ProductDetail, CartDrawer, Checkout, OrderTracker, AISommelier, Comparison, MobileMenu, CommandPalette, Onboarding.
+  - VERIFIED: 
+    - Open cart → press back → cart closes, page stays at / ✓
+    - Open product detail → press back → detail closes, page stays ✓
+    - Cart → checkout transition works (no race) → press back → checkout closes, page stays ✓
+
+- iOS INPUT ZOOM FIX:
+  - PROBLEM: iOS Safari auto-zooms when focusing inputs with font-size < 16px. Many checkout inputs used text-xs (12px) — caused jarring zoom on every field focus.
+  - FIX: Added global CSS rule in globals.css — on mobile (max-width: 640px), all input/textarea/select elements get font-size: 16px !important. Prevents zoom without changing every component.
+  - Verified: computed font-size on mobile inputs is now 16px.
+
+- VERIFIED via Agent Browser (iPhone 14):
+  - Back gesture: cart, checkout, product detail all close on back, page stays at /
+  - Cart→checkout transition: no race condition, checkout opens correctly
+  - Input font size: 16px on mobile (no iOS zoom)
+  - Zero hydration errors, zero runtime errors
+  - Lint clean
+
+Stage Summary:
+- Back gesture calibrated: back button/swipe closes modals (cart, checkout, detail, AI, comparison, orders, menu, command palette, onboarding) instead of navigating away. Race-condition-free for modal transitions.
+- iOS input zoom fixed: global 16px font-size on mobile inputs prevents jarring auto-zoom.
+- Lint clean, verified end-to-end on iPhone 14, zero errors.
