@@ -930,14 +930,26 @@ export function CheckoutModal({
 
                   {/* 8. Terms */}
                   <label className="flex items-start gap-2.5 cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 hover:border-white/20 transition-colors">
-                    <span className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border-2 transition-all ${agreeTerms ? "bg-[#1f431e] border-[#1f431e]" : "border-white/15"}`}>
+                    <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all ${agreeTerms ? "bg-[#1f431e] border-[#1f431e]" : "border-white/20"}`}>
                       {agreeTerms && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
                     </span>
                     <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="sr-only" />
                     <span className="text-[11px] text-stone-400 leading-relaxed">
                       I agree to Neer Rice Depo&apos;s{" "}
-                      <span className="font-bold text-[#a3c4a0] underline">Terms of Service</span> and{" "}
-                      <span className="font-bold text-[#a3c4a0] underline">Refund Policy</span>. Grains are non-returnable once opened unless damaged.
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.info("Terms of Service — full terms will be emailed with your order confirmation."); }}
+                        className="font-bold text-[#a3c4a0] underline hover:text-[#d4a373] transition-colors cursor-pointer"
+                      >
+                        Terms of Service
+                      </button>{" "}and{" "}
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.info("Refund Policy — 7-day returns on unopened packs. Full policy emailed post-order."); }}
+                        className="font-bold text-[#a3c4a0] underline hover:text-[#d4a373] transition-colors cursor-pointer"
+                      >
+                        Refund Policy
+                      </button>. Grains are non-returnable once opened unless damaged.
                     </span>
                   </label>
                 </div>

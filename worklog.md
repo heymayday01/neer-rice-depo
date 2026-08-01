@@ -1678,3 +1678,46 @@ Stage Summary:
 - Accessibility: ALL animations now respect prefers-reduced-motion globally via MotionConfig.
 - Performance: Removed GPU-expensive blanket will-change, dead CSS animations, global content-visibility.
 - Lint clean, verified desktop + mobile, zero runtime errors.
+
+---
+Task ID: navbar-logo-checkout-fix
+Agent: main (Z.ai Code)
+Task: Make navbar pill bigger, logo text "Neer Rice Depo", fix checkout T&C breakage.
+
+Work Log:
+- ROOT CAUSE of checkout T&C "break": The "Terms of Service" and "Refund Policy" were `<span>` elements with underline styling inside the `<label>`. Clicking them looked like clicking links, but they actually toggled the checkbox (label behavior). Users expected to read the terms — instead the checkbox toggled unexpectedly, feeling "broken".
+  - FIX: Changed both spans to `<button type="button">` with `e.preventDefault(); e.stopPropagation()` + toast.info() showing the terms summary. Now clicking them shows an informative toast ("Terms of Service — full terms will be emailed with your order confirmation") WITHOUT toggling the checkbox. Clicking the label/checkbox area still toggles normally.
+  - Also fixed: checkbox size `h-4.5 w-4.5` → `h-5 w-5` (cleaner, 20px) and border `border-white/15` → `border-white/20` (better contrast).
+  - Verified: clicking "Terms of Service" button → checkbox stays unchecked (correct). Clicking label → checkbox toggles (correct). Full order placed successfully.
+
+- MOBILE NAVBAR PILL BIGGER (header.tsx):
+  - Pill padding: px-3 py-2 → px-4 py-2.5 (wider, taller)
+  - Pill height: ~56px → 64px
+  - Logo size: 32px → 36px
+  - Logo text: "Neer Rice" → "Neer Rice Depo" (full brand name)
+  - Text size: text-xs → text-sm
+  - Action buttons: min-h/min-w 36px → 44px (Apple HIG touch target standard)
+  - Action button padding: p-2 → p-2.5
+  - Icons: w-[18px] → w-5 h-5 (20px, bigger)
+  - Cart badge: w-4 h-4 → w-5 h-5, text-[9px] → text-[10px]
+  - Gap between actions: gap-1 → gap-1.5
+  - Glass: blur(40px) → blur(44px), opacity 0.72 → 0.74, shadow depth increased (8px→10px, 0.5→0.55)
+  - Gold ring: 0.12 → 0.18 (more visible)
+  - Refractive edge: 0.3 → 0.35 (brighter light catch)
+  - Container: px-3 pt-2 → px-3 pt-2.5
+
+- VERIFIED via Agent Browser (mobile iPhone 14):
+  - Navbar text: "Neer Rice Depo" (confirmed)
+  - Logo: 36px SVG (confirmed)
+  - Pill: 64px height, 16px/10px padding (confirmed)
+  - Touch targets: 44px min (confirmed)
+  - T&C: clicking "Terms of Service" button → toast shown, checkbox NOT toggled (confirmed)
+  - T&C: clicking label → checkbox toggles (confirmed)
+  - Full checkout flow: fill form → terms → place order → "Order Confirmed!" (confirmed)
+  - Lint clean, zero runtime errors.
+
+Stage Summary:
+- Checkout T&C fixed: Terms of Service / Refund Policy are now proper buttons with stopPropagation + toast — no more unexpected checkbox toggle.
+- Mobile navbar pill bigger: 64px height, 44px touch targets, 36px logo, blur(44px) glass.
+- Logo text: "Neer Rice Depo" (full brand name) on mobile.
+- Lint clean, full checkout flow verified end-to-end.

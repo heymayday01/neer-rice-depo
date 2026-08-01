@@ -104,20 +104,20 @@ export function Header({
       </div>
 
       {/* === MOBILE: Floating pill navbar === */}
-      <div className="sm:hidden px-3 pt-2">
+      <div className="sm:hidden px-3 pt-2.5">
         <div
-          className="flex items-center justify-between rounded-full px-3 py-2 relative"
+          className="flex items-center justify-between rounded-full px-4 py-2.5 relative"
           style={{
-            background: "rgba(10, 15, 10, 0.72)",
-            backdropFilter: "blur(40px) saturate(180%)",
-            WebkitBackdropFilter: "blur(40px) saturate(180%)",
+            background: "rgba(10, 15, 10, 0.74)",
+            backdropFilter: "blur(44px) saturate(180%)",
+            WebkitBackdropFilter: "blur(44px) saturate(180%)",
             boxShadow: [
-              "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+              "inset 0 1px 0 0 rgba(255,255,255,0.09)",
               "inset 0 -1px 0 0 rgba(0,0,0,0.2)",
               "inset 1px 0 0 0 rgba(255,255,255,0.03)",
               "0 1px 3px rgba(0,0,0,0.3)",
-              "0 8px 28px -4px rgba(0,0,0,0.5)",
-              "0 0 0 0.5px rgba(212,163,115,0.15)",
+              "0 10px 32px -4px rgba(0,0,0,0.55)",
+              "0 0 0 0.5px rgba(212,163,115,0.18)",
             ].join(", "),
           }}
         >
@@ -125,54 +125,54 @@ export function Header({
           <div
             className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.3), transparent)",
+              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.35), transparent)",
             }}
           />
 
-          {/* Brand — SVG logo mark */}
+          {/* Brand — SVG logo mark + full wordmark */}
           <button
             onClick={goHome}
-            className="flex items-center gap-2 shrink-0 cursor-pointer"
+            className="flex items-center gap-2.5 shrink-0 cursor-pointer"
             aria-label="Neer Rice Depo home"
           >
             <div className="shrink-0">
-              <LogoMark size={32} />
+              <LogoMark size={36} />
             </div>
-            <span className="text-xs font-serif font-bold text-white tracking-tight">
-              Neer Rice
+            <span className="text-sm font-serif font-bold text-white tracking-tight">
+              Neer Rice Depo
             </span>
           </button>
 
           {/* Actions */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <motion.button
               whileTap={tapPress}
               onClick={onOpenMobileMenu}
-              className="p-2 text-stone-400 hover:text-white rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors"
+              className="p-2.5 text-stone-400 hover:text-white rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
               aria-label="Open menu"
             >
-              <Menu className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              <Menu className="w-5 h-5" strokeWidth={1.5} />
             </motion.button>
             <motion.button
               whileTap={tapPress}
               onClick={onOpenCart}
-              className="relative p-2 text-[#d4a373] rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/8"
+              className="relative p-2.5 text-[#d4a373] rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/8"
               aria-label={`Cart with ${count} items`}
               style={{
                 background: "rgba(212,163,115,0.08)",
                 boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.2)",
               }}
             >
-              <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
               {count > 0 && (
                 <motion.span
                   key={count}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={SPRING.bouncy}
-                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center z-20"
+                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center z-20"
                   style={{
-                    boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 4px rgba(212,163,115,0.3)",
+                    boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
                   }}
                 >
                   {count}
