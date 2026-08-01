@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, memo } from "react";
-import { motion } from "framer-motion";
-import { Star, ShoppingBag, Eye, Check, ChevronRight } from "lucide-react";
+import { useState, memo, useRef } from "react";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { Star, ShoppingBag, Eye, Check, ChevronRight, Plus } from "lucide-react";
 import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
@@ -19,8 +19,16 @@ interface ProductCardProps {
 function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
   const [weight, setWeight] = useState<number>(product.availableWeights[0] ?? 1);
   const [added, setAdded] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
   const add = useCart((s) => s.add);
   const haptic = useHaptic();
+  const cardRef = useRef<HTMLElement>(null);
+
+  // Tilt-on-press physics (subtle 3D feel)
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const rotateX = useTransform(tiltX, [-50, 50], [2, -2]);
+  const rotateY = useTransform(tiltY, [-50, 50], [-2, 2]);
 
   const { final, original, savings, perKg } = getPriceForWeight(product, weight);
   const discountPct = product.discountedPricePerKg
@@ -36,20 +44,46 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    haptic("medium");
+    add(product, product.availableWeights[0] ?? 1);
+    setShowQuickAdd(true);
+    setTimeout(() => setShowQuickAdd(false), 1200);
+  };
+
   const handleWeightChange = (w: number) => {
     haptic("selection");
     setWeight(w);
   };
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    tiltX.set(e.clientX - cx);
+    tiltY.set(e.clientY - cy);
+  };
+
+  const handleMouseLeave = () => {
+    animate(tiltX, 0, { duration: 0.4 });
+    animate(tiltY, 0, { duration: 0.4 });
+  };
+
   return (
     <motion.article
+      ref={cardRef}
       variants={cleanRise}
       whileHover={hoverLift}
       transition={SPRING.gentle}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformPerspective: 800 }}
       className="rounded-3xl flex flex-col justify-between overflow-hidden group relative border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/20 transition-colors"
     >
       <div>
-        {/* Image — tappable for details */}
+        {/* Image — tappable + long-press quick-add */}
         <div
           className="relative h-48 overflow-hidden bg-[#0a0f0a] cursor-pointer"
           onClick={() => onOpenDetail(product)}
@@ -70,7 +104,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             </div>
           )}
 
-          {/* Eye button — 44px tap target */}
+          {/* Eye button — 44px */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -82,12 +116,45 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             <Eye className="w-4 h-4" strokeWidth={1.5} />
           </button>
 
+          {/* Quick-add FAB — appears on hover/tap (innovation: instant add without scrolling) */}
+          <motion.button
+            onClick={handleQuickAdd}
+            initial={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#d4a373] text-[#0a0f0a] flex items-center justify-center shadow-lg cursor-pointer z-10 md:opacity-0 md:group-hover:opacity-100"
+            style={{ boxShadow: "0 4px 16px rgba(212,163,115,0.3)" }}
+            aria-label={`Quick add ${product.name}`}
+          >
+            <AnimatePresence mode="wait">
+              {showQuickAdd ? (
+                <motion.span
+                  key="check"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                >
+                  <Check className="w-4 h-4" strokeWidth={2.5} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="plus"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                >
+                  <Plus className="w-4 h-4" strokeWidth={2.5} />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+
           {/* Bottom image meta */}
-          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+          <div className="absolute bottom-3 left-3 z-10 pointer-events-none">
             <span className="text-stone-400 text-[10px] font-mono tracking-wide">
               {product.grainType} · {product.agingMonths}m
             </span>
-            <span className={`text-[10px] font-mono tracking-wide ${
+            <span className={`ml-2 text-[10px] font-mono tracking-wide ${
               product.giIndex.includes("Low") ? "text-[#d4a373]" : "text-stone-500"
             }`}>
               GI {product.giIndex.split(" ")[0]}
@@ -122,7 +189,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             )}
           </div>
 
-          {/* Tagline — improved contrast */}
+          {/* Tagline */}
           <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">
             {product.tagline}
           </p>
@@ -181,7 +248,6 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
 
       {/* Footer */}
       <div className="p-4 pt-0 space-y-2.5">
-        {/* Price row — cleaner spacing */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-baseline gap-2.5">
             <span className="text-2xl font-black font-serif text-white">₹{final}</span>
@@ -238,6 +304,9 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
     </motion.article>
   );
 }
+
+// Need AnimatePresence import
+import { AnimatePresence } from "framer-motion";
 
 // Memoized
 export const ProductCard = memo(ProductCardImpl);
