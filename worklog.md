@@ -805,3 +805,23 @@ Stage Summary:
 - Refractive top edge on both — light catches the glass.
 - Active state: rounded-2xl capsule with gradient + 3-layer shadow + gold glow.
 - Cart badge: gold ring shadow with glow — floats with depth.
+
+---
+Task ID: optimize-layout-remove-empty-spaces
+Agent: main (Z.ai Code)
+Task: Optimize and remove unused empty spaces, clean professional layout.
+
+Work Log:
+- Audited all sections via VLM — found excessive spacing in hero, catalog, grain wisdom, footer, and product cards.
+- HERO: pt-16→14, sm:pt-20→16, lg:pt-24→20, pb-12→10, lg:pb-20→16. Internal: space-y-6/7→5/6. Pillars: mt-14/20→10/14, pt-8→6.
+- CATALOG: py-12/20→8/14. Internal: space-y-8→6. Grid: gap-5/6→4/5.
+- PRODUCT CARDS: p-4/5→4, space-y-3→2.5 (both body and footer sections).
+- GRAIN WISDOM: py-12/24→10/16. Internal: space-y-8/12→6/10.
+- FOOTER: pt-16/20→12/16, pb-10→8. pb-14→10. gap-10/16→8/12. gap-10 py-14→8 py-10.
+- BOTTOM SPACER: h-32→h-28 (dock clearance).
+- Verified: lint clean, all routes 200, no errors. VLM 9/10 ("excellent cleanliness and professionalism, tight balanced spacing, eliminates awkward gaps").
+
+Stage Summary:
+- All spacing tightened by ~20-30% across every section.
+- Layout is now compact, professional, and balanced.
+- VLM 9/10 — "tight, balanced, clean, professional."

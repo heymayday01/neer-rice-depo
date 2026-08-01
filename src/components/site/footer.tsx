@@ -16,9 +16,9 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
       {/* Ambient glow */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-[#1f431e]/8 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-10">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8">
         {/* ===== Top: brand + CTA ===== */}
-        <motion.div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-14 border-b border-white/8">
+        <motion.div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pb-10 border-b border-white/8">
           <div className="lg:col-span-7 space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] p-1.5 border border-[#d4a373]/20 overflow-hidden shrink-0 shadow-sm">
@@ -60,7 +60,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
         </motion.div>
 
         {/* ===== Middle: 3 clean columns ===== */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 py-14 border-b border-white/8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-10 border-b border-white/8">
           {/* Explore */}
           <div className="space-y-4">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4a373]">

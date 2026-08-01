@@ -153,7 +153,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       {/* Content */}
       <motion.div
         style={{ opacity: reduced ? 1 : contentOpacity }}
-        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 sm:pt-20 lg:pt-24 pb-12 lg:pb-20 min-h-[100svh] flex flex-col justify-center"
+        className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-14 sm:pt-16 lg:pt-20 pb-10 lg:pb-16 min-h-[100svh] flex flex-col justify-center"
       >
         <motion.div
           variants={container}
@@ -162,7 +162,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
         >
           {/* Left */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-7">
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
             {/* Eyebrow */}
             <motion.div
               variants={fadeUpItem}
@@ -314,7 +314,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           variants={staggerContainer(0.07, 0.8)}
           initial={reduced ? "visible" : "hidden"}
           animate="visible"
-          className="grid grid-cols-4 gap-4 sm:gap-8 mt-14 sm:mt-20 pt-8 border-t border-white/10"
+          className="grid grid-cols-4 gap-4 sm:gap-8 mt-10 sm:mt-14 pt-6 border-t border-white/10"
         >
           {PILLARS.map((p) => (
             <motion.div

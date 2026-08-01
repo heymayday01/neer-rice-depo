@@ -90,7 +90,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
         </div>
 
         {/* Body */}
-        <div className="p-4 sm:p-5 space-y-3">
+        <div className="p-4 space-y-2.5">
           {/* Origin + stock row */}
           <div className="flex items-center justify-between gap-2">
             <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-500 truncate">
@@ -174,7 +174,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 sm:p-5 pt-0 space-y-3">
+      <div className="p-4 pt-0 space-y-2.5">
         {/* Price row — properly aligned */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-baseline gap-2">

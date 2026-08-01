@@ -99,12 +99,12 @@ export function ProductCatalog({
   };
 
   return (
-    <section className="relative bg-[#0a0f0a] py-12 sm:py-20">
+    <section className="relative bg-[#0a0f0a] py-8 sm:py-14">
       {/* Ambient glow */}
       <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] bg-[#1f431e]/8 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[26rem] h-[26rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Section eyebrow + title */}
         <motion.div
           variants={cleanRise}
@@ -216,7 +216,7 @@ export function ProductCatalog({
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
           >
             <AnimatePresence mode="popLayout">
               {sorted.map((product) => (
