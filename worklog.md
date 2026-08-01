@@ -1862,3 +1862,49 @@ Stage Summary:
 - Buggy Terms checkbox REMOVED — checkout is simpler (one less gate), terms links now in pay bar footer as small text (not a checkbox).
 - Fly-to-cart animation ADDED — product image flies in an arc from card → cart icon, cart icon pulses on arrival. Integrated into ProductCard (both add buttons), ProductDetailModal, and AISommelierModal.
 - Lint clean, full flow verified end-to-end.
+
+---
+Task ID: place-order-fix-address-improve
+Agent: main (Z.ai Code)
+Task: Fix Place Order button not working + improve address section.
+
+Work Log:
+- ROOT CAUSE of "Place Order doesn't work": The button was DISABLED because the payment method's expandable input (UPI ID / card details / bank) was empty. Users didn't realize they needed to fill it — the expandable section was collapsed/subtle and the error message just said "Complete payment details" without specifying what was missing.
+  - The order actually placed successfully when all fields were filled — but the UX made it seem broken.
+
+- FIX 1 — Clear actionable hint in pay bar:
+  - When address invalid: "Complete your delivery address above to continue" (with pulsing gold dot)
+  - When payment invalid: specific message — "Enter your UPI ID" / "Enter card details" / "Select your bank" / "Complete payment details" (with pulsing gold dot)
+  - Gold color (#d4a373) makes it visible, not hidden in stone-500
+
+- FIX 2 — Payment section "Required" indicator:
+  - Added a "REQUIRED TO PLACE ORDER" label with pulsing dot at the top of the expanded payment details section
+  - For COD: shows "No payment details needed" instead
+  - Makes it clear that the payment input is required, not optional
+
+- ADDRESS SECTION IMPROVEMENTS (complete rewrite):
+  1. Grouped into 4 clear sections with labeled headers:
+     - ADDRESS TYPE (3-column grid: Home/Work/Other with icons, larger touch targets, selected ring)
+     - CONTACT DETAILS (Full Name + Phone with +91 prefix, Email below)
+     - SHIPPING ADDRESS (Street Address)
+     - LOCATION (City + State + Pincode with auto-fill indicator)
+  2. Address type selector: changed from small pills → 3-column grid with larger icons + labels, selected state has ring + bg tint
+  3. Saved address rows: added "Use →" CTA on hover, bigger icon (h-8 w-8), icon turns gold-on-white on hover, shows label badge + phone
+  4. Compact address display: added "Verified" badge with check icon, phone + email shown with icons inline, bigger icon (h-11 w-11)
+  5. Pincode auto-fill: shows "Auto-filled" badge in the Location header when pincode triggers autofill, city/state fields show green valid state when auto-filled
+  6. Added hint: "Enter pincode to auto-fill city & state" below the location fields
+  7. Progress indicator: when address incomplete, shows a progress bar (gold for partial, sage green when 100%) + "X/4" counter
+  8. Save button: "Save Address & Continue" with check icon, only appears when address is valid, animates in
+
+- VERIFIED via Agent Browser:
+  - Address section: 4 grouped sections (ADDRESS TYPE, CONTACT DETAILS, SHIPPING ADDRESS, LOCATION) all rendering
+  - Pay bar hint: shows "Complete your delivery address above to continue" when address empty → changes to "Enter your UPI ID" when address filled but UPI empty
+  - Payment section: "REQUIRED TO PLACE ORDER" indicator visible in expanded payment details
+  - Full flow: fill address → fill UPI → Place Order enabled → click → "Order Confirmed!" → POST /api/orders 200
+  - Lint clean, zero runtime errors
+
+Stage Summary:
+- Place Order "not working" FIXED: root cause was missing payment input. Now shows clear actionable hints ("Enter your UPI ID") with pulsing gold dot so users know exactly what to fill.
+- Payment section: "REQUIRED TO PLACE ORDER" indicator makes it obvious the input is mandatory.
+- Address section REWRITTEN: 4 grouped sections (Address Type / Contact / Shipping / Location), progress bar, auto-fill badges, "Verified" badge, larger touch targets, "Save Address & Continue" button.
+- Lint clean, full flow verified end-to-end.

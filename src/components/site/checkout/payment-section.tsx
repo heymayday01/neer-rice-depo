@@ -59,7 +59,14 @@ export function PaymentSection({ s }: { s: CheckoutState }) {
                       transition={{ duration: 0.25, ease: EASE.out }}
                       className="overflow-hidden"
                     >
-                      <div className="px-3 pb-3 pt-1 border-t border-white/8 space-y-2">
+                      <div className="px-3 pb-3 pt-3 border-t border-white/8 space-y-2.5">
+                        {/* Required indicator */}
+                        <div className="flex items-center gap-1.5">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
+                          <p className="text-[9px] font-bold uppercase tracking-wider text-[#d4a373]">
+                            {s.payment === "COD" ? "No payment details needed" : "Required to place order"}
+                          </p>
+                        </div>
                         <PaymentFields s={s} />
                       </div>
                     </motion.div>

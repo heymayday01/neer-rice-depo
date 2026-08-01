@@ -209,8 +209,18 @@ export function CheckoutModal({
                 </motion.button>
               </div>
               {!s.canPlaceOrder && !s.placing && (
-                <p className="text-center text-[10px] text-stone-500 mt-1.5">
-                  {!s.addressValid ? "Complete delivery address" : "Complete payment details"}
+                <p className="text-center text-[10px] mt-1.5">
+                  {!s.addressValid ? (
+                    <span className="text-[#d4a373] font-bold flex items-center justify-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
+                      Complete your delivery address above to continue
+                    </span>
+                  ) : !s.paymentValid ? (
+                    <span className="text-[#d4a373] font-bold flex items-center justify-center gap-1">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d4a373] animate-pulse" />
+                      {s.payment === "UPI" ? "Enter your UPI ID" : s.payment === "CARD" ? "Enter card details" : s.payment === "NETBANKING" ? "Select your bank" : "Complete payment details"} to continue
+                    </span>
+                  ) : null}
                 </p>
               )}
               {/* Trust badges + terms links */}
