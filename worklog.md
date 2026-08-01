@@ -995,3 +995,52 @@ Stage Summary:
 - WhatsApp updates + express pay + save card + empty cart guard + Enter-to-advance polish the UX.
 - Enhanced success screen with loyalty points + payment method + 3-step timeline.
 - All verified working end-to-end, lint clean, POST /api/orders 200 confirmed.
+
+---
+Task ID: zomato-style-redesign
+Agent: main (Z.ai Code)
+Task: Implement Zomato/Swiggy/Zepto checkout UI/UX patterns with better colors for UX.
+
+Work Log:
+- RESEARCHED Zomato/Swiggy/Zepto checkout patterns: single-page consolidated (no wizard), light theme, prominent "Deliver to" card, bill-details card, payment as vertical radio list with expandable details, delivery-instruction chips, tip chips with emoji, coupon strip with dashed border, sticky bottom pay bar, organic/veg markers, ETA green pill.
+- COLOR PALETTE chosen for UX (Zomato-inspired light checkout):
+  - Primary: #1f431e (forest green — brand identity, organic/fresh association)
+  - Savings/positive: #15803d (brighter green-700 — Zomato uses #1BA672 for veg/savings, high contrast on white)
+  - Accent: #d4a373 (gold — premium touches, gift wrap, loyalty)
+  - Danger: #dc2626 (red — errors)
+  - Background: white (cards) / stone-50 (main bg) — LIGHT theme for trust/readability
+  - Text: stone-900 (primary) / stone-500 (secondary)
+  - Organic marker: green square border #15803d (like Zomato veg marker)
+
+- MAJOR STRUCTURAL CHANGE: Converted from 4-step wizard → SINGLE-PAGE consolidated checkout (Zomato pattern). All sections visible on one scrollable page, no step navigation, no stepper. Users see everything and can edit any field anytime.
+
+- IMPLEMENTED 12 Zomato patterns:
+  1. LIGHT THEME: White cards on stone-50 bg. Forced light (no dark: variants) — better readability, more trustworthy for payments. This is the biggest visual shift.
+  2. SINGLE-PAGE LAYOUT: Left column (scrollable sections) + right sidebar (sticky Bill Details) on desktop. Single column + sticky bottom bar on mobile.
+  3. PROMINENT "DELIVER TO" CARD: Shows compact address with name, label badge, full address, phone, and "Change" button. Expands to edit form when Change clicked. Saved-addresses quick-pick collapsible.
+  4. BILL DETAILS CARD (Zomato-style): Itemized breakdown with right-aligned amounts, dashed dividers, "Item Total / Discount / Delivery Fee / Gift Wrap / Tip / Sample Pack", bold "To Pay" at bottom. Collapsible item list with organic markers + qty controls.
+  5. PAYMENT AS VERTICAL RADIO LIST: Each method is a row with icon + label + desc + radio circle. Selecting expands details inline (UPI ID input, card fields, bank dropdown, COD note). Card type auto-detected and shown as badge.
+  6. DELIVERY INSTRUCTIONS CHIPS: 4 quick-select chips (Leave at door, Ring bell, Call me, Contactless) + custom note textarea. Zomato pattern.
+  7. TIP CHIPS WITH EMOJI: 4 options (🙂 No tip, 😊 ₹20, 😍 ₹30, 🤩 ₹50). Zomato/Swiggy pattern.
+  8. COUPON STRIP: Dashed-border button "Apply coupon / View offers" → expands to manual input + available offers list with eligibility gating. Applied coupon shows green badge with discount.
+  9. STICKY BOTTOM PAY BAR: "To Pay ₹XXX" + "Saving ₹XX" + "Place Order" button. Always visible. Disabled until address + payment + terms complete. Helper text shows what's missing.
+  10. ORGANIC MARKER: Green square border with green dot on each item (like Zomato's veg marker) — signals organic/fresh.
+  11. ETA GREEN PILL: In header, green pill showing delivery date range "5 Aug – 6 Aug".
+  12. MOBILE BILL SUMMARY: Collapsible card at top on mobile (lg:hidden) showing "N items ₹XXX" → expands to full bill details (items, coupon, breakdown, savings, loyalty, ETA). Zomato mobile pattern.
+
+- KEPT ALL EXISTING FEATURES: Auto-save draft, pincode→city/state autofill, card type detection, saved addresses, gift wrap + message, order bump upsell, loyalty points, free-ship progress bar, WhatsApp opt-in, newsletter, billing-same toggle, save-card, terms agreement, confetti success screen with tracking ID + timeline.
+
+- FIXED: Dialog max-width override (sm:max-w-5xl to override default sm:max-w-lg) — now 1024px on desktop.
+
+- VERIFIED via Agent Browser (desktop 1280 + mobile iPhone 14):
+  Desktop: Add → cart → checkout → single page renders with all sections + right bill sidebar → pincode autofill (411038→Pune/Maharashtra) → compact address card with Change → delivery instruction chip → tip emoji chip → card payment expands with VISA detection → coupon strip expands → apply NEER10 → accept terms → Place Order → POST /api/orders 200 → success screen.
+  Mobile: Single column scroll → mobile bill summary "4 ITEMS ₹304" → expand → free-ship progress + items + coupon + breakdown → all sections visible → sticky bottom Place Order bar.
+
+- Lint clean, zero runtime errors, POST /api/orders 200 confirmed.
+
+Stage Summary:
+- Complete Zomato/Swiggy-style checkout redesign: single-page consolidated, light theme, forest-green primary + brighter savings green.
+- 12 Zomato patterns implemented: prominent Deliver-to card, bill-details card, vertical radio payment with expandable details, delivery-instruction chips, tip chips with emoji, coupon strip with offers, sticky bottom pay bar, organic markers, ETA green pill, mobile collapsible bill.
+- Color palette optimized for checkout UX: white/stone-50 bg (trust/readability), #1f431e primary (brand/organic), #15803d savings (Zomato-green high contrast), #d4a373 gold accents.
+- All 16 previous features retained (auto-save, pincode autofill, card detection, saved addresses, gift wrap, order bump, loyalty, free-ship progress, WhatsApp, etc.).
+- Verified on desktop + mobile, lint clean, order creation confirmed.
