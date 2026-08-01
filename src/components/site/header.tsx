@@ -158,6 +158,7 @@ export function Header({
               onClick={onOpenCart}
               className="relative p-2.5 text-[#d4a373] rounded-full cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/8"
               aria-label={`Cart with ${count} items`}
+              data-cart-target="true"
               style={{
                 background: "rgba(212,163,115,0.08)",
                 boxShadow: "inset 0 0 0 1px rgba(212,163,115,0.2)",
@@ -283,6 +284,7 @@ export function Header({
                 whileTap={tapPress}
                 onClick={onOpenCart}
                 aria-label={`Cart with ${count} items`}
+                data-cart-target="true"
                 className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />

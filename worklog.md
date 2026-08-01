@@ -1821,3 +1821,44 @@ Stage Summary:
 - Lint clean (fixed setState-in-effect with lazy initializers).
 - Full flow verified end-to-end: add → checkout → fill → terms modal → place order → success.
 - All features retained, zero regressions.
+
+---
+Task ID: remove-terms-fly-to-cart
+Agent: main (Z.ai Code)
+Task: Remove buggy Terms checkbox + add fly-to-cart animation.
+
+Work Log:
+- REMOVED buggy Terms & Conditions checkbox from checkout:
+  - Removed `<TermsSection>` from the checkout body
+  - Removed `agreeTerms` from `canPlaceOrder` validation (now just addressValid && paymentValid)
+  - Removed the `agreeTerms` check in `placeOrder()` 
+  - Removed TermsSection import from checkout-modal.tsx
+  - Replaced with a small footer text in the sticky pay bar: "By placing this order you agree to our Terms and Refund Policy" with clickable links that open the PolicyModal
+  - Terms/Refund links still accessible (open full policy modals) but don't gate the order
+  - Verified: Place Order enabled after filling form (no checkbox needed) → order placed successfully
+
+- ADDED fly-to-cart animation (useFlyToCart hook):
+  - New hook: src/hooks/use-fly-to-cart.ts
+  - When add-to-cart is clicked: creates a flying clone of the product image, animates it from the product card position → cart icon position using a quadratic Bezier arc trajectory (flies upward then down to cart)
+  - Animation details: 0.7s duration, ease [0.22,1,0.36,1], image shrinks from 64px → 32px, fades out at end, gold border glow on flying image
+  - On arrival: cart icon pulses (scale 1.25 → 1.0 with spring bounce) — confirms the item "landed"
+  - Finds cart icon via `data-cart-target="true"` attribute (added to both mobile + desktop cart buttons in header)
+  - Uses framer-motion's `animate()` function for smooth GPU-accelerated transform
+
+- INTEGRATED fly-to-cart into 3 add-to-cart locations:
+  1. ProductCard: both handleAdd (main Add button) and handleQuickAdd (FAB + button) — uses imgRef on the product image container as the source
+  2. ProductDetailModal: handleAdd — flies from the modal (document.body as source)
+  3. AISommelierModal: handleAdd for recommended products — flies from the modal
+
+- Added `data-cart-target="true"` to both cart buttons (mobile + desktop) in header.tsx so the hook can reliably find the target
+
+- VERIFIED via Agent Browser:
+  - Terms checkbox removed: checkout has no checkbox, Place Order enabled after form fill, order placed successfully ("Order Confirmed!")
+  - Fly-to-cart: clicked "Add 1kg" → cart count went to 1 → animation triggered (image flew to cart icon, cart pulsed)
+  - Terms/Refund links in pay bar footer still open PolicyModal with full 7-section content
+  - Lint clean, zero runtime errors, POST /api/orders 200
+
+Stage Summary:
+- Buggy Terms checkbox REMOVED — checkout is simpler (one less gate), terms links now in pay bar footer as small text (not a checkbox).
+- Fly-to-cart animation ADDED — product image flies in an arc from card → cart icon, cart icon pulses on arrival. Integrated into ProductCard (both add buttons), ProductDetailModal, and AISommelierModal.
+- Lint clean, full flow verified end-to-end.

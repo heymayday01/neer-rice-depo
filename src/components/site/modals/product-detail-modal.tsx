@@ -25,6 +25,7 @@ import { RiceProduct } from "@/lib/types";
 import { getPriceForWeight } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, swapUp, hoverLift, tapPress, staggerContainer } from "@/lib/motion";
+import { useFlyToCart } from "@/hooks/use-fly-to-cart";
 
 
 interface Props {
@@ -36,6 +37,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
   const [weight, setWeight] = useState<number>(1);
   const [added, setAdded] = useState(false);
   const add = useCart((s) => s.add);
+  const flyToCart = useFlyToCart();
   const [prevId, setPrevId] = useState<string | null>(null);
 
   // Reset weight when product changes (render-phase state adjustment)
@@ -51,6 +53,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
   const handleAdd = () => {
     add(product, weight);
+    flyToCart(document.body, product.image);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };

@@ -36,7 +36,6 @@ import {
   PaymentSection,
   BillCard,
   MobileBillSummary,
-  TermsSection,
   EmptyCartState,
   SuccessScreen,
   PolicyModal,
@@ -63,7 +62,7 @@ export function CheckoutModal({
   const placeOrder = async () => {
     if (!s.addressValid) { toast.error("Please complete your delivery address"); return; }
     if (!s.paymentValid) { toast.error("Please complete payment details"); return; }
-    if (!s.agreeTerms) { toast.error("Please accept the terms to continue"); return; }
+  
     if (s.saveInfo) s.saveCurrentAddress();
     s.setPlacing(true);
     try {
@@ -176,7 +175,6 @@ export function CheckoutModal({
                   <AddressSection s={s} />
                   <DeliverySection s={s} />
                   <PaymentSection s={s} />
-                  <TermsSection s={s} />
                 </div>
               </div>
 
@@ -212,20 +210,28 @@ export function CheckoutModal({
               </div>
               {!s.canPlaceOrder && !s.placing && (
                 <p className="text-center text-[10px] text-stone-500 mt-1.5">
-                  {!s.addressValid ? "Complete delivery address" : !s.paymentValid ? "Complete payment details" : "Accept terms to continue"}
+                  {!s.addressValid ? "Complete delivery address" : "Complete payment details"}
                 </p>
               )}
-              {/* Trust badges */}
-              <div className="mt-3 flex items-center justify-center gap-4 sm:gap-6 text-[10px] font-semibold text-stone-500">
-                <span className="flex items-center gap-1.5">
-                  <Lock className="h-3 w-3 text-[#a3c4a0]" /> SSL Secured
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-3 w-3 text-[#a3c4a0]" /> 7-Day Returns
-                </span>
-                <span className="hidden sm:flex items-center gap-1.5">
-                  <Truck className="h-3 w-3 text-[#a3c4a0]" /> Farm-Direct
-                </span>
+              {/* Trust badges + terms links */}
+              <div className="mt-3 flex flex-col items-center gap-1.5">
+                <div className="flex items-center justify-center gap-4 sm:gap-6 text-[10px] font-semibold text-stone-500">
+                  <span className="flex items-center gap-1.5">
+                    <Lock className="h-3 w-3 text-[#a3c4a0]" /> SSL Secured
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="h-3 w-3 text-[#a3c4a0]" /> 7-Day Returns
+                  </span>
+                  <span className="hidden sm:flex items-center gap-1.5">
+                    <Truck className="h-3 w-3 text-[#a3c4a0]" /> Farm-Direct
+                  </span>
+                </div>
+                <p className="text-[9px] text-stone-500 text-center">
+                  By placing this order you agree to our{" "}
+                  <button type="button" onClick={() => s.setPolicyModal("terms")} className="text-[#a3c4a0] underline hover:text-[#d4a373] cursor-pointer">Terms</button>
+                  {" "}and{" "}
+                  <button type="button" onClick={() => s.setPolicyModal("refund")} className="text-[#a3c4a0] underline hover:text-[#d4a373] cursor-pointer">Refund Policy</button>
+                </p>
               </div>
             </div>
           </div>

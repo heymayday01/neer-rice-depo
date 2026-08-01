@@ -23,6 +23,7 @@ import { RICE_PRODUCTS } from "@/lib/rice-products";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
 import { tapPress, SPRING } from "@/lib/motion";
+import { useFlyToCart } from "@/hooks/use-fly-to-cart";
 
 interface Props {
   open: boolean;
@@ -50,6 +51,7 @@ export function AISommelierModal({ open, onClose }: Props) {
   const [rec, setRec] = useState<Rec | null>(null);
   const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
   const add = useCart((s) => s.add);
+  const flyToCart = useFlyToCart();
 
   const ask = async (text: string) => {
     const q = text.trim();
@@ -80,6 +82,7 @@ export function AISommelierModal({ open, onClose }: Props) {
     const p = RICE_PRODUCTS.find((x) => x.id === productId);
     if (!p) return;
     add(p, p.availableWeights[0] ?? 1);
+    flyToCart(document.body, p.image);
     setAddedIds((s) => new Set(s).add(productId));
     toast.success(`${p.name} added to cart`);
     setTimeout(() => {

@@ -10,6 +10,7 @@ import { SPRING, swapUp, hoverLift, tapPress, cleanRise } from "@/lib/motion";
 import { SmartImage } from "./smart-image";
 import { RadialGauge } from "./radial-gauge";
 import { useHaptic } from "@/hooks/use-haptic";
+import { useFlyToCart } from "@/hooks/use-fly-to-cart";
 
 /* Calculate days since harvest for freshness badge */
 function getFreshnessDays(harvestDate: string): number {
@@ -34,7 +35,9 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const add = useCart((s) => s.add);
   const haptic = useHaptic();
+  const flyToCart = useFlyToCart();
   const cardRef = useRef<HTMLElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   // Only enable 3D tilt on desktop (mouse), not mobile (touch causes jank)
   useEffect(() => {
@@ -59,6 +62,10 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
 
   const handleAdd = () => {
     haptic("success");
+    // Fly the product image to the cart icon
+    if (imgRef.current) {
+      flyToCart(imgRef.current, product.image);
+    }
     add(product, weight);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -67,6 +74,10 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
     haptic("medium");
+    // Fly the product image to the cart icon
+    if (imgRef.current) {
+      flyToCart(imgRef.current, product.image);
+    }
     add(product, product.availableWeights[0] ?? 1);
     setShowQuickAdd(true);
     setTimeout(() => setShowQuickAdd(false), 1200);
@@ -104,6 +115,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
       <div>
         {/* Image — tappable + long-press quick-add */}
         <div
+          ref={imgRef}
           className="relative h-48 overflow-hidden bg-[#0a0f0a] cursor-pointer"
           onClick={() => onOpenDetail(product)}
         >

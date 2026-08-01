@@ -174,7 +174,7 @@ export function useCheckoutState(open: boolean, coupon: string) {
     return true;
   })();
 
-  const canPlaceOrder = addressValid && paymentValid && agreeTerms;
+  const canPlaceOrder = addressValid && paymentValid;
   const hasAddress = form.fullName && form.phone && form.address && form.pincode && addressValid;
 
   // ===== Handlers =====
