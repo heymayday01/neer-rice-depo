@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +38,16 @@ import {
   Clock,
   ArrowLeft,
   Sparkles,
+  Plus,
+  Minus,
+  Trash2,
+  MessageSquare,
+  Heart,
+  Leaf,
+  Wallet,
+  ShoppingBag,
+  AlertCircle,
+  KeyRound,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
@@ -59,6 +69,25 @@ const COUPONS: Record<string, number> = {
   FARM20: 0.2,
 };
 
+const COUPON_HINTS = [
+  { code: "NEER10", off: "10% off", minOrder: 0 },
+  { code: "ORGANIC15", off: "15% off", minOrder: 500 },
+  { code: "FARM20", off: "20% off", minOrder: 1500 },
+];
+
+const FREE_SHIP_THRESHOLD = 999;
+
+const TIP_OPTIONS = [0, 20, 30, 50];
+
+const ORDER_BUMP = {
+  id: "sample-basmati",
+  name: "Royal 1121 Basmati — Sample Pack",
+  weight: "250g",
+  price: 99,
+  originalPrice: 149,
+  desc: "Try our flagship aged basmati at half price",
+};
+
 const STEPS = [
   { id: 1, label: "Information", icon: User },
   { id: 2, label: "Delivery", icon: Truck },
@@ -77,6 +106,7 @@ const DELIVERY_OPTIONS: {
   fee: number;
   days: number;
   icon: typeof Truck;
+  carbon: string;
 }[] = [
   {
     id: "standard",
@@ -85,6 +115,7 @@ const DELIVERY_OPTIONS: {
     fee: 0,
     days: 4,
     icon: Truck,
+    carbon: "Lowest carbon — consolidated routes",
   },
   {
     id: "express",
@@ -93,6 +124,7 @@ const DELIVERY_OPTIONS: {
     fee: 49,
     days: 2,
     icon: Zap,
+    carbon: "Express courier — slightly higher emissions",
   },
   {
     id: "pickup",
@@ -101,6 +133,7 @@ const DELIVERY_OPTIONS: {
     fee: 0,
     days: 1,
     icon: Store,
+    carbon: "Zero delivery emissions",
   },
 ];
 
@@ -116,6 +149,106 @@ const PAYMENTS: {
   { id: "COD", label: "Cash on Delivery", desc: "Pay when it arrives", icon: Banknote },
 ];
 
+/* ===== India PIN code prefix → city/state lookup ===== */
+const PINCODE_MAP: Record<string, { city: string; state: string }> = {
+  "11": { city: "Delhi", state: "Delhi" },
+  "12": { city: "Delhi", state: "Delhi" },
+  "13": { city: "Delhi", state: "Delhi" },
+  "14": { city: "Delhi", state: "Delhi" },
+  "15": { city: "Delhi", state: "Delhi" },
+  "16": { city: "Delhi", state: "Delhi" },
+  "17": { city: "Delhi", state: "Delhi" },
+  "18": { city: "Delhi", state: "Delhi" },
+  "19": { city: "Delhi", state: "Delhi" },
+  "20": { city: "Lucknow", state: "Uttar Pradesh" },
+  "21": { city: "Kanpur", state: "Uttar Pradesh" },
+  "22": { city: "Varanasi", state: "Uttar Pradesh" },
+  "23": { city: "Agra", state: "Uttar Pradesh" },
+  "24": { city: "Bareilly", state: "Uttar Pradesh" },
+  "25": { city: "Meerut", state: "Uttar Pradesh" },
+  "26": { city: "Gorakhpur", state: "Uttar Pradesh" },
+  "27": { city: "Mathura", state: "Uttar Pradesh" },
+  "28": { city: "Noida", state: "Uttar Pradesh" },
+  "30": { city: "Jaipur", state: "Rajasthan" },
+  "31": { city: "Udaipur", state: "Rajasthan" },
+  "32": { city: "Jodhpur", state: "Rajasthan" },
+  "33": { city: "Bikaner", state: "Rajasthan" },
+  "34": { city: "Jaisalmer", state: "Rajasthan" },
+  "36": { city: "Jaipur", state: "Rajasthan" },
+  "38": { city: "Ahmedabad", state: "Gujarat" },
+  "39": { city: "Surat", state: "Gujarat" },
+  "40": { city: "Hyderabad", state: "Telangana" },
+  "41": { city: "Pune", state: "Maharashtra" },
+  "42": { city: "Pune", state: "Maharashtra" },
+  "43": { city: "Pune", state: "Maharashtra" },
+  "44": { city: "Nagpur", state: "Maharashtra" },
+  "45": { city: "Indore", state: "Madhya Pradesh" },
+  "46": { city: "Bhopal", state: "Madhya Pradesh" },
+  "47": { city: "Gwalior", state: "Madhya Pradesh" },
+  "48": { city: "Jabalpur", state: "Madhya Pradesh" },
+  "49": { city: "Raipur", state: "Chhattisgarh" },
+  "50": { city: "Hyderabad", state: "Telangana" },
+  "51": { city: "Visakhapatnam", state: "Andhra Pradesh" },
+  "52": { city: "Tirupati", state: "Andhra Pradesh" },
+  "53": { city: "Vijayawada", state: "Andhra Pradesh" },
+  "56": { city: "Bengaluru", state: "Karnataka" },
+  "57": { city: "Bengaluru", state: "Karnataka" },
+  "58": { city: "Bengaluru", state: "Karnataka" },
+  "59": { city: "Mysuru", state: "Karnataka" },
+  "60": { city: "Chennai", state: "Tamil Nadu" },
+  "61": { city: "Chennai", state: "Tamil Nadu" },
+  "62": { city: "Tiruchirappalli", state: "Tamil Nadu" },
+  "63": { city: "Madurai", state: "Tamil Nadu" },
+  "64": { city: "Coimbatore", state: "Tamil Nadu" },
+  "67": { city: "Thiruvananthapuram", state: "Kerala" },
+  "68": { city: "Kochi", state: "Kerala" },
+  "69": { city: "Kottayam", state: "Kerala" },
+  "70": { city: "Kolkata", state: "West Bengal" },
+  "71": { city: "Kolkata", state: "West Bengal" },
+  "72": { city: "Kolkata", state: "West Bengal" },
+  "73": { city: "Siliguri", state: "West Bengal" },
+  "74": { city: "Guwahati", state: "Assam" },
+  "75": { city: "Bhubaneswar", state: "Odisha" },
+  "76": { city: "Cuttack", state: "Odisha" },
+  "77": { city: "Itanagar", state: "Arunachal Pradesh" },
+  "78": { city: "Shillong", state: "Meghalaya" },
+  "79": { city: "Aizawl", state: "Mizoram" },
+  "80": { city: "Patna", state: "Bihar" },
+  "81": { city: "Ranchi", state: "Jharkhand" },
+  "82": { city: "Jamshedpur", state: "Jharkhand" },
+  "83": { city: "Ranchi", state: "Jharkhand" },
+  "84": { city: "Bhagalpur", state: "Bihar" },
+  "85": { city: "Patna", state: "Bihar" },
+  "90": { city: "Srinagar", state: "Jammu & Kashmir" },
+  "91": { city: "Srinagar", state: "Jammu & Kashmir" },
+  "92": { city: "Shimla", state: "Himachal Pradesh" },
+  "93": { city: "Chandigarh", state: "Chandigarh" },
+  "94": { city: "Chandigarh", state: "Chandigarh" },
+  "95": { city: "Chandigarh", state: "Chandigarh" },
+  "96": { city: "Imphal", state: "Manipur" },
+  "97": { city: "Imphal", state: "Manipur" },
+  "98": { city: "Kohima", state: "Nagaland" },
+  "99": { city: "Gangtok", state: "Sikkim" },
+};
+
+function lookupPincode(pin: string): { city: string; state: string } | null {
+  if (pin.length < 2) return null;
+  const prefix = pin.slice(0, 2);
+  return PINCODE_MAP[prefix] || null;
+}
+
+/* ===== Card type detection ===== */
+function detectCardType(number: string): string | null {
+  const n = number.replace(/\s/g, "");
+  if (!n) return null;
+  if (/^4/.test(n)) return "VISA";
+  if (/^(5[1-5]|2[2-7])/.test(n)) return "Mastercard";
+  if (/^3[47]/.test(n)) return "Amex";
+  if (/^(60|65|81|82)/.test(n)) return "RuPay";
+  if (/^(6011|65|64[4-9])/.test(n)) return "Discover";
+  return null;
+}
+
 function addDays(date: Date, days: number): Date {
   const d = new Date(date);
   d.setDate(d.getDate() + days);
@@ -130,6 +263,21 @@ function formatDateRange(start: Date, end: Date): string {
   )}`;
 }
 
+const DRAFT_KEY = "neer-checkout-draft";
+const SAVED_ADDR_KEY = "neer-saved-addresses";
+
+interface SavedAddress {
+  id: string;
+  label: AddressLabel;
+  fullName: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
 export function CheckoutModal({
   open,
   onClose,
@@ -141,6 +289,8 @@ export function CheckoutModal({
   const subtotal = useCart((s) => s.subtotal());
   const count = useCart((s) => s.count());
   const clear = useCart((s) => s.clear);
+  const updateQty = useCart((s) => s.updateQuantity);
+  const removeItem = useCart((s) => s.remove);
 
   const [step, setStep] = useState(1);
   const [placing, setPlacing] = useState(false);
@@ -151,7 +301,11 @@ export function CheckoutModal({
   const [billingSame, setBillingSame] = useState(true);
   const [newsletter, setNewsletter] = useState(true);
   const [saveInfo, setSaveInfo] = useState(true);
+  const [whatsappUpdates, setWhatsappUpdates] = useState(true);
   const [giftWrap, setGiftWrap] = useState(false);
+  const [giftMessage, setGiftMessage] = useState("");
+  const [tip, setTip] = useState(0);
+  const [orderBump, setOrderBump] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
   const [couponInput, setCouponInput] = useState(coupon || "");
@@ -159,6 +313,8 @@ export function CheckoutModal({
     coupon || null
   );
   const [copied, setCopied] = useState(false);
+  const [showSavedAddresses, setShowSavedAddresses] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
 
   // Payment-method-specific mock fields
   const [upiId, setUpiId] = useState("");
@@ -167,6 +323,7 @@ export function CheckoutModal({
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [bank, setBank] = useState("");
+  const [saveCard, setSaveCard] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -178,6 +335,83 @@ export function CheckoutModal({
     pincode: "",
   });
   const [orderNote, setOrderNote] = useState("");
+
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  // ===== Auto-save draft to localStorage =====
+  const draft = {
+    step, form, orderNote, payment, delivery, addressLabel, billingSame,
+    newsletter, saveInfo, whatsappUpdates, giftWrap, giftMessage, tip,
+    orderBump, agreeTerms, couponInput, appliedCoupon, upiId, cardNumber,
+    cardName, cardExpiry, bank, saveCard,
+  };
+
+  useEffect(() => {
+    if (!open || done) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch {
+      /* ignore quota errors */
+    }
+  }, [
+    step, form, orderNote, payment, delivery, addressLabel, billingSame,
+    newsletter, saveInfo, whatsappUpdates, giftWrap, giftMessage, tip,
+    orderBump, agreeTerms, couponInput, appliedCoupon, upiId, cardNumber,
+    cardExpiry, bank, saveCard, open, done,
+  ]);
+
+  // Restore draft on first open
+  useEffect(() => {
+    if (!open) return;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.form) setForm(d.form);
+        if (d.orderNote) setOrderNote(d.orderNote);
+        if (d.payment) setPayment(d.payment);
+        if (d.delivery) setDelivery(d.delivery);
+        if (d.addressLabel) setAddressLabel(d.addressLabel);
+        if (typeof d.billingSame === "boolean") setBillingSame(d.billingSame);
+        if (typeof d.newsletter === "boolean") setNewsletter(d.newsletter);
+        if (typeof d.saveInfo === "boolean") setSaveInfo(d.saveInfo);
+        if (typeof d.whatsappUpdates === "boolean") setWhatsappUpdates(d.whatsappUpdates);
+        if (typeof d.giftWrap === "boolean") setGiftWrap(d.giftWrap);
+        if (d.giftMessage) setGiftMessage(d.giftMessage);
+        if (typeof d.tip === "number") setTip(d.tip);
+        if (typeof d.orderBump === "boolean") setOrderBump(d.orderBump);
+        if (typeof d.agreeTerms === "boolean") setAgreeTerms(d.agreeTerms);
+        if (d.couponInput) setCouponInput(d.couponInput);
+        if (d.appliedCoupon) setAppliedCoupon(d.appliedCoupon);
+        if (d.upiId) setUpiId(d.upiId);
+        if (d.cardNumber) setCardNumber(d.cardNumber);
+        if (d.cardName) setCardName(d.cardName);
+        if (d.cardExpiry) setCardExpiry(d.cardExpiry);
+        if (d.bank) setBank(d.bank);
+        if (typeof d.saveCard === "boolean") setSaveCard(d.saveCard);
+      }
+    } catch {
+      /* ignore parse errors */
+    }
+    // Load saved addresses
+    try {
+      const addrRaw = localStorage.getItem(SAVED_ADDR_KEY);
+      if (addrRaw) setSavedAddresses(JSON.parse(addrRaw));
+    } catch {
+      /* ignore */
+    }
+  }, [open]);
+
+  // Clear draft on successful order
+  useEffect(() => {
+    if (done) {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [done]);
 
   // Sync incoming coupon prop
   useEffect(() => {
@@ -198,18 +432,32 @@ export function CheckoutModal({
   const discount = Math.round(subtotal * discountRate);
   const deliveryOption = DELIVERY_OPTIONS.find((d) => d.id === delivery)!;
   const deliveryBaseFee = deliveryOption.fee;
-  const freeShipThresholdMet = subtotal - discount > 999 || delivery === "pickup";
+  const freeShipThresholdMet = subtotal - discount > FREE_SHIP_THRESHOLD || delivery === "pickup";
   const deliveryFee = freeShipThresholdMet ? 0 : deliveryBaseFee;
   const giftWrapFee = giftWrap ? 49 : 0;
-  const total = Math.max(0, subtotal - discount) + deliveryFee + giftWrapFee;
+  const tipFee = tip;
+  const orderBumpFee = orderBump ? ORDER_BUMP.price : 0;
+  const total = Math.max(0, subtotal - discount) + deliveryFee + giftWrapFee + tipFee + orderBumpFee;
   const loyaltyPoints = Math.floor(total / 10);
-  const savings = discount + (freeShipThresholdMet && delivery !== "pickup" ? 79 : 0);
+  const savings = discount + (freeShipThresholdMet && delivery !== "pickup" ? 79 : 0) + (orderBump ? ORDER_BUMP.originalPrice - ORDER_BUMP.price : 0);
+  const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - (subtotal - discount));
+  const freeShipProgress = Math.min(100, ((subtotal - discount) / FREE_SHIP_THRESHOLD) * 100);
 
   const etaStart = useMemo(() => addDays(new Date(), deliveryOption.days), [deliveryOption.days]);
   const etaEnd = useMemo(() => addDays(etaStart, 1), [etaStart]);
 
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setForm((f) => ({ ...f, [k]: val }));
+    // Auto-fill city/state from pincode
+    if (k === "pincode" && /^\d{6}$/.test(val)) {
+      const loc = lookupPincode(val);
+      if (loc) {
+        setForm((f) => ({ ...f, [k]: val, city: loc.city, state: loc.state }));
+        toast.success(`Auto-filled: ${loc.city}, ${loc.state}`, { duration: 2000 });
+      }
+    }
+  };
 
   const applyCouponInline = () => {
     const code = couponInput.trim().toUpperCase();
@@ -226,10 +474,49 @@ export function CheckoutModal({
     }
   };
 
+  const applyCouponCode = (code: string) => {
+    setCouponInput(code);
+    setAppliedCoupon(code);
+    toast.success(`Coupon ${code} applied — ${COUPONS[code] * 100}% off!`);
+  };
+
   const removeCoupon = () => {
     setAppliedCoupon(null);
     setCouponInput("");
     toast.success("Coupon removed");
+  };
+
+  const saveCurrentAddress = useCallback(() => {
+    if (!form.fullName || !form.pincode) return;
+    const newAddr: SavedAddress = {
+      id: Date.now().toString(),
+      label: addressLabel,
+      ...form,
+    };
+    const updated = [newAddr, ...savedAddresses.filter(a =>
+      !(a.fullName === form.fullName && a.pincode === form.pincode && a.address === form.address)
+    )].slice(0, 5);
+    setSavedAddresses(updated);
+    try {
+      localStorage.setItem(SAVED_ADDR_KEY, JSON.stringify(updated));
+    } catch {
+      /* ignore */
+    }
+  }, [form, addressLabel, savedAddresses]);
+
+  const loadSavedAddress = (addr: SavedAddress) => {
+    setForm({
+      fullName: addr.fullName,
+      email: addr.email,
+      phone: addr.phone,
+      address: addr.address,
+      city: addr.city,
+      state: addr.state,
+      pincode: addr.pincode,
+    });
+    setAddressLabel(addr.label);
+    setShowSavedAddresses(false);
+    toast.success("Address loaded");
   };
 
   // Field-level validation for step 1
@@ -265,13 +552,27 @@ export function CheckoutModal({
       toast.error("Please complete all required fields correctly");
       return;
     }
+    if (step === 1 && saveInfo) saveCurrentAddress();
     if (step === 3 && !step3Valid) {
       toast.error("Please complete payment details");
       return;
     }
     setStep((s) => Math.min(4, s + 1));
+    // Scroll to top of body on step change
+    setTimeout(() => bodyRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 100);
   };
-  const back = () => setStep((s) => Math.max(1, s - 1));
+  const back = () => {
+    setStep((s) => Math.max(1, s - 1));
+    setTimeout(() => bodyRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 100);
+  };
+
+  // Enter key to advance on step 1
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && step < 4 && step1Valid) {
+      e.preventDefault();
+      next();
+    }
+  };
 
   const placeOrder = async () => {
     if (!agreeTerms) {
@@ -304,6 +605,10 @@ export function CheckoutModal({
           deliveryMethod: delivery,
           orderNote,
           giftWrap,
+          giftMessage: giftWrap ? giftMessage : "",
+          tip,
+          orderBump: orderBump ? ORDER_BUMP : null,
+          whatsappUpdates,
           addressLabel,
           eta: formatDateRange(etaStart, etaEnd),
         }),
@@ -384,9 +689,14 @@ export function CheckoutModal({
       setOrderNote("");
       setAgreeTerms(false);
       setGiftWrap(false);
+      setGiftMessage("");
+      setTip(0);
+      setOrderBump(false);
     }
     onClose();
   };
+
+  const cardType = detectCardType(cardNumber);
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && close()}>
@@ -407,8 +717,9 @@ export function CheckoutModal({
                 <p className="text-[13px] font-bold text-stone-900 dark:text-white">
                   Secure Checkout
                 </p>
-                <p className="text-[10px] font-medium text-stone-500 dark:text-stone-400">
-                  256-bit SSL encrypted
+                <p className="text-[10px] font-medium text-stone-500 dark:text-stone-400 flex items-center gap-1">
+                  <ShieldCheck className="h-2.5 w-2.5" />
+                  256-bit SSL · Draft auto-saved
                 </p>
               </div>
             </div>
@@ -498,6 +809,8 @@ export function CheckoutModal({
             onCopy={copyTrackingId}
             eta={formatDateRange(etaStart, etaEnd)}
             total={total}
+            loyaltyPoints={loyaltyPoints}
+            paymentMethod={payment}
             onTrack={() => {
               onOrderPlaced(done);
               close();
@@ -505,10 +818,16 @@ export function CheckoutModal({
             }}
             onContinue={close}
           />
+        ) : items.length === 0 ? (
+          <EmptyCartState onClose={close} />
         ) : (
           <div className="grid lg:grid-cols-[1fr_360px] max-h-[calc(94vh-130px)]">
             {/* Left: step content (scrollable) */}
-            <div className="overflow-y-auto px-5 sm:px-7 py-6 lg:py-7 order-2 lg:order-1">
+            <div
+              ref={bodyRef}
+              onKeyDown={handleKeyDown}
+              className="overflow-y-auto px-5 sm:px-7 py-6 lg:py-7 order-2 lg:order-1"
+            >
               {/* Mobile collapsible order summary */}
               <div className="lg:hidden mb-5">
                 <button
@@ -553,6 +872,8 @@ export function CheckoutModal({
                           discount={discount}
                           deliveryFee={deliveryFee}
                           giftWrapFee={giftWrapFee}
+                          tipFee={tipFee}
+                          orderBumpFee={orderBumpFee}
                           total={total}
                           savings={savings}
                           loyaltyPoints={loyaltyPoints}
@@ -561,8 +882,14 @@ export function CheckoutModal({
                           setCouponInput={setCouponInput}
                           onApply={applyCouponInline}
                           onRemove={removeCoupon}
+                          onApplyCode={applyCouponCode}
                           eta={formatDateRange(etaStart, etaEnd)}
                           count={count}
+                          onUpdateQty={updateQty}
+                          onRemoveItem={removeItem}
+                          freeShipRemaining={freeShipRemaining}
+                          freeShipProgress={freeShipProgress}
+                          freeShipMet={freeShipThresholdMet}
                         />
                       </div>
                     </motion.div>
@@ -590,6 +917,11 @@ export function CheckoutModal({
                       setSaveInfo={setSaveInfo}
                       orderNote={orderNote}
                       setOrderNote={setOrderNote}
+                      savedAddresses={savedAddresses}
+                      showSavedAddresses={showSavedAddresses}
+                      setShowSavedAddresses={setShowSavedAddresses}
+                      onLoadAddress={loadSavedAddress}
+                      onPincodeLookup={lookupPincode}
                     />
                   )}
                   {step === 2 && (
@@ -600,7 +932,11 @@ export function CheckoutModal({
                       etaEnd={etaEnd}
                       giftWrap={giftWrap}
                       setGiftWrap={setGiftWrap}
+                      giftMessage={giftMessage}
+                      setGiftMessage={setGiftMessage}
                       freeShipThresholdMet={freeShipThresholdMet}
+                      tip={tip}
+                      setTip={setTip}
                     />
                   )}
                   {step === 3 && (
@@ -611,6 +947,8 @@ export function CheckoutModal({
                       setBillingSame={setBillingSame}
                       newsletter={newsletter}
                       setNewsletter={setNewsletter}
+                      whatsappUpdates={whatsappUpdates}
+                      setWhatsappUpdates={setWhatsappUpdates}
                       upiId={upiId}
                       setUpiId={setUpiId}
                       cardNumber={cardNumber}
@@ -623,6 +961,10 @@ export function CheckoutModal({
                       setCardCvv={setCardCvv}
                       bank={bank}
                       setBank={setBank}
+                      saveCard={saveCard}
+                      setSaveCard={setSaveCard}
+                      cardType={cardType}
+                      total={total}
                     />
                   )}
                   {step === 4 && (
@@ -635,10 +977,16 @@ export function CheckoutModal({
                       payment={payment}
                       upiId={upiId}
                       cardNumber={cardNumber}
+                      cardType={cardType}
                       bank={bank}
                       orderNote={orderNote}
                       giftWrap={giftWrap}
+                      giftMessage={giftMessage}
+                      tip={tip}
+                      orderBump={orderBump}
+                      setOrderBump={setOrderBump}
                       newsletter={newsletter}
+                      whatsappUpdates={whatsappUpdates}
                       agreeTerms={agreeTerms}
                       setAgreeTerms={setAgreeTerms}
                       onEdit={(s) => setStep(s)}
@@ -656,6 +1004,8 @@ export function CheckoutModal({
                 discount={discount}
                 deliveryFee={deliveryFee}
                 giftWrapFee={giftWrapFee}
+                tipFee={tipFee}
+                orderBumpFee={orderBumpFee}
                 total={total}
                 savings={savings}
                 loyaltyPoints={loyaltyPoints}
@@ -664,17 +1014,21 @@ export function CheckoutModal({
                 setCouponInput={setCouponInput}
                 onApply={applyCouponInline}
                 onRemove={removeCoupon}
+                onApplyCode={applyCouponCode}
                 eta={formatDateRange(etaStart, etaEnd)}
                 count={count}
+                onUpdateQty={updateQty}
+                onRemoveItem={removeItem}
+                freeShipRemaining={freeShipRemaining}
+                freeShipProgress={freeShipProgress}
+                freeShipMet={freeShipThresholdMet}
               />
             </aside>
-
-            {/* Mobile: collapsible order summary toggle handled in bottom bar */}
           </div>
         )}
 
         {/* ===== Bottom sticky nav bar ===== */}
-        {!done && (
+        {!done && items.length > 0 && (
           <div className="border-t border-white/8 bg-white/60 dark:bg-[#0d140d]/70 backdrop-blur-xl px-5 sm:px-7 py-4">
             <div className="flex items-center gap-3">
               {step > 1 && (
@@ -709,6 +1063,11 @@ export function CheckoutModal({
                       ? "Your details are safe & encrypted"
                       : "Final step — review & confirm"}
                   </span>
+                  {step === 1 && step1Valid && (
+                    <span className="ml-2 text-[#1f431e] font-bold flex items-center gap-1">
+                      <Check className="h-3 w-3" /> Ready · press Enter ↵
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -771,6 +1130,35 @@ export function CheckoutModal({
   );
 }
 
+/* ============ Empty Cart Guard ============ */
+function EmptyCartState({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="px-6 py-16 text-center">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={SPRING.gentle}
+        className="w-20 h-20 rounded-full bg-[#1f431e]/10 flex items-center justify-center mx-auto mb-5"
+      >
+        <ShoppingBag className="h-9 w-9 text-[#1f431e]" strokeWidth={1.8} />
+      </motion.div>
+      <h3 className="text-xl font-serif font-bold text-stone-900 dark:text-white">
+        Your cart is empty
+      </h3>
+      <p className="text-sm text-stone-500 dark:text-stone-400 mt-2 max-w-xs mx-auto">
+        Add some heritage grains to your basket before checking out.
+      </p>
+      <button
+        onClick={onClose}
+        className="mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 bg-[#1f431e] hover:bg-[#16321a] text-white text-xs font-bold transition-colors cursor-pointer"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Browse Grains
+      </button>
+    </div>
+  );
+}
+
 /* ============ Step 1: Information ============ */
 function StepInformation({
   form,
@@ -782,6 +1170,11 @@ function StepInformation({
   setSaveInfo,
   orderNote,
   setOrderNote,
+  savedAddresses,
+  showSavedAddresses,
+  setShowSavedAddresses,
+  onLoadAddress,
+  onPincodeLookup,
 }: {
   form: {
     fullName: string;
@@ -800,7 +1193,14 @@ function StepInformation({
   setSaveInfo: (b: boolean) => void;
   orderNote: string;
   setOrderNote: (s: string) => void;
+  savedAddresses: SavedAddress[];
+  showSavedAddresses: boolean;
+  setShowSavedAddresses: (b: boolean) => void;
+  onLoadAddress: (a: SavedAddress) => void;
+  onPincodeLookup: (pin: string) => { city: string; state: string } | null;
 }) {
+  const pincodeLookup = form.pincode.length === 6 ? onPincodeLookup(form.pincode) : null;
+
   return (
     <div className="space-y-6">
       <div>
@@ -811,6 +1211,65 @@ function StepInformation({
           Where should we send your heritage grains?
         </p>
       </div>
+
+      {/* Saved addresses quick-pick */}
+      {savedAddresses.length > 0 && (
+        <div className="rounded-2xl border border-[#d4a373]/30 bg-[#d4a373]/[0.05] p-4">
+          <button
+            onClick={() => setShowSavedAddresses(!showSavedAddresses)}
+            className="w-full flex items-center justify-between cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <KeyRound className="h-4 w-4 text-[#a06d3c]" />
+              <span className="text-xs font-bold text-stone-900 dark:text-white">
+                {savedAddresses.length} saved {savedAddresses.length === 1 ? "address" : "addresses"}
+              </span>
+            </div>
+            <motion.span animate={{ rotate: showSavedAddresses ? 180 : 0 }} transition={SPRING.snappy}>
+              <ChevronRight className="h-4 w-4 rotate-90 text-stone-400" />
+            </motion.span>
+          </button>
+          <AnimatePresence initial={false}>
+            {showSavedAddresses && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: EASE.out }}
+                className="overflow-hidden"
+              >
+                <div className="mt-3 space-y-2">
+                  {savedAddresses.map((addr) => (
+                    <button
+                      key={addr.id}
+                      onClick={() => onLoadAddress(addr)}
+                      className="w-full flex items-start gap-3 rounded-xl border border-stone-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 text-left hover:border-[#1f431e]/40 transition-colors cursor-pointer"
+                    >
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#1f431e]/10 text-[#1f431e]">
+                        {addr.label === "Home" ? (
+                          <Home className="h-3.5 w-3.5" />
+                        ) : addr.label === "Work" ? (
+                          <Briefcase className="h-3.5 w-3.5" />
+                        ) : (
+                          <MapPin className="h-3.5 w-3.5" />
+                        )}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-stone-900 dark:text-white">
+                          {addr.fullName} · {addr.label}
+                        </p>
+                        <p className="text-[10px] text-stone-500 dark:text-stone-400 mt-0.5 truncate">
+                          {addr.address}, {addr.city}, {addr.state} {addr.pincode}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
       {/* Contact */}
       <div className="space-y-3">
@@ -836,6 +1295,7 @@ function StepInformation({
             error={errors.phone}
             errorText="10-digit number"
             valid={!errors.phone && form.phone !== ""}
+            prefix="+91"
           />
         </div>
       </div>
@@ -892,6 +1352,7 @@ function StepInformation({
             value={form.city}
             onChange={set("city")}
             placeholder="Pune"
+            valid={pincodeLookup !== null && form.city === pincodeLookup.city}
           />
           <Field
             label="State"
@@ -908,6 +1369,7 @@ function StepInformation({
             error={errors.pincode}
             errorText="6-digit"
             valid={!errors.pincode && form.pincode !== ""}
+            hint={pincodeLookup ? `✓ ${pincodeLookup.city}, ${pincodeLookup.state}` : undefined}
           />
         </div>
 
@@ -959,7 +1421,11 @@ function StepDelivery({
   etaEnd,
   giftWrap,
   setGiftWrap,
+  giftMessage,
+  setGiftMessage,
   freeShipThresholdMet,
+  tip,
+  setTip,
 }: {
   delivery: DeliveryId;
   setDelivery: (d: DeliveryId) => void;
@@ -967,7 +1433,11 @@ function StepDelivery({
   etaEnd: Date;
   giftWrap: boolean;
   setGiftWrap: (b: boolean) => void;
+  giftMessage: string;
+  setGiftMessage: (s: string) => void;
   freeShipThresholdMet: boolean;
+  tip: number;
+  setTip: (n: number) => void;
 }) {
   return (
     <div className="space-y-6">
@@ -1015,14 +1485,25 @@ function StepDelivery({
                       Fastest
                     </span>
                   )}
+                  {opt.id === "pickup" && (
+                    <span className="rounded-full bg-[#1f431e]/12 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#1f431e]">
+                      Eco
+                    </span>
+                  )}
                 </div>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
                   {opt.desc}
                 </p>
-                <p className="flex items-center gap-1 text-[10px] font-semibold text-[#1f431e] dark:text-[#a3c4a0] mt-1">
-                  <Clock className="h-3 w-3" />
-                  Arrives {formatDateRange(optEtaStart, optEtaEnd)}
-                </p>
+                <div className="flex items-center gap-3 mt-1">
+                  <p className="flex items-center gap-1 text-[10px] font-semibold text-[#1f431e] dark:text-[#a3c4a0]">
+                    <Clock className="h-3 w-3" />
+                    Arrives {formatDateRange(optEtaStart, optEtaEnd)}
+                  </p>
+                  <p className="flex items-center gap-1 text-[10px] text-stone-400">
+                    <Leaf className="h-3 w-3" />
+                    {opt.carbon}
+                  </p>
+                </div>
               </div>
               <div className="text-right">
                 <p
@@ -1053,42 +1534,102 @@ function StepDelivery({
         })}
       </div>
 
+      {/* Delivery partner tip */}
+      <div className="rounded-2xl border border-stone-200 dark:border-white/10 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Heart className="h-4 w-4 text-[#d4a373]" />
+          <p className="text-xs font-bold text-stone-900 dark:text-white">
+            Tip your delivery partner
+          </p>
+          <span className="text-[10px] text-stone-400">100% goes to them</span>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {TIP_OPTIONS.map((amount) => (
+            <button
+              key={amount}
+              onClick={() => setTip(amount)}
+              className={`flex-1 min-w-[60px] rounded-xl border py-2.5 text-xs font-bold transition-all cursor-pointer ${
+                tip === amount
+                  ? "border-[#1f431e] bg-[#1f431e]/[0.06] dark:bg-[#1f431e]/12 text-[#1f431e]"
+                  : "border-stone-200 dark:border-white/10 text-stone-500 hover:border-stone-300 dark:hover:border-white/20"
+              }`}
+            >
+              {amount === 0 ? "No tip" : `₹${amount}`}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Gift wrap */}
       <div
-        className={`flex items-center gap-3.5 rounded-2xl border p-4 cursor-pointer transition-all ${
+        className={`rounded-2xl border p-4 cursor-pointer transition-all ${
           giftWrap
             ? "border-[#d4a373] bg-[#d4a373]/[0.06]"
             : "border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/20"
         }`}
         onClick={() => setGiftWrap(!giftWrap)}
       >
-        <span
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
-            giftWrap
-              ? "bg-[#d4a373] text-white"
-              : "bg-black/[0.04] dark:bg-white/5 text-stone-500"
-          }`}
-        >
-          <Gift className="h-5 w-5" strokeWidth={2.2} />
-        </span>
-        <div className="flex-1">
-          <p className="text-sm font-bold text-stone-900 dark:text-white">
-            Heritage Gift Wrap
-          </p>
-          <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
-            Handwoven jute pouch with gold-foil seal — perfect for gifting
-          </p>
+        <div className="flex items-center gap-3.5">
+          <span
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+              giftWrap
+                ? "bg-[#d4a373] text-white"
+                : "bg-black/[0.04] dark:bg-white/5 text-stone-500"
+            }`}
+          >
+            <Gift className="h-5 w-5" strokeWidth={2.2} />
+          </span>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-stone-900 dark:text-white">
+              Heritage Gift Wrap
+            </p>
+            <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+              Handwoven jute pouch with gold-foil seal — perfect for gifting
+            </p>
+          </div>
+          <p className="text-sm font-black text-stone-900 dark:text-white">₹49</p>
+          <span
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+              giftWrap
+                ? "border-[#d4a373] bg-[#d4a373]"
+                : "border-stone-300 dark:border-white/20"
+            }`}
+          >
+            {giftWrap && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+          </span>
         </div>
-        <p className="text-sm font-black text-stone-900 dark:text-white">₹49</p>
-        <span
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-            giftWrap
-              ? "border-[#d4a373] bg-[#d4a373]"
-              : "border-stone-300 dark:border-white/20"
-          }`}
-        >
-          {giftWrap && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
-        </span>
+
+        {/* Gift message — only when gift wrap selected */}
+        <AnimatePresence initial={false}>
+          {giftWrap && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: EASE.out }}
+              className="overflow-hidden"
+            >
+              <div className="mt-3 pt-3 border-t border-[#d4a373]/20" onClick={(e) => e.stopPropagation()}>
+                <label className="block">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block mb-1.5 flex items-center gap-1.5">
+                    <MessageSquare className="h-3 w-3" />
+                    Gift Message <span className="text-stone-400 normal-case font-medium">(optional · max 100 chars)</span>
+                  </span>
+                  <textarea
+                    value={giftMessage}
+                    onChange={(e) => setGiftMessage(e.target.value.slice(0, 100))}
+                    rows={2}
+                    placeholder="Happy birthday, Aarav! Enjoy these heritage grains…"
+                    className="w-full px-3.5 py-2.5 bg-black/[0.03] dark:bg-white/5 border border-stone-200 dark:border-white/10 rounded-xl text-xs font-semibold text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all resize-none"
+                  />
+                  <span className="text-[9px] text-stone-400 mt-0.5 block text-right">
+                    {giftMessage.length}/100
+                  </span>
+                </label>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="flex items-start gap-2.5 rounded-xl bg-[#1f431e]/[0.05] dark:bg-[#1f431e]/10 p-3.5">
@@ -1110,6 +1651,8 @@ function StepPayment({
   setBillingSame,
   newsletter,
   setNewsletter,
+  whatsappUpdates,
+  setWhatsappUpdates,
   upiId,
   setUpiId,
   cardNumber,
@@ -1122,6 +1665,10 @@ function StepPayment({
   setCardCvv,
   bank,
   setBank,
+  saveCard,
+  setSaveCard,
+  cardType,
+  total,
 }: {
   payment: PaymentId;
   setPayment: (p: PaymentId) => void;
@@ -1129,6 +1676,8 @@ function StepPayment({
   setBillingSame: (b: boolean) => void;
   newsletter: boolean;
   setNewsletter: (b: boolean) => void;
+  whatsappUpdates: boolean;
+  setWhatsappUpdates: (b: boolean) => void;
   upiId: string;
   setUpiId: (s: string) => void;
   cardNumber: string;
@@ -1141,6 +1690,10 @@ function StepPayment({
   setCardCvv: (s: string) => void;
   bank: string;
   setBank: (s: string) => void;
+  saveCard: boolean;
+  setSaveCard: (b: boolean) => void;
+  cardType: string | null;
+  total: number;
 }) {
   const formatCard = (v: string) => {
     const digits = v.replace(/\D/g, "").slice(0, 16);
@@ -1161,6 +1714,31 @@ function StepPayment({
         <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
           All transactions are encrypted & secure.
         </p>
+      </div>
+
+      {/* Express pay — recommended for UPI */}
+      <div className="rounded-2xl border border-[#1f431e]/25 bg-[#1f431e]/[0.04] dark:bg-[#1f431e]/8 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Zap className="h-3.5 w-3.5 text-[#1f431e]" />
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#1f431e]">
+            Express Pay · Instant
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2.5">
+          {["GPay", "PhonePe"].map((app) => (
+            <button
+              key={app}
+              onClick={() => {
+                setPayment("UPI");
+                toast.success(`${app} selected — complete via UPI ID below`);
+              }}
+              className="flex items-center justify-center gap-2 rounded-xl bg-white dark:bg-white/90 px-4 py-3 text-xs font-bold text-stone-900 hover:shadow-md transition-all cursor-pointer"
+            >
+              <Smartphone className="h-4 w-4 text-[#1f431e]" />
+              {app}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Payment options */}
@@ -1245,7 +1823,19 @@ function StepPayment({
           )}
           {payment === "CARD" && (
             <>
-              <SectionLabel icon={CreditCard} text="Card Details" />
+              <div className="flex items-center justify-between">
+                <SectionLabel icon={CreditCard} text="Card Details" />
+                {cardType && (
+                  <motion.span
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={SPRING.snappy}
+                    className="rounded-md bg-[#1f431e]/10 px-2 py-1 text-[10px] font-extrabold text-[#1f431e]"
+                  >
+                    {cardType}
+                  </motion.span>
+                )}
+              </div>
               <input
                 value={cardNumber}
                 onChange={(e) => setCardNumber(formatCard(e.target.value))}
@@ -1278,16 +1868,26 @@ function StepPayment({
                   className="w-full px-3.5 py-3 bg-black/[0.03] dark:bg-white/5 border border-stone-200 dark:border-white/10 rounded-xl text-sm font-semibold text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/20 focus:border-[#1f431e]/40 transition-all font-mono"
                 />
               </div>
-              <div className="flex items-center gap-2 pt-1">
-                {["VISA", "Mastercard", "RuPay", "Amex"].map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-md border border-stone-200 dark:border-white/10 px-2 py-1 text-[9px] font-extrabold text-stone-400"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
+              <label className="flex items-center gap-2 cursor-pointer pt-1">
+                <span
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-all ${
+                    saveCard
+                      ? "bg-[#1f431e] border-[#1f431e]"
+                      : "border-stone-300 dark:border-white/20"
+                  }`}
+                >
+                  {saveCard && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={saveCard}
+                  onChange={(e) => setSaveCard(e.target.checked)}
+                  className="sr-only"
+                />
+                <span className="text-[11px] text-stone-500">
+                  Save card securely for next time <span className="text-stone-400">(tokenized · PCI-DSS)</span>
+                </span>
+              </label>
             </>
           )}
           {payment === "NETBANKING" && (
@@ -1321,16 +1921,23 @@ function StepPayment({
             </>
           )}
           {payment === "COD" && (
-            <div className="flex items-start gap-3 py-1">
-              <Banknote className="h-5 w-5 text-[#1f431e] mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm font-bold text-stone-900 dark:text-white">
-                  Pay with cash on delivery
-                </p>
-                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">
-                  Keep ₹{0} ready. A small ₹0 COD handling fee may apply. Inspect
-                  your package before paying.
-                </p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-3 py-1">
+                <Banknote className="h-5 w-5 text-[#1f431e] mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-stone-900 dark:text-white">
+                    Pay with cash on delivery
+                  </p>
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">
+                    Keep ₹{total} ready. Inspect your package before paying.
+                  </p>
+                </div>
+              </div>
+              <div className="rounded-lg bg-[#d4a373]/[0.06] dark:bg-[#d4a373]/10 px-3 py-2 flex items-center gap-1.5">
+                <AlertCircle className="h-3 w-3 text-[#a06d3c] shrink-0" />
+                <span className="text-[10px] text-[#a06d3c] font-semibold">
+                  COD orders may take 1 extra day for verification
+                </span>
               </div>
             </div>
           )}
@@ -1356,6 +1963,28 @@ function StepPayment({
         />
         <span className="text-[11px] text-stone-500 dark:text-stone-400 leading-tight">
           Billing address same as shipping address
+        </span>
+      </label>
+
+      {/* WhatsApp updates */}
+      <label className="flex items-start gap-2.5 cursor-pointer group rounded-xl border border-stone-200 dark:border-white/10 p-3 hover:border-stone-300 dark:hover:border-white/20 transition-colors">
+        <span
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-all ${
+            whatsappUpdates
+              ? "bg-[#1f431e] border-[#1f431e]"
+              : "border-stone-300 dark:border-white/20 group-hover:border-stone-400"
+          }`}
+        >
+          {whatsappUpdates && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+        </span>
+        <input
+          type="checkbox"
+          checked={whatsappUpdates}
+          onChange={(e) => setWhatsappUpdates(e.target.checked)}
+          className="sr-only"
+        />
+        <span className="text-[11px] text-stone-500 dark:text-stone-400 leading-tight">
+          Send order updates via WhatsApp <span className="text-stone-400">(tracking, delivery, ETA)</span>
         </span>
       </label>
 
@@ -1394,10 +2023,16 @@ function StepReview({
   payment,
   upiId,
   cardNumber,
+  cardType,
   bank,
   orderNote,
   giftWrap,
+  giftMessage,
+  tip,
+  orderBump,
+  setOrderBump,
   newsletter,
+  whatsappUpdates,
   agreeTerms,
   setAgreeTerms,
   onEdit,
@@ -1418,10 +2053,16 @@ function StepReview({
   payment: PaymentId;
   upiId: string;
   cardNumber: string;
+  cardType: string | null;
   bank: string;
   orderNote: string;
   giftWrap: boolean;
+  giftMessage: string;
+  tip: number;
+  orderBump: boolean;
+  setOrderBump: (b: boolean) => void;
   newsletter: boolean;
+  whatsappUpdates: boolean;
   agreeTerms: boolean;
   setAgreeTerms: (b: boolean) => void;
   onEdit: (step: number) => void;
@@ -1430,7 +2071,7 @@ function StepReview({
   const payLabel = PAYMENTS.find((p) => p.id === payment)!;
   const maskedCard =
     payment === "CARD" && cardNumber
-      ? `•••• ${cardNumber.replace(/\s/g, "").slice(-4)}`
+      ? `${cardType ? cardType + " " : ""}•••• ${cardNumber.replace(/\s/g, "").slice(-4)}`
       : null;
 
   return (
@@ -1444,6 +2085,76 @@ function StepReview({
         </p>
       </div>
 
+      {/* Order bump upsell */}
+      <AnimatePresence initial={false}>
+        {!orderBump && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: EASE.out }}
+            className="overflow-hidden"
+          >
+            <motion.button
+              onClick={() => setOrderBump(true)}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full flex items-center gap-3.5 rounded-2xl border-2 border-dashed border-[#d4a373]/50 bg-[#d4a373]/[0.06] p-4 text-left cursor-pointer transition-all hover:border-[#d4a373]"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#d4a373] text-white">
+                <Plus className="h-6 w-6" strokeWidth={2.5} />
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-bold text-stone-900 dark:text-white">
+                    {ORDER_BUMP.name}
+                  </p>
+                  <span className="rounded-full bg-[#d4a373] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-white">
+                    33% off
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+                  {ORDER_BUMP.desc} · {ORDER_BUMP.weight}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-sm font-black text-[#a06d3c]">₹{ORDER_BUMP.price}</span>
+                  <span className="text-[11px] text-stone-400 line-through">₹{ORDER_BUMP.originalPrice}</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#a06d3c] shrink-0">
+                Add →
+              </span>
+            </motion.button>
+          </motion.div>
+        )}
+        {orderBump && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={SPRING.snappy}
+            className="flex items-center gap-3.5 rounded-2xl border border-[#d4a373] bg-[#d4a373]/[0.08] p-4"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#d4a373] text-white">
+              <Check className="h-5 w-5" strokeWidth={2.5} />
+            </span>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-stone-900 dark:text-white">
+                {ORDER_BUMP.name} added
+              </p>
+              <p className="text-[11px] text-[#a06d3c] font-semibold">
+                You saved ₹{ORDER_BUMP.originalPrice - ORDER_BUMP.price}!
+              </p>
+            </div>
+            <button
+              onClick={() => setOrderBump(false)}
+              className="text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-red-500 cursor-pointer"
+            >
+              Remove
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Delivery to */}
       <ReviewCard
         title="Deliver To"
@@ -1451,7 +2162,7 @@ function StepReview({
         onEdit={onEdit}
         icon={MapPin}
         lines={[
-          `${form.fullName} · ${form.phone}`,
+          `${form.fullName} · +91 ${form.phone}`,
           form.address,
           `${form.city ? form.city + ", " : ""}${form.state} ${form.pincode}`.trim(),
           form.email,
@@ -1468,7 +2179,8 @@ function StepReview({
         lines={[
           deliveryOpt.label,
           `Arrives ${formatDateRange(etaStart, etaEnd)}`,
-          ...(giftWrap ? ["Heritage gift wrap included"] : []),
+          ...(giftWrap ? [`Heritage gift wrap${giftMessage ? ` · "${giftMessage.slice(0, 30)}${giftMessage.length > 30 ? "…" : ""}"` : ""}`] : []),
+          ...(tip > 0 ? [`Delivery tip: ₹${tip}`] : []),
         ]}
       />
 
@@ -1484,6 +2196,7 @@ function StepReview({
           ...(maskedCard ? [maskedCard] : []),
           ...(payment === "NETBANKING" && bank ? [bank] : []),
           ...(payment === "COD" ? ["Pay when it arrives"] : []),
+          ...(whatsappUpdates ? ["WhatsApp updates enabled"] : []),
         ]}
       />
 
@@ -1493,7 +2206,7 @@ function StepReview({
             Delivery Note
           </p>
           <p className="text-xs text-stone-700 dark:text-stone-300 italic">
-            “{orderNote}”
+            &ldquo;{orderNote}&rdquo;
           </p>
         </div>
       )}
@@ -1516,7 +2229,7 @@ function StepReview({
           className="sr-only"
         />
         <span className="text-[11px] text-stone-600 dark:text-stone-300 leading-relaxed">
-          I agree to Neer Rice Depo's{" "}
+          I agree to Neer Rice Depo&apos;s{" "}
           <span className="font-bold text-[#1f431e] underline cursor-pointer">
             Terms of Service
           </span>{" "}
@@ -1595,6 +2308,8 @@ function OrderSummary({
   discount,
   deliveryFee,
   giftWrapFee,
+  tipFee,
+  orderBumpFee,
   total,
   savings,
   loyaltyPoints,
@@ -1603,14 +2318,22 @@ function OrderSummary({
   setCouponInput,
   onApply,
   onRemove,
+  onApplyCode,
   eta,
   count,
+  onUpdateQty,
+  onRemoveItem,
+  freeShipRemaining,
+  freeShipProgress,
+  freeShipMet,
 }: {
   items: ReturnType<typeof useCart.getState>["items"];
   subtotal: number;
   discount: number;
   deliveryFee: number;
   giftWrapFee: number;
+  tipFee: number;
+  orderBumpFee: number;
   total: number;
   savings: number;
   loyaltyPoints: number;
@@ -1619,8 +2342,14 @@ function OrderSummary({
   setCouponInput: (s: string) => void;
   onApply: () => void;
   onRemove: () => void;
+  onApplyCode: (code: string) => void;
   eta: string;
   count: number;
+  onUpdateQty: (productId: string, weightKg: number, qty: number) => void;
+  onRemoveItem: (productId: string, weightKg: number) => void;
+  freeShipRemaining: number;
+  freeShipProgress: number;
+  freeShipMet: boolean;
 }) {
   return (
     <div className="flex flex-col px-5 py-6">
@@ -1633,7 +2362,40 @@ function OrderSummary({
         </span>
       </div>
 
-      {/* Items with thumbnails */}
+      {/* Free shipping progress bar */}
+      <div className={`rounded-xl p-3 mb-4 ${
+        freeShipMet
+          ? "bg-[#1f431e]/[0.08] dark:bg-[#1f431e]/15"
+          : "bg-[#d4a373]/[0.08] dark:bg-[#d4a373]/12"
+      }`}>
+        {freeShipMet ? (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-[#1f431e] shrink-0" />
+            <p className="text-[11px] font-bold text-[#1f431e]">
+              You&apos;ve unlocked FREE delivery!
+            </p>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              <Truck className="h-3.5 w-3.5 text-[#a06d3c] shrink-0" />
+              <p className="text-[11px] font-bold text-[#a06d3c]">
+                Add ₹{freeShipRemaining} more for FREE delivery
+              </p>
+            </div>
+            <div className="h-1.5 rounded-full bg-[#d4a373]/20 overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${freeShipProgress}%` }}
+                transition={{ duration: 0.5, ease: EASE.out }}
+                className="h-full rounded-full bg-gradient-to-r from-[#d4a373] to-[#a06d3c]"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Items with thumbnails + qty editing */}
       <div className="space-y-2.5 max-h-[240px] overflow-y-auto pr-1 -mr-1">
         {items.map((i) => (
           <div
@@ -1657,8 +2419,35 @@ function OrderSummary({
               <p className="text-[10px] text-stone-500 dark:text-stone-400">
                 {i.selectedWeightKg}kg pack
               </p>
+              {/* Inline qty controls */}
+              <div className="flex items-center gap-1.5 mt-1">
+                <button
+                  onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)}
+                  className="flex h-5 w-5 items-center justify-center rounded-full border border-stone-200 dark:border-white/15 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="h-2.5 w-2.5" strokeWidth={2.5} />
+                </button>
+                <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 min-w-[14px] text-center">
+                  {i.quantity}
+                </span>
+                <button
+                  onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)}
+                  className="flex h-5 w-5 items-center justify-center rounded-full border border-stone-200 dark:border-white/15 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="h-2.5 w-2.5" strokeWidth={2.5} />
+                </button>
+                <button
+                  onClick={() => onRemoveItem(i.productId, i.selectedWeightKg)}
+                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-full text-stone-400 hover:text-red-500 transition-colors cursor-pointer"
+                  aria-label="Remove item"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              </div>
             </div>
-            <p className="text-xs font-black text-stone-900 dark:text-white">
+            <p className="text-xs font-black text-stone-900 dark:text-white shrink-0">
               ₹{i.totalPrice}
             </p>
           </div>
@@ -1683,29 +2472,49 @@ function OrderSummary({
             </button>
           </div>
         ) : (
-          <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-400" />
-              <input
-                value={couponInput}
-                onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                onKeyDown={(e) => e.key === "Enter" && onApply()}
-                placeholder="Coupon code"
-                className="w-full pl-9 pr-3 py-2.5 bg-black/[0.03] dark:bg-white/5 border border-stone-200 dark:border-white/10 rounded-xl text-xs font-bold text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/20 focus:border-[#1f431e]/40 transition-all tracking-wider"
-              />
+          <>
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-400" />
+                <input
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => e.key === "Enter" && onApply()}
+                  placeholder="Coupon code"
+                  className="w-full pl-9 pr-3 py-2.5 bg-black/[0.03] dark:bg-white/5 border border-stone-200 dark:border-white/10 rounded-xl text-xs font-bold text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/20 focus:border-[#1f431e]/40 transition-all tracking-wider"
+                />
+              </div>
+              <button
+                onClick={onApply}
+                className="rounded-xl bg-[#1f431e] hover:bg-[#16321a] px-4 py-2.5 text-xs font-bold text-white transition-colors cursor-pointer"
+              >
+                Apply
+              </button>
             </div>
-            <button
-              onClick={onApply}
-              className="rounded-xl bg-[#1f431e] hover:bg-[#16321a] px-4 py-2.5 text-xs font-bold text-white transition-colors cursor-pointer"
-            >
-              Apply
-            </button>
-          </div>
-        )}
-        {!appliedCoupon && (
-          <p className="mt-1.5 text-[10px] text-stone-400">
-            Try <span className="font-bold text-[#1f431e]">NEER10</span> for 10% off
-          </p>
+            {/* Coupon suggestions */}
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {COUPON_HINTS.map((c) => {
+                const eligible = subtotal >= c.minOrder;
+                return (
+                  <button
+                    key={c.code}
+                    onClick={() => eligible && onApplyCode(c.code)}
+                    disabled={!eligible}
+                    className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] font-bold transition-all cursor-pointer ${
+                      eligible
+                        ? "bg-[#d4a373]/12 text-[#a06d3c] hover:bg-[#d4a373]/20"
+                        : "bg-stone-100 dark:bg-white/5 text-stone-400 cursor-not-allowed"
+                    }`}
+                    title={eligible ? `Apply ${c.code}` : `Min order ₹${c.minOrder}`}
+                  >
+                    <Sparkles className="h-2.5 w-2.5" />
+                    {c.code} · {c.off}
+                    {!eligible && ` · ₹${c.minOrder}+`}
+                  </button>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
 
@@ -1721,6 +2530,8 @@ function OrderSummary({
           accent={deliveryFee === 0 ? "green" : undefined}
         />
         {giftWrapFee > 0 && <Row label="Gift wrap" value={`₹${giftWrapFee}`} />}
+        {tipFee > 0 && <Row label="Delivery tip" value={`₹${tipFee}`} />}
+        {orderBumpFee > 0 && <Row label="Sample pack" value={`₹${orderBumpFee}`} />}
         <div className="pt-2 border-t border-stone-200 dark:border-white/10 flex items-baseline justify-between">
           <span className="text-sm font-bold text-stone-900 dark:text-white">
             Total
@@ -1806,6 +2617,8 @@ function SuccessScreen({
   onCopy,
   eta,
   total,
+  loyaltyPoints,
+  paymentMethod,
   onTrack,
   onContinue,
 }: {
@@ -1814,6 +2627,8 @@ function SuccessScreen({
   onCopy: () => void;
   eta: string;
   total: number;
+  loyaltyPoints: number;
+  paymentMethod: PaymentId;
   onTrack: () => void;
   onContinue: () => void;
 }) {
@@ -1834,6 +2649,8 @@ function SuccessScreen({
       desc: "Enjoy your heritage grains!",
     },
   ];
+
+  const payLabel = PAYMENTS.find((p) => p.id === paymentMethod)?.label || paymentMethod;
 
   return (
     <div className="overflow-y-auto max-h-[calc(94vh-60px)]">
@@ -1858,7 +2675,7 @@ function SuccessScreen({
           </h3>
           <p className="text-sm text-stone-500 dark:text-stone-400 mt-1.5 max-w-sm mx-auto">
             Thank you for choosing heritage grains. A confirmation has been sent
-            to your email.
+            to your email{paymentMethod === "COD" ? "" : " and WhatsApp"}.
           </p>
         </motion.div>
 
@@ -1890,26 +2707,39 @@ function SuccessScreen({
           </button>
         </motion.div>
 
-        {/* Total + ETA */}
+        {/* Total + ETA + payment */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5, ease: EASE.out }}
-          className="mt-6 flex items-center justify-center gap-6 text-xs"
+          className="mt-6 flex items-center justify-center gap-4 sm:gap-6 text-xs flex-wrap"
         >
           <div className="flex items-center gap-1.5">
-            <span className="text-stone-400">Order total</span>
-            <span className="font-black text-stone-900 dark:text-white">
-              ₹{total}
-            </span>
+            <Wallet className="h-3.5 w-3.5 text-[#1f431e]" />
+            <span className="text-stone-400">Paid</span>
+            <span className="font-black text-stone-900 dark:text-white">₹{total}</span>
+            <span className="text-stone-400">· {payLabel}</span>
           </div>
-          <span className="h-3 w-px bg-stone-300 dark:bg-white/15" />
+          <span className="hidden sm:inline h-3 w-px bg-stone-300 dark:bg-white/15" />
           <div className="flex items-center gap-1.5">
             <Truck className="h-3.5 w-3.5 text-[#1f431e]" />
             <span className="font-bold text-stone-700 dark:text-stone-300">
               Arrives {eta}
             </span>
           </div>
+        </motion.div>
+
+        {/* Loyalty points earned */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5, ease: EASE.out }}
+          className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#d4a373]/30 bg-[#d4a373]/[0.08] px-4 py-2"
+        >
+          <Star className="h-4 w-4 text-[#d4a373]" />
+          <span className="text-xs font-bold text-[#a06d3c]">
+            You earned {loyaltyPoints} loyalty points!
+          </span>
         </motion.div>
 
         {/* What happens next */}
@@ -1998,6 +2828,8 @@ function Field({
   error,
   errorText,
   valid,
+  prefix,
+  hint,
 }: {
   label: string;
   value: string;
@@ -2008,6 +2840,8 @@ function Field({
   error?: boolean;
   errorText?: string;
   valid?: boolean;
+  prefix?: string;
+  hint?: string;
 }) {
   return (
     <label className="block">
@@ -2019,10 +2853,15 @@ function Field({
           </span>
         )}
       </span>
-      <div className="relative">
+      <div className="relative flex items-center">
+        {prefix && (
+          <span className="absolute left-3 text-xs font-bold text-stone-400 pointer-events-none">
+            {prefix}
+          </span>
+        )}
         {Icon && (
           <Icon
-            className={`absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 ${
+            className={`absolute ${prefix ? "left-11" : "left-3"} top-1/2 -translate-y-1/2 h-3.5 w-3.5 ${
               error
                 ? "text-red-400"
                 : valid
@@ -2038,7 +2877,7 @@ function Field({
           onChange={onChange}
           placeholder={placeholder}
           className={`w-full ${
-            Icon ? "pl-9" : "pl-3.5"
+            prefix ? "pl-16" : Icon ? "pl-9" : "pl-3.5"
           } pr-3.5 py-2.5 bg-black/[0.03] dark:bg-white/5 border rounded-xl text-xs font-semibold text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 transition-all ${
             error
               ? "border-red-300 dark:border-red-500/40 focus:ring-red-400/20 focus:border-red-400"
@@ -2051,6 +2890,11 @@ function Field({
       {error && errorText && (
         <span className="mt-1 block text-[10px] font-semibold text-red-500">
           {errorText}
+        </span>
+      )}
+      {hint && !error && (
+        <span className="mt-1 block text-[10px] font-semibold text-[#1f431e]">
+          {hint}
         </span>
       )}
     </label>
