@@ -95,9 +95,75 @@ export function Header({
         </div>
       </div>
 
-      {/* Main bar */}
+      {/* === MOBILE: Floating pill navbar === */}
+      <div className="sm:hidden px-3 pt-2">
+        <div
+          className="flex items-center justify-between rounded-full px-3 py-2 border border-white/10 refract-edge"
+          style={{
+            background: "rgba(10, 15, 10, 0.72)",
+            backdropFilter: "blur(28px) saturate(160%)",
+            WebkitBackdropFilter: "blur(28px) saturate(160%)",
+            boxShadow:
+              "inset 0 1px 0 0 rgba(255,255,255,0.05), 0 4px 20px -4px rgba(0,0,0,0.5)",
+          }}
+        >
+          {/* Brand — compact */}
+          <button
+            onClick={() => {
+              setActiveCategory("all");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="flex items-center gap-2 shrink-0 cursor-pointer"
+            aria-label="Neer Rice Depo home"
+          >
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-[#d4a373]/20 shrink-0 bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a]">
+              <img
+                src="/neer-logo-premium.png"
+                alt="Neer Rice Depo"
+                className="w-full h-full object-contain p-0.5"
+              />
+            </div>
+            <span className="text-xs font-serif font-bold text-white tracking-tight">
+              Neer Rice
+            </span>
+          </button>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1.5">
+            <motion.button
+              whileTap={tapPress}
+              onClick={onOpenMobileMenu}
+              className="p-2 text-stone-400 hover:text-white rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors"
+              aria-label="Open menu"
+            >
+              <Menu className="w-[18px] h-[18px]" strokeWidth={1.5} />
+            </motion.button>
+            <motion.button
+              whileTap={tapPress}
+              onClick={onOpenCart}
+              className="relative p-2 bg-[#d4a373]/10 border border-[#d4a373]/25 text-[#d4a373] rounded-full cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/15"
+              aria-label={`Cart with ${count} items`}
+            >
+              <ShoppingBag className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              {count > 0 && (
+                <motion.span
+                  key={count}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={SPRING.bouncy}
+                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a]"
+                >
+                  {count}
+                </motion.span>
+              )}
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
+      {/* === DESKTOP: Full-width glass bar === */}
       <div
-        className={`border-b transition-all duration-300 ${
+        className={`hidden sm:block border-b transition-all duration-300 ${
           scrolled
             ? "bg-[#0a0f0a]/90 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
             : "bg-[#0a0f0a]/70 border-white/5"
@@ -160,37 +226,6 @@ export function Header({
                   <X className="w-3 h-3" />
                 </button>
               )}
-            </div>
-
-            {/* Mobile: menu + cart */}
-            <div className="flex sm:hidden items-center gap-2">
-              <motion.button
-                whileTap={tapPress}
-                onClick={onOpenMobileMenu}
-                className="p-2.5 text-stone-300 hover:text-white rounded-xl cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
-                aria-label="Open menu"
-              >
-                <Menu className="w-5 h-5" strokeWidth={1.5} />
-              </motion.button>
-              <motion.button
-                whileTap={tapPress}
-                onClick={onOpenCart}
-                className="relative p-2.5 bg-[#d4a373]/10 border border-[#d4a373]/25 text-[#d4a373] rounded-xl cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors hover:bg-[#d4a373]/15"
-                aria-label={`Cart with ${count} items`}
-              >
-                <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
-                {count > 0 && (
-                  <motion.span
-                    key={count}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={SPRING.bouncy}
-                    className="absolute -top-1 -right-1 bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0a0f0a]"
-                  >
-                    {count}
-                  </motion.span>
-                )}
-              </motion.button>
             </div>
 
             {/* Desktop actions */}

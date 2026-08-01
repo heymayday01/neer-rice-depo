@@ -740,3 +740,36 @@ Stage Summary:
 - Precisely timed 2.5s reveal chain: eyebrow → headline → description → selector → CTAs → panel → pillars → scroll hint.
 - Eyebrow line draws itself (scaleX animation).
 - All animations respect prefers-reduced-motion.
+
+---
+Task ID: pill-navbar-dock-redesign
+Agent: main (Z.ai Code)
+Task: Redesign dock to match reference image + make mobile navbar pill-shaped with frosted glass.
+
+Work Log:
+- ANALYZED reference image: pill-shaped dock with icon+label tabs, circular active background, solid dark bg, evenly spaced.
+- DOCK REDESIGNED to match reference:
+  - Pill shape (rounded-full container) with frosted glass + refract-edge
+  - Icon + label vertical stack for each tab (w-14 h-14)
+  - Active state: circular background (w-9 h-9 rounded-full, bg-[#d4a373]/12 + border)
+  - layoutId sliding animation for active circle
+  - Cart badge positioned inside the tab area
+  - Press ripple on circular area
+  - Frosted glass: rgba(10,15,10,0.72) + blur(32px) + saturate(160%) + refract-edge border
+
+- MOBILE NAVBAR REDESIGNED to floating pill:
+  - Pill-shaped container (rounded-full) with frosted glass + refract-edge
+  - Positioned with px-3 pt-2 (floating, not full-width)
+  - Compact brand (w-8 h-8 logo + "Neer Rice" text)
+  - Menu + Cart buttons (36px tap targets, rounded-full)
+  - Cart badge on the pill navbar
+  - Hidden on desktop (sm:hidden) — desktop keeps full-width glass bar
+  - Frosted glass: rgba(10,15,10,0.72) + blur(28px) + saturate(160%) + refract-edge
+  - Inset highlight + drop shadow for depth
+
+- Verified: lint clean, all routes 200, no errors. VLM: navbar 8/10 ("floating pill, frosted glass, clean modern"), dock 9/10 ("pill-shaped, icon+label, circular active bg, perfectly centered, highly polished, premium UI trends").
+
+Stage Summary:
+- Dock: pill shape, icon+label tabs, circular active bg, frosted glass, refract-edge.
+- Mobile navbar: floating pill, frosted glass, refract-edge, compact brand, menu+cart.
+- Desktop: unchanged full-width glass bar.

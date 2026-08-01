@@ -67,13 +67,13 @@ export function MobileDock({
           aria-label="Mobile navigation"
         >
           <div
-            className="flex items-center gap-1 rounded-2xl px-2 py-1.5 pb-safe border border-white/8"
+            className="flex items-center justify-around rounded-full px-3 py-2 pb-safe border border-white/10 refract-edge"
             style={{
-              background: "rgba(10, 15, 10, 0.88)",
-              backdropFilter: "blur(28px) saturate(140%)",
-              WebkitBackdropFilter: "blur(28px) saturate(140%)",
+              background: "rgba(10, 15, 10, 0.72)",
+              backdropFilter: "blur(32px) saturate(160%)",
+              WebkitBackdropFilter: "blur(32px) saturate(160%)",
               boxShadow:
-                "inset 0 1px 0 0 rgba(255,255,255,0.03), 0 6px 24px -4px rgba(0,0,0,0.5)",
+                "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 32px -4px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(212,163,115,0.08)",
             }}
           >
             {tabs.map((tab) => {
@@ -88,16 +88,16 @@ export function MobileDock({
                   whileTap={{ scale: 0.9 }}
                   transition={SPRING.dock}
                   animate={isPressed ? { scale: 0.9 } : { scale: 1 }}
-                  className="relative flex flex-col items-center justify-center w-12 h-12 rounded-xl cursor-pointer select-none"
+                  className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-14 cursor-pointer select-none"
                   aria-label={tab.label}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {/* Active background — uniform for all tabs including cart */}
+                  {/* Active background circle */}
                   {isActive && (
                     <motion.span
                       layoutId="dock-active"
                       transition={SPRING.dock}
-                      className="absolute inset-0 rounded-xl bg-[#d4a373]/10 border border-[#d4a373]/15"
+                      className="absolute top-1.5 w-9 h-9 rounded-full bg-[#d4a373]/12 border border-[#d4a373]/15"
                     />
                   )}
 
@@ -105,19 +105,28 @@ export function MobileDock({
                   {isPressed && (
                     <motion.span
                       initial={{ scale: 0, opacity: 0.15 }}
-                      animate={{ scale: 1.5, opacity: 0 }}
+                      animate={{ scale: 1.6, opacity: 0 }}
                       transition={{ duration: 0.4, ease: EASE.out }}
-                      className="absolute inset-0 rounded-xl bg-[#d4a373]/10"
+                      className="absolute top-1.5 w-9 h-9 rounded-full bg-[#d4a373]/10"
                     />
                   )}
 
-                  <Icon
-                    className={`relative z-10 transition-colors duration-200 ${
-                      isActive ? "text-[#d4a373]" : "text-stone-500"
-                    }`}
-                    strokeWidth={isActive ? 2 : 1.5}
-                    style={{ width: 20, height: 20 }}
-                  />
+                  <div className="relative z-10 flex flex-col items-center gap-0.5">
+                    <Icon
+                      className={`transition-colors duration-200 ${
+                        isActive ? "text-[#d4a373]" : "text-stone-500"
+                      }`}
+                      strokeWidth={isActive ? 2 : 1.5}
+                      style={{ width: 20, height: 20 }}
+                    />
+                    <span
+                      className={`text-[9px] font-bold tracking-tight transition-colors duration-200 ${
+                        isActive ? "text-[#d4a373]" : "text-stone-500"
+                      }`}
+                    >
+                      {tab.label}
+                    </span>
+                  </div>
 
                   {/* Cart badge */}
                   {tab.id === "cart" && count > 0 && (
@@ -126,7 +135,7 @@ export function MobileDock({
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute top-1.5 right-2 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[15px] h-[15px] px-0.5 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a] z-20"
+                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-4 px-0.5 rounded-full flex items-center justify-center border-[1.5px] border-[#0a0f0a] z-20"
                     >
                       {count}
                     </motion.span>
