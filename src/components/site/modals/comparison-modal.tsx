@@ -42,7 +42,7 @@ export function ComparisonModal({ open, onClose }: Props) {
       <DialogContent className="max-w-5xl p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-3xl">
         <DialogHeader className="px-6 pt-6 pb-3">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
-            <BarChart2 className="w-5 h-5 text-[#1f431e]" />
+            <BarChart2 className="w-5 h-5 text-[#a3c4a0]" />
             Rice Comparison Matrix
           </DialogTitle>
           <DialogDescription className="text-xs">
@@ -71,7 +71,7 @@ export function ComparisonModal({ open, onClose }: Props) {
                 <tr
                   key={p.id}
                   className={`${
-                    i % 2 ? "bg-white/[0.03]" : "bg-white"
+                    i % 2 ? "bg-white/[0.03]" : "bg-white/[0.02]"
                   } hover:bg-[#d4a373]/8 transition-colors border-b border-white/8`}
                 >
                   <td className="p-3">
@@ -85,24 +85,24 @@ export function ComparisonModal({ open, onClose }: Props) {
                         <div className="font-bold text-white line-clamp-1">
                           {p.name}
                         </div>
-                        <div className="text-[10px] text-stone-500 line-clamp-1">
+                        <div className="text-[10px] text-stone-400 line-clamp-1">
                           {p.originRegion}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="text-center p-3 text-stone-500 font-medium">
+                  <td className="text-center p-3 text-stone-400 font-medium">
                     {p.grainType}
                   </td>
-                  <td className="text-center p-3 text-stone-500 font-medium">
+                  <td className="text-center p-3 text-stone-400 font-medium">
                     {p.processing}
                   </td>
                   <td className="text-center p-3">
                     <span
                       className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
                         p.giIndex.includes("Low")
-                          ? "bg-[#1f431e]/10 text-[#1f431e]"
-                          : "bg-stone-100 text-stone-500"
+                          ? "bg-[#1f431e]/10 text-[#a3c4a0]"
+                          : "bg-white/5 text-stone-400"
                       }`}
                     >
                       {p.giIndex.split(" ")[0]}
@@ -114,20 +114,20 @@ export function ComparisonModal({ open, onClose }: Props) {
                         <span
                           key={idx}
                           className={`w-1.5 h-1.5 rounded-full ${
-                            idx < p.aromaLevel ? "bg-[#d4a373]" : "bg-stone-200"
+                            idx < p.aromaLevel ? "bg-[#d4a373]" : "bg-white/8"
                           }`}
                         />
                       ))}
                     </div>
                   </td>
-                  <td className="text-center p-3 text-stone-500 font-medium">
+                  <td className="text-center p-3 text-stone-400 font-medium">
                     {p.agingMonths}m
                   </td>
-                  <td className="text-center p-3 text-stone-500 font-medium font-mono">
+                  <td className="text-center p-3 text-stone-400 font-medium font-mono">
                     {p.waterRatio}
                   </td>
                   <td className="text-right p-3">
-                    <span className="font-black font-serif text-[#1f431e]">
+                    <span className="font-black font-serif text-[#a3c4a0]">
                       ₹{p.discountedPricePerKg ?? p.pricePerKg}
                     </span>
                   </td>

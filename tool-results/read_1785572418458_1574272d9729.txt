@@ -1,0 +1,402 @@
+   773→                      rows={1}
+   774→                      placeholder="Add a custom note (optional)…"
+   775→                      className="mt-2.5 w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-[11px] font-medium text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all resize-none"
+   776→                    />
+   777→                  </SectionCard>
+   778→
+   779→                  {/* 4. Tip — Zomato emoji chips */}
+   780→                  <SectionCard>
+   781→                    <div className="flex items-center justify-between mb-3">
+   782→                      <SectionTitle icon={Heart} text="Delivery Partner Tip" />
+   783→                      <span className="text-[10px] text-stone-400">100% goes to them</span>
+   784→                    </div>
+   785→                    <div className="grid grid-cols-4 gap-2">
+   786→                      {TIP_OPTIONS.map((t) => {
+   787→                        const sel = tip === t.amount;
+   788→                        return (
+   789→                          <button
+   790→                            key={t.amount}
+   791→                            onClick={() => setTip(t.amount)}
+   792→                            className={`flex flex-col items-center gap-0.5 rounded-xl border py-2.5 transition-all cursor-pointer ${
+   793→                              sel ? "border-[#1f431e] bg-[#1f431e]/[0.04] ring-1 ring-[#1f431e]/20" : "border-stone-200 hover:border-stone-300"
+   794→                            }`}
+   795→                          >
+   796→                            <span className="text-base leading-none">{t.emoji}</span>
+   797→                            <span className={`text-[10px] font-bold ${sel ? "text-[#1f431e]" : "text-stone-600"}`}>{t.label}</span>
+   798→                          </button>
+   799→                        );
+   800→                      })}
+   801→                    </div>
+   802→                  </SectionCard>
+   803→
+   804→                  {/* 5. Payment — Zomato vertical radio list with expandable details */}
+   805→                  <SectionCard>
+   806→                    <SectionTitle icon={Wallet} text="Payment Method" />
+   807→                    <div className="mt-3 space-y-2">
+   808→                      {PAYMENTS.map((p) => {
+   809→                        const sel = payment === p.id;
+   810→                        const Icon = p.icon;
+   811→                        return (
+   812→                          <div key={p.id} className={`rounded-xl border overflow-hidden transition-all ${sel ? "border-[#1f431e] ring-1 ring-[#1f431e]/20" : "border-stone-200"}`}>
+   813→                            <button
+   814→                              onClick={() => setPayment(p.id)}
+   815→                              className="w-full flex items-center gap-3 p-3 text-left cursor-pointer"
+   816→                            >
+   817→                              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${sel ? "bg-[#1f431e] text-white" : "bg-stone-100 text-stone-500"}`}>
+   818→                                <Icon className="h-4 w-4" strokeWidth={2.2} />
+   819→                              </span>
+   820→                              <div className="flex-1 min-w-0">
+   821→                                <p className="text-xs font-bold text-stone-900">{p.label}</p>
+   822→                                <p className="text-[10px] text-stone-500 mt-0.5">{p.desc}</p>
+   823→                              </div>
+   824→                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-[#1f431e] bg-[#1f431e]" : "border-stone-300"}`}>
+   825→                                {sel && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
+   826→                              </span>
+   827→                            </button>
+   828→                            {/* Expandable payment details */}
+   829→                            <AnimatePresence initial={false}>
+   830→                              {sel && (
+   831→                                <motion.div
+   832→                                  initial={{ height: 0, opacity: 0 }}
+   833→                                  animate={{ height: "auto", opacity: 1 }}
+   834→                                  exit={{ height: 0, opacity: 0 }}
+   835→                                  transition={{ duration: 0.25, ease: EASE.out }}
+   836→                                  className="overflow-hidden"
+   837→                                >
+   838→                                  <div className="px-3 pb-3 pt-1 border-t border-stone-100 space-y-2">
+   839→                                    {p.id === "UPI" && (
+   840→                                      <>
+   841→                                        <input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="yourname@okhdfcbank" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all" />
+   842→                                        <div className="flex flex-wrap gap-1.5">
+   843→                                          {["GPay", "PhonePe", "Paytm", "BHIM"].map(app => (
+   844→                                            <span key={app} className="rounded-full bg-stone-100 px-2 py-0.5 text-[9px] font-bold text-stone-500">{app}</span>
+   845→                                          ))}
+   846→                                        </div>
+   847→                                      </>
+   848→                                    )}
+   849→                                    {p.id === "CARD" && (
+   850→                                      <>
+   851→                                        {cardType && (
+   852→                                          <span className="inline-flex items-center gap-1 rounded-md bg-[#1f431e]/10 px-2 py-1 text-[9px] font-extrabold text-[#1f431e]">{cardType}</span>
+   853→                                        )}
+   854→                                        <input value={cardNumber} onChange={(e) => setCardNumber((v => v.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())(e.target.value))} placeholder="1234 5678 9012 3456" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono tracking-wider" />
+   855→                                        <input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Name on card" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all" />
+   856→                                        <div className="grid grid-cols-2 gap-2">
+   857→                                          <input value={cardExpiry} onChange={(e) => { const d = e.target.value.replace(/\D/g, "").slice(0, 4); setCardExpiry(d.length <= 2 ? d : `${d.slice(0,2)}/${d.slice(2)}`); }} placeholder="MM/YY" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono" />
+   858→                                          <input value={cardCvv} onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="CVV" type="password" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono" />
+   859→                                        </div>
+   860→                                        <label className="flex items-center gap-2 cursor-pointer">
+   861→                                          <span className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border ${saveCard ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+   862→                                            {saveCard && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
+   863→                                          </span>
+   864→                                          <input type="checkbox" checked={saveCard} onChange={(e) => setSaveCard(e.target.checked)} className="sr-only" />
+   865→                                          <span className="text-[10px] text-stone-500">Save card securely (tokenized · PCI-DSS)</span>
+   866→                                        </label>
+   867→                                      </>
+   868→                                    )}
+   869→                                    {p.id === "NETBANKING" && (
+   870→                                      <select value={bank} onChange={(e) => setBank(e.target.value)} className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all cursor-pointer">
+   871→                                        <option value="">Choose your bank…</option>
+   872→                                        {["State Bank of India", "HDFC Bank", "ICICI Bank", "Axis Bank", "Kotak Mahindra", "Punjab National Bank", "Bank of Baroda", "Yes Bank"].map(b => <option key={b} value={b}>{b}</option>)}
+   873→                                      </select>
+   874→                                    )}
+   875→                                    {p.id === "COD" && (
+   876→                                      <div className="flex items-start gap-2 py-1">
+   877→                                        <Banknote className="h-4 w-4 text-[#1f431e] mt-0.5 shrink-0" />
+   878→                                        <p className="text-[10px] text-stone-600 leading-relaxed">Keep ₹{total} ready. Inspect your package before paying. COD orders may take 1 extra day for verification.</p>
+   879→                                      </div>
+   880→                                    )}
+   881→                                  </div>
+   882→                                </motion.div>
+   883→                              )}
+   884→                            </AnimatePresence>
+   885→                          </div>
+   886→                        );
+   887→                      })}
+   888→                    </div>
+   889→                  </SectionCard>
+   890→
+   891→                  {/* 6. Gift Wrap */}
+   892→                  <SectionCard>
+   893→                    <button onClick={() => setGiftWrap(!giftWrap)} className="w-full flex items-center gap-3 text-left cursor-pointer">
+   894→                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${giftWrap ? "bg-[#d4a373] text-white" : "bg-stone-100 text-stone-500"}`}>
+   895→                        <Gift className="h-5 w-5" strokeWidth={2.2} />
+   896→                      </span>
+   897→                      <div className="flex-1">
+   898→                        <p className="text-xs font-bold text-stone-900">Heritage Gift Wrap</p>
+   899→                        <p className="text-[10px] text-stone-500 mt-0.5">Jute pouch with gold-foil seal</p>
+   900→                      </div>
+   901→                      <span className="text-xs font-black text-stone-900">₹49</span>
+   902→                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${giftWrap ? "border-[#d4a373] bg-[#d4a373]" : "border-stone-300"}`}>
+   903→                        {giftWrap && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+   904→                      </span>
+   905→                    </button>
+   906→                    <AnimatePresence initial={false}>
+   907→                      {giftWrap && (
+   908→                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: EASE.out }} className="overflow-hidden">
+   909→                          <div className="mt-3 pt-3 border-t border-stone-100">
+   910→                            <label className="block">
+   911→                              <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block mb-1.5">Gift Message <span className="text-stone-400 normal-case font-medium">(optional · {giftMessage.length}/100)</span></span>
+   912→                              <textarea value={giftMessage} onChange={(e) => setGiftMessage(e.target.value.slice(0, 100))} rows={2} placeholder="Happy birthday! Enjoy these heritage grains…" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all resize-none" />
+   913→                            </label>
+   914→                          </div>
+   915→                        </motion.div>
+   916→                      )}
+   917→                    </AnimatePresence>
+   918→                  </SectionCard>
+   919→
+   920→                  {/* 7. Preferences — billing, whatsapp, newsletter */}
+   921→                  <SectionCard>
+   922→                    <SectionTitle icon={Sparkles} text="Preferences" />
+   923→                    <div className="mt-3 space-y-2.5">
+   924→                      <ToggleRow checked={billingSame} onChange={setBillingSame} label="Billing address same as shipping" />
+   925→                      <ToggleRow checked={whatsappUpdates} onChange={setWhatsappUpdates} label="Order updates via WhatsApp" subtext="Tracking, delivery & ETA" />
+   926→                      <ToggleRow checked={newsletter} onChange={setNewsletter} label="Harvest updates & member offers" />
+   927→                      <ToggleRow checked={saveInfo} onChange={setSaveInfo} label="Save address for next time" />
+   928→                    </div>
+   929→                  </SectionCard>
+   930→
+   931→                  {/* 8. Terms */}
+   932→                  <label className="flex items-start gap-2.5 cursor-pointer rounded-2xl border border-stone-200 bg-white p-3.5 hover:border-stone-300 transition-colors">
+   933→                    <span className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border-2 transition-all ${agreeTerms ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+   934→                      {agreeTerms && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+   935→                    </span>
+   936→                    <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="sr-only" />
+   937→                    <span className="text-[11px] text-stone-600 leading-relaxed">
+   938→                      I agree to Neer Rice Depo&apos;s{" "}
+   939→                      <span className="font-bold text-[#1f431e] underline">Terms of Service</span> and{" "}
+   940→                      <span className="font-bold text-[#1f431e] underline">Refund Policy</span>. Grains are non-returnable once opened unless damaged.
+   941→                    </span>
+   942→                  </label>
+   943→                </div>
+   944→              </div>
+   945→
+   946→              {/* RIGHT: sticky Bill card (Zomato-style) */}
+   947→              <aside className="hidden lg:flex flex-col border-l border-stone-200 bg-white order-1 lg:order-2 overflow-y-auto">
+   948→                <BillCard
+   949→                  items={items} subtotal={subtotal} discount={discount} deliveryFee={deliveryFee}
+   950→                  giftWrapFee={giftWrapFee} tipFee={tipFee} orderBumpFee={orderBumpFee} total={total}
+   951→                  savings={savings} loyaltyPoints={loyaltyPoints}
+   952→                  appliedCoupon={appliedCoupon} couponInput={couponInput} setCouponInput={setCouponInput}
+   953→                  onApply={applyCouponInline} onRemove={removeCoupon} onApplyCode={applyCouponCode}
+   954→                  showOffers={showOffers} setShowOffers={setShowOffers}
+   955→                  eta={formatDateRange(etaStart, etaEnd)} count={count}
+   956→                  onUpdateQty={updateQty} onRemoveItem={removeItem}
+   957→                  freeShipRemaining={freeShipRemaining} freeShipMet={freeShipMet}
+   958→                  orderBump={orderBump} setOrderBump={setOrderBump}
+   959→                />
+   960→              </aside>
+   961→            </div>
+   962→
+   963→            {/* ===== Sticky bottom pay bar (Zomato-style) ===== */}
+   964→            <div className="border-t border-stone-200 bg-white px-4 sm:px-6 py-3.5 shrink-0">
+   965→              <div className="flex items-center gap-3 max-w-2xl mx-auto">
+   966→                <div className="flex-1">
+   967→                  <div className="flex items-baseline gap-2">
+   968→                    <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">To Pay</span>
+   969→                    {savings > 0 && <span className="text-[10px] font-bold text-[#15803d]">Saving ₹{savings}</span>}
+   970→                  </div>
+   971→                  <p className="text-xl font-black font-serif text-stone-900 leading-tight">₹{total}</p>
+   972→                </div>
+   973→                <motion.button
+   974→                  whileHover={canPlaceOrder ? hoverLift : undefined}
+   975→                  whileTap={canPlaceOrder ? tapPress : undefined}
+   976→                  onClick={placeOrder}
+   977→                  disabled={!canPlaceOrder || placing}
+   978→                  className="flex items-center gap-2 rounded-xl px-6 sm:px-10 py-3.5 bg-[#1f431e] text-white text-sm font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-[#1f431e]/20"
+   979→                >
+   980→                  {placing ? (
+   981→                    <><Loader2 className="h-4 w-4 animate-spin" /> Placing…</>
+   982→                  ) : (
+   983→                    <><Lock className="h-4 w-4" /> Place Order</>
+   984→                  )}
+   985→                </motion.button>
+   986→              </div>
+   987→              {!canPlaceOrder && !placing && (
+   988→                <p className="text-center text-[10px] text-stone-400 mt-1.5">
+   989→                  {!addressValid ? "Complete delivery address" : !paymentValid ? "Complete payment details" : "Accept terms to continue"}
+   990→                </p>
+   991→              )}
+   992→            </div>
+   993→          </div>
+   994→        )}
+   995→      </DialogContent>
+   996→    </Dialog>
+   997→  );
+   998→}
+   999→
+  1000→/* ============ Section Card (Zomato-style white card) ============ */
+  1001→function SectionCard({ children }: { children: React.ReactNode }) {
+  1002→  return (
+  1003→    <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm shadow-stone-200/50">
+  1004→      {children}
+  1005→    </div>
+  1006→  );
+  1007→}
+  1008→
+  1009→function SectionTitle({ icon: Icon, text }: { icon: typeof Mail; text: string }) {
+  1010→  return (
+  1011→    <div className="flex items-center gap-2">
+  1012→      <Icon className="h-4 w-4 text-[#1f431e]" strokeWidth={2.3} />
+  1013→      <h3 className="text-sm font-bold text-stone-900">{text}</h3>
+  1014→    </div>
+  1015→  );
+  1016→}
+  1017→
+  1018→function ToggleRow({
+  1019→  checked, onChange, label, subtext,
+  1020→}: { checked: boolean; onChange: (b: boolean) => void; label: string; subtext?: string }) {
+  1021→  return (
+  1022→    <label className="flex items-center gap-2.5 cursor-pointer">
+  1023→      <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${checked ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+  1024→        {checked && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
+  1025→      </span>
+  1026→      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only" />
+  1027→      <div>
+  1028→        <span className="text-[11px] font-semibold text-stone-700">{label}</span>
+  1029→        {subtext && <span className="text-[10px] text-stone-400 ml-1">· {subtext}</span>}
+  1030→      </div>
+  1031→    </label>
+  1032→  );
+  1033→}
+  1034→
+  1035→/* ============ Bill Card (Zomato-style bill details) ============ */
+  1036→function BillCard({
+  1037→  items, subtotal, discount, deliveryFee, giftWrapFee, tipFee, orderBumpFee, total,
+  1038→  savings, loyaltyPoints, appliedCoupon, couponInput, setCouponInput, onApply, onRemove,
+  1039→  onApplyCode, showOffers, setShowOffers, eta, count, onUpdateQty, onRemoveItem,
+  1040→  freeShipRemaining, freeShipMet, orderBump, setOrderBump,
+  1041→}: {
+  1042→  items: ReturnType<typeof useCart.getState>["items"];
+  1043→  subtotal: number; discount: number; deliveryFee: number; giftWrapFee: number;
+  1044→  tipFee: number; orderBumpFee: number; total: number; savings: number; loyaltyPoints: number;
+  1045→  appliedCoupon: string | null; couponInput: string; setCouponInput: (s: string) => void;
+  1046→  onApply: () => void; onRemove: () => void; onApplyCode: (c: string) => void;
+  1047→  showOffers: boolean; setShowOffers: (b: boolean) => void;
+  1048→  eta: string; count: number;
+  1049→  onUpdateQty: (productId: string, weightKg: number, qty: number) => void;
+  1050→  onRemoveItem: (productId: string, weightKg: number) => void;
+  1051→  freeShipRemaining: number; freeShipMet: boolean;
+  1052→  orderBump: boolean; setOrderBump: (b: boolean) => void;
+  1053→}) {
+  1054→  const [itemsExpanded, setItemsExpanded] = useState(true);
+  1055→  return (
+  1056→    <div className="flex flex-col px-5 py-5">
+  1057→      <div className="flex items-center justify-between mb-3">
+  1058→        <h3 className="font-serif text-base font-bold text-stone-900">Bill Details</h3>
+  1059→        <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-bold text-stone-500">{count} {count === 1 ? "item" : "items"}</span>
+  1060→      </div>
+  1061→
+  1062→      {/* Free shipping progress */}
+  1063→      <div className={`rounded-xl p-2.5 mb-3 ${freeShipMet ? "bg-[#15803d]/10" : "bg-[#d4a373]/10"}`}>
+  1064→        {freeShipMet ? (
+  1065→          <div className="flex items-center gap-1.5">
+  1066→            <CheckCircle2 className="h-3.5 w-3.5 text-[#15803d] shrink-0" />
+  1067→            <p className="text-[10px] font-bold text-[#15803d]">FREE delivery unlocked!</p>
+  1068→          </div>
+  1069→        ) : (
+  1070→          <div>
+  1071→            <p className="text-[10px] font-bold text-[#a06d3c] mb-1.5">Add ₹{freeShipRemaining} more for FREE delivery</p>
+  1072→            <div className="h-1 rounded-full bg-[#d4a373]/20 overflow-hidden">
+  1073→              <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, ((subtotal - discount) / FREE_SHIP_THRESHOLD) * 100)}%` }} transition={{ duration: 0.5, ease: EASE.out }} className="h-full rounded-full bg-[#d4a373]" />
+  1074→            </div>
+  1075→          </div>
+  1076→        )}
+  1077→      </div>
+  1078→
+  1079→      {/* Items list — collapsible */}
+  1080→      <div className="mb-3">
+  1081→        <button onClick={() => setItemsExpanded(!itemsExpanded)} className="w-full flex items-center justify-between mb-2 cursor-pointer">
+  1082→          <span className="text-[11px] font-bold text-stone-700">{itemsExpanded ? "Hide items" : `Show ${count} items`}</span>
+  1083→          <motion.span animate={{ rotate: itemsExpanded ? 180 : 0 }} transition={SPRING.snappy}>
+  1084→            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+  1085→          </motion.span>
+  1086→        </button>
+  1087→        <AnimatePresence initial={false}>
+  1088→          {itemsExpanded && (
+  1089→            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: EASE.out }} className="overflow-hidden">
+  1090→              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+  1091→                {items.map((i) => (
+  1092→                  <div key={`${i.productId}-${i.selectedWeightKg}`} className="flex items-center gap-2.5">
+  1093→                    {/* Organic marker — Zomato veg marker style */}
+  1094→                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+  1095→                      <SmartImage src={i.product.image} alt={i.product.name} className="h-full w-full" />
+  1096→                      <span className="absolute -top-1 -right-1 z-10 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#1f431e] px-1 text-[9px] font-black text-white">{i.quantity}</span>
+  1097→                    </div>
+  1098→                    <div className="flex-1 min-w-0">
+  1099→                      <div className="flex items-center gap-1.5">
+  1100→                        {/* Organic green square marker (like Zomato veg marker) */}
+  1101→                        <span className="flex h-3 w-3 shrink-0 items-center justify-center border-[1.5px] border-[#15803d] rounded-[2px]">
+  1102→                          <span className="h-1.5 w-1.5 rounded-full bg-[#15803d]" />
+  1103→                        </span>
+  1104→                        <p className="text-[11px] font-bold text-stone-900 truncate">{i.product.name}</p>
+  1105→                      </div>
+  1106→                      <p className="text-[9px] text-stone-500">{i.selectedWeightKg}kg</p>
+  1107→                      <div className="flex items-center gap-1 mt-0.5">
+  1108→                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer" aria-label="Decrease">
+  1109→                          <Minus className="h-2 w-2" strokeWidth={3} />
+  1110→                        </button>
+  1111→                        <span className="text-[9px] font-bold text-stone-700 min-w-[12px] text-center">{i.quantity}</span>
+  1112→                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer" aria-label="Increase">
+  1113→                          <Plus className="h-2 w-2" strokeWidth={3} />
+  1114→                        </button>
+  1115→                      </div>
+  1116→                    </div>
+  1117→                    <p className="text-[11px] font-black text-stone-900 shrink-0">₹{i.totalPrice}</p>
+  1118→                  </div>
+  1119→                ))}
+  1120→              </div>
+  1121→            </motion.div>
+  1122→          )}
+  1123→        </AnimatePresence>
+  1124→      </div>
+  1125→
+  1126→      {/* Order bump upsell */}
+  1127→      <AnimatePresence initial={false}>
+  1128→        {!orderBump && (
+  1129→          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25, ease: EASE.out }} className="overflow-hidden mb-3">
+  1130→            <button onClick={() => setOrderBump(true)} className="w-full flex items-center gap-2.5 rounded-xl border border-dashed border-[#d4a373] bg-[#d4a373]/5 p-2.5 text-left cursor-pointer hover:bg-[#d4a373]/10 transition-colors">
+  1131→              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#d4a373] text-white">
+  1132→                <Plus className="h-4 w-4" strokeWidth={2.5} />
+  1133→              </span>
+  1134→              <div className="flex-1 min-w-0">
+  1135→                <p className="text-[10px] font-bold text-stone-900 truncate">{ORDER_BUMP.name}</p>
+  1136→                <p className="text-[9px] text-stone-500">{ORDER_BUMP.weight} · {ORDER_BUMP.desc}</p>
+  1137→                <div className="flex items-center gap-1.5 mt-0.5">
+  1138→                  <span className="text-[11px] font-black text-[#a06d3c]">₹{ORDER_BUMP.price}</span>
+  1139→                  <span className="text-[9px] text-stone-400 line-through">₹{ORDER_BUMP.originalPrice}</span>
+  1140→                </div>
+  1141→              </div>
+  1142→              <span className="text-[9px] font-extrabold uppercase text-[#a06d3c] shrink-0">Add +</span>
+  1143→            </button>
+  1144→          </motion.div>
+  1145→        )}
+  1146→      </AnimatePresence>
+  1147→
+  1148→      {/* Coupon strip — Zomato dashed style */}
+  1149→      <div className="mb-3">
+  1150→        {appliedCoupon ? (
+  1151→          <div className="flex items-center justify-between rounded-xl border border-[#15803d]/30 bg-[#15803d]/5 px-3 py-2.5">
+  1152→            <div className="flex items-center gap-2">
+  1153→              <Tag className="h-3.5 w-3.5 text-[#15803d]" />
+  1154→              <div>
+  1155→                <p className="text-[11px] font-bold text-[#15803d]">{appliedCoupon} applied</p>
+  1156→                <p className="text-[9px] text-[#15803d]/70">You saved ₹{discount}</p>
+  1157→              </div>
+  1158→            </div>
+  1159→            <button onClick={onRemove} className="text-[10px] font-bold text-stone-400 hover:text-red-500 cursor-pointer">Remove</button>
+  1160→          </div>
+  1161→        ) : (
+  1162→          <>
+  1163→            <button onClick={() => setShowOffers(!showOffers)} className="w-full flex items-center gap-2 rounded-xl border border-dashed border-stone-300 bg-stone-50 px-3 py-2.5 cursor-pointer hover:border-[#1f431e] transition-colors">
+  1164→              <Tag className="h-4 w-4 text-[#1f431e]" />
+  1165→              <span className="flex-1 text-left text-[11px] font-bold text-stone-700">{couponInput || "Apply coupon / View offers"}</span>
+  1166→              <ChevronRightIcon className="h-3.5 w-3.5 text-stone-400" />
+  1167→            </button>
+  1168→            <AnimatePresence initial={false}>
+  1169→              {showOffers && (
+  1170→                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: EASE.out }} className="overflow-hidden">
+  1171→                  <div className="mt-2 space-y-1.5">
+  1172→                    {/* Manual coupon input */}
+
+[showing lines 773-1172 of 1559; use offset=1173 with limit to continue reading]

@@ -84,7 +84,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
               {product.badges.map((b) => (
                 <span
                   key={b}
-                  className="bg-white/95 backdrop-blur-sm text-[#1f431e] font-extrabold text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider border border-[#1f431e]/15"
+                  className="bg-white/[0.06] backdrop-blur-sm text-[#a3c4a0] font-extrabold text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider border border-[#1f431e]/15"
                 >
                   {b}
                 </span>
@@ -116,8 +116,8 @@ export function ProductDetailModal({ product, onClose }: Props) {
           </motion.div>
 
             <div className="flex items-center gap-4 text-xs">
-              <div className="flex items-center gap-1 text-amber-600">
-                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+              <div className="flex items-center gap-1 text-[#d4a373]">
+                <Star className="w-4 h-4 fill-[#d4a373] text-[#d4a373]" />
                 <span className="font-bold text-white">{product.rating}</span>
                 <span className="text-stone-400">({product.reviewsCount})</span>
               </div>
@@ -146,9 +146,9 @@ export function ProductDetailModal({ product, onClose }: Props) {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="bg-white/[0.03] rounded-xl p-3 border border-white/10/80 text-center"
+                  className="bg-white/[0.03] rounded-xl p-3 border border-white/10 text-center"
                 >
-                  <s.icon className="w-4 h-4 text-[#1f431e] mx-auto mb-1" />
+                  <s.icon className="w-4 h-4 text-[#a3c4a0] mx-auto mb-1" />
                   <div className="text-[9px] uppercase tracking-wider text-stone-400 font-bold">
                     {s.label}
                   </div>
@@ -166,7 +166,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                 {product.bestFor.map((b) => (
                   <span
                     key={b}
-                    className="px-2.5 py-1 rounded-full bg-[#1f431e]/8 text-[#1f431e] text-[11px] font-bold border border-[#1f431e]/12"
+                    className="px-2.5 py-1 rounded-full bg-[#1f431e]/8 text-[#a3c4a0] text-[11px] font-bold border border-[#1f431e]/12"
                   >
                     {b}
                   </span>
@@ -175,7 +175,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
             </div>
 
             {/* Nutrition */}
-            <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/10/80">
+            <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/10">
               <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 mb-2.5 flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5 text-[#d4a373]" />
                 Nutrition Facts (per 100g)
@@ -211,7 +211,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                   Select Bag Weight
                 </span>
                 {weight >= 10 && (
-                  <span className="text-[10px] font-bold text-[#1f431e] bg-[#1f431e]/10 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-bold text-[#a3c4a0] bg-[#1f431e]/10 px-2 py-0.5 rounded-md">
                     Bulk Savings Applied
                   </span>
                 )}
@@ -245,7 +245,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
               <div className="flex items-end justify-between pt-1">
                 <div>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-black font-serif text-[#1f431e]">
+                    <span className="text-3xl font-black font-serif text-[#a3c4a0]">
                       ₹{final}
                     </span>
                     {savings > 0 && (

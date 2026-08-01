@@ -108,7 +108,7 @@ export function AISommelierModal({ open, onClose }: Props) {
         <div className="px-6 pb-6 space-y-4">
           {/* Input */}
           <div className="flex gap-2">
-            <div className="flex-1 flex items-center gap-2 bg-stone-100 rounded-xl px-3">
+            <div className="flex-1 flex items-center gap-2 bg-white/5 rounded-xl px-3">
               <BrainCircuit className="w-4 h-4 text-[#d4a373]" strokeWidth={1.5} />
               <input
                 value={prompt}
@@ -142,7 +142,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                     setPrompt(s);
                     ask(s);
                   }}
-                  className="px-3 py-1.5 bg-[#d4a373]/10 hover:bg-[#d4a373]/20 text-[#1f431e] border border-[#d4a373]/30 rounded-full text-[11px] font-bold transition-all cursor-pointer"
+                  className="px-3 py-1.5 bg-[#d4a373]/10 hover:bg-[#d4a373]/20 text-[#a3c4a0] border border-[#d4a373]/30 rounded-full text-[11px] font-bold transition-all cursor-pointer"
                 >
                   {s}
                 </button>
@@ -153,7 +153,7 @@ export function AISommelierModal({ open, onClose }: Props) {
           {/* Loading */}
           {loading && (
             <div className="py-10 flex flex-col items-center gap-3 text-center">
-              <Loader2 className="w-8 h-8 text-[#1f431e] animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#a3c4a0] animate-spin" />
               <p className="text-xs text-stone-500 font-medium">
                 The sommelier is studying the grains…
               </p>
@@ -181,7 +181,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                   {recommended.map((p) => (
                     <div
                       key={p.id}
-                      className="flex gap-3 bg-white rounded-2xl border border-white/10/90 p-3 items-center shadow-sm"
+                      className="flex gap-3 bg-white/[0.03] rounded-2xl border border-white/10 p-3 items-center shadow-sm"
                     >
                       <img
                         src={p.image}
@@ -243,7 +243,7 @@ export function AISommelierModal({ open, onClose }: Props) {
                   setRec(null);
                   setPrompt("");
                 }}
-                className="w-full py-2.5 bg-white border border-white/10 text-stone-400 rounded-xl text-xs font-bold hover:bg-white/5 cursor-pointer"
+                className="w-full py-2.5 bg-white/[0.03] border border-white/10 text-stone-400 rounded-xl text-xs font-bold hover:bg-white/5 cursor-pointer"
               >
                 Ask Another Question
               </button>
@@ -266,7 +266,7 @@ function InfoCard({
 }) {
   return (
     <div className="bg-white/[0.03] rounded-2xl p-3.5 border border-white/8 space-y-1.5">
-      <div className="flex items-center gap-1.5 text-[#1f431e]">
+      <div className="flex items-center gap-1.5 text-[#a3c4a0]">
         <Icon className="w-3.5 h-3.5 text-[#d4a373]" />
         <span className="text-[10px] font-extrabold uppercase tracking-widest">
           {title}

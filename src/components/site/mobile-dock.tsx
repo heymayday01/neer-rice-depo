@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, ShoppingBag, BrainCircuit, Package, BarChart2 } from "lucide-react";
+import { ShoppingBag, BrainCircuit, Package, BarChart2, Sprout } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { SPRING, EASE } from "@/lib/motion";
 import { useHaptic } from "@/hooks/use-haptic";
@@ -35,14 +35,14 @@ export function MobileDock({
   const tabs: {
     id: TabId;
     label: string;
-    icon: typeof Home;
+    icon: typeof Sprout;
     action: () => void;
   }[] = [
-    { id: "home", label: "Home", icon: Home, action: onHome },
-    { id: "ai", label: "AI", icon: BrainCircuit, action: onOpenAISommelier },
+    { id: "home", label: "Harvest", icon: Sprout, action: onHome },
+    { id: "ai", label: "Sommelier", icon: BrainCircuit, action: onOpenAISommelier },
     { id: "matrix", label: "Compare", icon: BarChart2, action: onOpenComparison },
     { id: "orders", label: "Orders", icon: Package, action: onOpenOrders },
-    { id: "cart", label: "Cart", icon: ShoppingBag, action: onOpenCart },
+    { id: "cart", label: "Basket", icon: ShoppingBag, action: onOpenCart },
   ];
 
   const handleTap = (id: TabId, action: () => void) => {
@@ -69,7 +69,7 @@ export function MobileDock({
           <div
             className="flex items-center justify-around rounded-full px-3 py-2 pb-safe relative"
             style={{
-              background: "rgba(10, 15, 10, 0.68)",
+              background: "rgba(10, 15, 10, 0.72)",
               backdropFilter: "blur(40px) saturate(180%)",
               WebkitBackdropFilter: "blur(40px) saturate(180%)",
               boxShadow: [
@@ -78,17 +78,28 @@ export function MobileDock({
                 "inset 1px 0 0 0 rgba(255,255,255,0.03)",
                 "0 1px 3px rgba(0,0,0,0.3)",
                 "0 12px 40px -6px rgba(0,0,0,0.6)",
-                "0 0 0 0.5px rgba(212,163,115,0.12)",
+                "0 0 0 0.5px rgba(212,163,115,0.15)",
               ].join(", "),
             }}
           >
-            {/* Refractive top edge — light catch */}
+            {/* Refractive top edge — light catch (rice-grain shaped) */}
             <div
               className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
               style={{
-                background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.3), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.35), transparent)",
               }}
             />
+            {/* Fresh harvest pulse — subtle living indicator */}
+            <div
+              className="absolute -top-1 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full pointer-events-none"
+              style={{
+                background: "rgba(31,67,30,0.6)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)",
+              }}
+            >
+              <span className="live-dot" style={{ width: 4, height: 4 }} />
+              <span className="text-[7px] font-bold uppercase tracking-wider text-[#a3c4a0]">Fresh</span>
+            </div>
 
             {tabs.map((tab) => {
               const Icon = tab.icon;

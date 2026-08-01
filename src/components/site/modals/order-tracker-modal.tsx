@@ -85,7 +85,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
       <DialogContent className="max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-3xl">
         <DialogHeader className="px-6 pt-6 pb-3">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
-            <Package className="w-5 h-5 text-[#1f431e]" />
+            <Package className="w-5 h-5 text-[#a3c4a0]" />
             Track Your Order
           </DialogTitle>
           <DialogDescription className="text-xs">
@@ -96,7 +96,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
         <div className="px-6 pb-6 space-y-5">
           {/* Search */}
           <div className="flex gap-2">
-            <div className="flex-1 flex items-center gap-2 bg-stone-100 rounded-xl px-3">
+            <div className="flex-1 flex items-center gap-2 bg-white/5 rounded-xl px-3">
               <Search className="w-4 h-4 text-stone-400" />
               <input
                 value={query}
@@ -138,7 +138,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block">
                       Tracking ID
                     </span>
-                    <span className="text-base font-black font-mono text-[#1f431e]">
+                    <span className="text-base font-black font-mono text-[#a3c4a0]">
                       {result.trackingId}
                     </span>
                   </div>
@@ -169,7 +169,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                           className={`w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all ${
                             done
                               ? "bg-[#1f431e] border-[#1f431e] text-white"
-                              : "bg-white border-white/10 text-stone-300"
+                              : "bg-white/[0.04] border-white/10 text-stone-300"
                           }`}
                         >
                           <Icon className="w-4 h-4" />
@@ -177,7 +177,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                         {i < STEPS.length - 1 && (
                           <div
                             className={`w-0.5 h-6 ${
-                              i < currentStepIdx ? "bg-[#1f431e]" : "bg-stone-200"
+                              i < currentStepIdx ? "bg-[#1f431e]" : "bg-white/8"
                             }`}
                           />
                         )}
@@ -226,9 +226,9 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
                     setQuery(o.trackingId);
                     lookup(o.trackingId);
                   }}
-                  className="w-full flex justify-between items-center bg-stone-50 hover:bg-stone-100 rounded-xl p-3 text-left cursor-pointer transition-colors"
+                  className="w-full flex justify-between items-center bg-white/[0.03] hover:bg-white/5 rounded-xl p-3 text-left cursor-pointer transition-colors"
                 >
-                  <span className="text-xs font-mono font-bold text-[#1f431e]">
+                  <span className="text-xs font-mono font-bold text-[#a3c4a0]">
                     {o.trackingId}
                   </span>
                   <span className="text-[11px] text-stone-500">

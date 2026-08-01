@@ -525,7 +525,7 @@ export function CheckoutModal({
   return (
     <Dialog open={open} onOpenChange={(o) => !o && close()}>
       <DialogContent
-        className="max-w-5xl sm:max-w-5xl p-0 overflow-hidden max-h-[94vh] gap-0 sm:rounded-[24px] rounded-[20px] bg-white text-stone-900 border-stone-200"
+        className="max-w-5xl sm:max-w-5xl p-0 overflow-hidden max-h-[94vh] gap-0 sm:rounded-[24px] rounded-[20px] bg-[#0a0f0a] text-stone-100 border-white/10"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Secure Checkout</DialogTitle>
@@ -546,17 +546,17 @@ export function CheckoutModal({
         ) : (
           <div className="flex flex-col max-h-[94vh]">
             {/* ===== Header (Zomato-style clean bar) ===== */}
-            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-stone-200 bg-white shrink-0">
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-white/8 bg-[#0d140d]/80 backdrop-blur-xl shrink-0">
               <div className="flex items-center gap-3">
                 <button
                   onClick={close}
-                  className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-stone-100 transition-colors cursor-pointer"
+                  className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-white/5 transition-colors cursor-pointer"
                   aria-label="Back to cart"
                 >
-                  <ArrowLeft className="h-4 w-4 text-stone-700" strokeWidth={2.5} />
+                  <ArrowLeft className="h-4 w-4 text-stone-300" strokeWidth={2.5} />
                 </button>
                 <div>
-                  <h2 className="font-serif text-lg font-bold text-stone-900 leading-tight">Secure Checkout</h2>
+                  <h2 className="font-serif text-lg font-bold text-stone-100 leading-tight">Secure Checkout</h2>
                   <p className="text-[10px] font-semibold text-stone-500 flex items-center gap-1">
                     <Lock className="h-2.5 w-2.5" />
                     256-bit SSL · Draft auto-saved
@@ -564,9 +564,9 @@ export function CheckoutModal({
                 </div>
               </div>
               {/* ETA pill — Zomato style */}
-              <div className="flex items-center gap-2 rounded-full bg-[#15803d]/10 px-3 py-1.5">
-                <Truck className="h-3.5 w-3.5 text-[#15803d]" strokeWidth={2.5} />
-                <span className="text-[11px] font-bold text-[#15803d]">
+              <div className="flex items-center gap-2 rounded-full bg-[#1f431e]/15 px-3 py-1.5">
+                <Truck className="h-3.5 w-3.5 text-[#a3c4a0]" strokeWidth={2.5} />
+                <span className="text-[11px] font-bold text-[#a3c4a0]">
                   {formatDateRange(etaStart, etaEnd)}
                 </span>
               </div>
@@ -575,7 +575,7 @@ export function CheckoutModal({
             {/* ===== Body: two-column single page ===== */}
             <div className="grid lg:grid-cols-[1fr_360px] flex-1 overflow-hidden">
               {/* LEFT: scrollable sections */}
-              <div ref={leftColRef} className="overflow-y-auto bg-stone-50 order-2 lg:order-1">
+              <div ref={leftColRef} className="overflow-y-auto bg-[#0a0f0a] order-2 lg:order-1">
                 <div className="px-4 sm:px-6 py-5 space-y-3 max-w-2xl mx-auto">
 
                   {/* Mobile bill summary — collapsible (Zomato mobile pattern) */}
@@ -601,7 +601,7 @@ export function CheckoutModal({
                       {savedAddresses.length > 0 && !editingAddress && (
                         <button
                           onClick={() => setShowSavedAddresses(!showSavedAddresses)}
-                          className="flex items-center gap-1 text-[11px] font-bold text-[#1f431e] hover:underline cursor-pointer"
+                          className="flex items-center gap-1 text-[11px] font-bold text-[#a3c4a0] hover:underline cursor-pointer"
                         >
                           <KeyRound className="h-3 w-3" />
                           {savedAddresses.length} saved
@@ -624,13 +624,13 @@ export function CheckoutModal({
                               <button
                                 key={addr.id}
                                 onClick={() => loadSavedAddress(addr)}
-                                className="w-full flex items-start gap-2.5 rounded-xl border border-stone-200 bg-stone-50 p-3 text-left hover:border-[#1f431e]/40 hover:bg-white transition-colors cursor-pointer"
+                                className="w-full flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:border-[#d4a373]/40 hover:bg-white/5 transition-colors cursor-pointer"
                               >
-                                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#1f431e]/10 text-[#1f431e]">
+                                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#d4a373]/12 text-[#d4a373]">
                                   {addr.label === "Home" ? <Home className="h-3.5 w-3.5" /> : addr.label === "Work" ? <Briefcase className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
                                 </span>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-xs font-bold text-stone-900">{addr.fullName} · {addr.label}</p>
+                                  <p className="text-xs font-bold text-stone-100">{addr.fullName} · {addr.label}</p>
                                   <p className="text-[10px] text-stone-500 mt-0.5 truncate">{addr.address}, {addr.city}, {addr.state} {addr.pincode}</p>
                                 </div>
                               </button>
@@ -643,21 +643,21 @@ export function CheckoutModal({
                     {/* Compact address display when valid + not editing */}
                     {hasAddress && !editingAddress ? (
                       <div className="flex items-start gap-3">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1f431e]/10 text-[#1f431e]">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#d4a373]/12 text-[#d4a373]">
                           {addressLabel === "Home" ? <Home className="h-5 w-5" /> : addressLabel === "Work" ? <Briefcase className="h-5 w-5" /> : <MapPin className="h-5 w-5" />}
                         </span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="text-sm font-bold text-stone-900">{form.fullName}</p>
+                            <p className="text-sm font-bold text-stone-100">{form.fullName}</p>
                             <span className="rounded-full bg-[#d4a373]/15 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#a06d3c]">{addressLabel}</span>
                           </div>
-                          <p className="text-xs text-stone-600 mt-0.5 leading-relaxed">{form.address}</p>
-                          <p className="text-xs text-stone-600">{form.city}{form.city && ", "}{form.state} {form.pincode}</p>
+                          <p className="text-xs text-stone-400 mt-0.5 leading-relaxed">{form.address}</p>
+                          <p className="text-xs text-stone-400">{form.city}{form.city && ", "}{form.state} {form.pincode}</p>
                           <p className="text-xs text-stone-500 mt-1">+91 {form.phone}{form.email && ` · ${form.email}`}</p>
                         </div>
                         <button
                           onClick={() => setEditingAddress(true)}
-                          className="flex items-center gap-1 text-[11px] font-bold text-[#1f431e] hover:underline cursor-pointer shrink-0"
+                          className="flex items-center gap-1 text-[11px] font-bold text-[#a3c4a0] hover:underline cursor-pointer shrink-0"
                         >
                           <Edit3 className="h-3 w-3" />
                           Change
@@ -675,7 +675,7 @@ export function CheckoutModal({
                                 key={l}
                                 onClick={() => setAddressLabel(l)}
                                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold transition-all cursor-pointer ${
-                                  sel ? "bg-[#1f431e] text-white" : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                                  sel ? "bg-[#1f431e] text-white" : "bg-white/5 text-stone-400 hover:bg-white/10"
                                 }`}
                               >
                                 <Icon className="h-3 w-3" />
@@ -722,22 +722,22 @@ export function CheckoutModal({
                             key={opt.id}
                             onClick={() => setDelivery(opt.id)}
                             className={`w-full flex items-center gap-3 rounded-xl border p-3 text-left transition-all cursor-pointer ${
-                              sel ? "border-[#1f431e] bg-[#1f431e]/[0.03] ring-1 ring-[#1f431e]/20" : "border-stone-200 hover:border-stone-300"
+                              sel ? "border-[#1f431e] bg-[#1f431e]/[0.03] ring-1 ring-[#1f431e]/20" : "border-white/10 hover:border-white/20"
                             }`}
                           >
-                            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${sel ? "bg-[#1f431e] text-white" : "bg-stone-100 text-stone-500"}`}>
+                            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${sel ? "bg-[#1f431e] text-white" : "bg-white/5 text-stone-400"}`}>
                               <Icon className="h-4 w-4" strokeWidth={2.2} />
                             </span>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className="text-xs font-bold text-stone-900">{opt.label}</p>
+                                <p className="text-xs font-bold text-stone-100">{opt.label}</p>
                                 {opt.id === "express" && <span className="rounded bg-[#d4a373]/20 px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-[#a06d3c]">Fastest</span>}
-                                {opt.id === "pickup" && <span className="rounded bg-[#15803d]/15 px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-[#15803d]">Eco</span>}
+                                {opt.id === "pickup" && <span className="rounded bg-[#15803d]/15 px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-[#a3c4a0]">Eco</span>}
                               </div>
                               <p className="text-[10px] text-stone-500 mt-0.5">{opt.desc} · {optEta}</p>
                             </div>
-                            <span className="text-xs font-black text-stone-900">{opt.fee === 0 || (opt.id === "standard" && freeShipMet) ? "FREE" : `₹${opt.fee}`}</span>
-                            <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-[#1f431e] bg-[#1f431e]" : "border-stone-300"}`}>
+                            <span className="text-xs font-black text-stone-100">{opt.fee === 0 || (opt.id === "standard" && freeShipMet) ? "FREE" : `₹${opt.fee}`}</span>
+                            <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-[#1f431e] bg-[#1f431e]" : "border-white/15"}`}>
                               {sel && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
                             </span>
                           </button>
@@ -758,7 +758,7 @@ export function CheckoutModal({
                             key={inst.id}
                             onClick={() => setSelectedInstruction(sel ? null : inst.id)}
                             className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-bold transition-all cursor-pointer ${
-                              sel ? "border-[#1f431e] bg-[#1f431e]/5 text-[#1f431e]" : "border-stone-200 bg-white text-stone-600 hover:border-stone-300"
+                              sel ? "border-[#1f431e] bg-[#1f431e]/5 text-[#a3c4a0]" : "border-white/10 bg-white/[0.03] text-stone-400 hover:border-white/20"
                             }`}
                           >
                             <Icon className="h-3 w-3" />
@@ -772,7 +772,7 @@ export function CheckoutModal({
                       onChange={(e) => setOrderNote(e.target.value)}
                       rows={1}
                       placeholder="Add a custom note (optional)…"
-                      className="mt-2.5 w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-[11px] font-medium text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all resize-none"
+                      className="mt-2.5 w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-[11px] font-medium text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all resize-none"
                     />
                   </SectionCard>
 
@@ -790,11 +790,11 @@ export function CheckoutModal({
                             key={t.amount}
                             onClick={() => setTip(t.amount)}
                             className={`flex flex-col items-center gap-0.5 rounded-xl border py-2.5 transition-all cursor-pointer ${
-                              sel ? "border-[#1f431e] bg-[#1f431e]/[0.04] ring-1 ring-[#1f431e]/20" : "border-stone-200 hover:border-stone-300"
+                              sel ? "border-[#1f431e] bg-[#1f431e]/[0.04] ring-1 ring-[#1f431e]/20" : "border-white/10 hover:border-white/20"
                             }`}
                           >
                             <span className="text-base leading-none">{t.emoji}</span>
-                            <span className={`text-[10px] font-bold ${sel ? "text-[#1f431e]" : "text-stone-600"}`}>{t.label}</span>
+                            <span className={`text-[10px] font-bold ${sel ? "text-[#a3c4a0]" : "text-stone-400"}`}>{t.label}</span>
                           </button>
                         );
                       })}
@@ -809,19 +809,19 @@ export function CheckoutModal({
                         const sel = payment === p.id;
                         const Icon = p.icon;
                         return (
-                          <div key={p.id} className={`rounded-xl border overflow-hidden transition-all ${sel ? "border-[#1f431e] ring-1 ring-[#1f431e]/20" : "border-stone-200"}`}>
+                          <div key={p.id} className={`rounded-xl border overflow-hidden transition-all ${sel ? "border-[#1f431e] ring-1 ring-[#1f431e]/20" : "border-white/10"}`}>
                             <button
                               onClick={() => setPayment(p.id)}
                               className="w-full flex items-center gap-3 p-3 text-left cursor-pointer"
                             >
-                              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${sel ? "bg-[#1f431e] text-white" : "bg-stone-100 text-stone-500"}`}>
+                              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${sel ? "bg-[#1f431e] text-white" : "bg-white/5 text-stone-400"}`}>
                                 <Icon className="h-4 w-4" strokeWidth={2.2} />
                               </span>
                               <div className="flex-1 min-w-0">
-                                <p className="text-xs font-bold text-stone-900">{p.label}</p>
+                                <p className="text-xs font-bold text-stone-100">{p.label}</p>
                                 <p className="text-[10px] text-stone-500 mt-0.5">{p.desc}</p>
                               </div>
-                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-[#1f431e] bg-[#1f431e]" : "border-stone-300"}`}>
+                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${sel ? "border-[#1f431e] bg-[#1f431e]" : "border-white/15"}`}>
                                 {sel && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
                               </span>
                             </button>
@@ -838,10 +838,10 @@ export function CheckoutModal({
                                   <div className="px-3 pb-3 pt-1 border-t border-stone-100 space-y-2">
                                     {p.id === "UPI" && (
                                       <>
-                                        <input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="yourname@okhdfcbank" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all" />
+                                        <input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="yourname@okhdfcbank" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all" />
                                         <div className="flex flex-wrap gap-1.5">
                                           {["GPay", "PhonePe", "Paytm", "BHIM"].map(app => (
-                                            <span key={app} className="rounded-full bg-stone-100 px-2 py-0.5 text-[9px] font-bold text-stone-500">{app}</span>
+                                            <span key={app} className="rounded-full bg-white/5 px-2 py-0.5 text-[9px] font-bold text-stone-500">{app}</span>
                                           ))}
                                         </div>
                                       </>
@@ -849,16 +849,16 @@ export function CheckoutModal({
                                     {p.id === "CARD" && (
                                       <>
                                         {cardType && (
-                                          <span className="inline-flex items-center gap-1 rounded-md bg-[#1f431e]/10 px-2 py-1 text-[9px] font-extrabold text-[#1f431e]">{cardType}</span>
+                                          <span className="inline-flex items-center gap-1 rounded-md bg-[#1f431e]/10 px-2 py-1 text-[9px] font-extrabold text-[#a3c4a0]">{cardType}</span>
                                         )}
-                                        <input value={cardNumber} onChange={(e) => setCardNumber((v => v.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())(e.target.value))} placeholder="1234 5678 9012 3456" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono tracking-wider" />
-                                        <input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Name on card" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all" />
+                                        <input value={cardNumber} onChange={(e) => setCardNumber((v => v.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim())(e.target.value))} placeholder="1234 5678 9012 3456" inputMode="numeric" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all font-mono tracking-wider" />
+                                        <input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Name on card" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all" />
                                         <div className="grid grid-cols-2 gap-2">
-                                          <input value={cardExpiry} onChange={(e) => { const d = e.target.value.replace(/\D/g, "").slice(0, 4); setCardExpiry(d.length <= 2 ? d : `${d.slice(0,2)}/${d.slice(2)}`); }} placeholder="MM/YY" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono" />
-                                          <input value={cardCvv} onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="CVV" type="password" inputMode="numeric" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all font-mono" />
+                                          <input value={cardExpiry} onChange={(e) => { const d = e.target.value.replace(/\D/g, "").slice(0, 4); setCardExpiry(d.length <= 2 ? d : `${d.slice(0,2)}/${d.slice(2)}`); }} placeholder="MM/YY" inputMode="numeric" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all font-mono" />
+                                          <input value={cardCvv} onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="CVV" type="password" inputMode="numeric" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all font-mono" />
                                         </div>
                                         <label className="flex items-center gap-2 cursor-pointer">
-                                          <span className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border ${saveCard ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+                                          <span className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border ${saveCard ? "bg-[#1f431e] border-[#1f431e]" : "border-white/15"}`}>
                                             {saveCard && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
                                           </span>
                                           <input type="checkbox" checked={saveCard} onChange={(e) => setSaveCard(e.target.checked)} className="sr-only" />
@@ -867,15 +867,15 @@ export function CheckoutModal({
                                       </>
                                     )}
                                     {p.id === "NETBANKING" && (
-                                      <select value={bank} onChange={(e) => setBank(e.target.value)} className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all cursor-pointer">
+                                      <select value={bank} onChange={(e) => setBank(e.target.value)} className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all cursor-pointer">
                                         <option value="">Choose your bank…</option>
                                         {["State Bank of India", "HDFC Bank", "ICICI Bank", "Axis Bank", "Kotak Mahindra", "Punjab National Bank", "Bank of Baroda", "Yes Bank"].map(b => <option key={b} value={b}>{b}</option>)}
                                       </select>
                                     )}
                                     {p.id === "COD" && (
                                       <div className="flex items-start gap-2 py-1">
-                                        <Banknote className="h-4 w-4 text-[#1f431e] mt-0.5 shrink-0" />
-                                        <p className="text-[10px] text-stone-600 leading-relaxed">Keep ₹{total} ready. Inspect your package before paying. COD orders may take 1 extra day for verification.</p>
+                                        <Banknote className="h-4 w-4 text-[#a3c4a0] mt-0.5 shrink-0" />
+                                        <p className="text-[10px] text-stone-400 leading-relaxed">Keep ₹{total} ready. Inspect your package before paying. COD orders may take 1 extra day for verification.</p>
                                       </div>
                                     )}
                                   </div>
@@ -891,15 +891,15 @@ export function CheckoutModal({
                   {/* 6. Gift Wrap */}
                   <SectionCard>
                     <button onClick={() => setGiftWrap(!giftWrap)} className="w-full flex items-center gap-3 text-left cursor-pointer">
-                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${giftWrap ? "bg-[#d4a373] text-white" : "bg-stone-100 text-stone-500"}`}>
+                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${giftWrap ? "bg-[#d4a373] text-white" : "bg-white/5 text-stone-400"}`}>
                         <Gift className="h-5 w-5" strokeWidth={2.2} />
                       </span>
                       <div className="flex-1">
-                        <p className="text-xs font-bold text-stone-900">Heritage Gift Wrap</p>
+                        <p className="text-xs font-bold text-stone-100">Heritage Gift Wrap</p>
                         <p className="text-[10px] text-stone-500 mt-0.5">Jute pouch with gold-foil seal</p>
                       </div>
-                      <span className="text-xs font-black text-stone-900">₹49</span>
-                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${giftWrap ? "border-[#d4a373] bg-[#d4a373]" : "border-stone-300"}`}>
+                      <span className="text-xs font-black text-stone-100">₹49</span>
+                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${giftWrap ? "border-[#d4a373] bg-[#d4a373]" : "border-white/15"}`}>
                         {giftWrap && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
                       </span>
                     </button>
@@ -908,8 +908,8 @@ export function CheckoutModal({
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: EASE.out }} className="overflow-hidden">
                           <div className="mt-3 pt-3 border-t border-stone-100">
                             <label className="block">
-                              <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block mb-1.5">Gift Message <span className="text-stone-400 normal-case font-medium">(optional · {giftMessage.length}/100)</span></span>
-                              <textarea value={giftMessage} onChange={(e) => setGiftMessage(e.target.value.slice(0, 100))} rows={2} placeholder="Happy birthday! Enjoy these heritage grains…" className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all resize-none" />
+                              <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-400 block mb-1.5">Gift Message <span className="text-stone-400 normal-case font-medium">(optional · {giftMessage.length}/100)</span></span>
+                              <textarea value={giftMessage} onChange={(e) => setGiftMessage(e.target.value.slice(0, 100))} rows={2} placeholder="Happy birthday! Enjoy these heritage grains…" className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all resize-none" />
                             </label>
                           </div>
                         </motion.div>
@@ -929,22 +929,22 @@ export function CheckoutModal({
                   </SectionCard>
 
                   {/* 8. Terms */}
-                  <label className="flex items-start gap-2.5 cursor-pointer rounded-2xl border border-stone-200 bg-white p-3.5 hover:border-stone-300 transition-colors">
-                    <span className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border-2 transition-all ${agreeTerms ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+                  <label className="flex items-start gap-2.5 cursor-pointer rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 hover:border-white/20 transition-colors">
+                    <span className={`mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border-2 transition-all ${agreeTerms ? "bg-[#1f431e] border-[#1f431e]" : "border-white/15"}`}>
                       {agreeTerms && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
                     </span>
                     <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="sr-only" />
-                    <span className="text-[11px] text-stone-600 leading-relaxed">
+                    <span className="text-[11px] text-stone-400 leading-relaxed">
                       I agree to Neer Rice Depo&apos;s{" "}
-                      <span className="font-bold text-[#1f431e] underline">Terms of Service</span> and{" "}
-                      <span className="font-bold text-[#1f431e] underline">Refund Policy</span>. Grains are non-returnable once opened unless damaged.
+                      <span className="font-bold text-[#a3c4a0] underline">Terms of Service</span> and{" "}
+                      <span className="font-bold text-[#a3c4a0] underline">Refund Policy</span>. Grains are non-returnable once opened unless damaged.
                     </span>
                   </label>
                 </div>
               </div>
 
               {/* RIGHT: sticky Bill card (Zomato-style) */}
-              <aside className="hidden lg:flex flex-col border-l border-stone-200 bg-white order-1 lg:order-2 overflow-y-auto">
+              <aside className="hidden lg:flex flex-col border-l border-white/8 bg-[#0d140d]/40 order-1 lg:order-2 overflow-y-auto">
                 <BillCard
                   items={items} subtotal={subtotal} discount={discount} deliveryFee={deliveryFee}
                   giftWrapFee={giftWrapFee} tipFee={tipFee} orderBumpFee={orderBumpFee} total={total}
@@ -961,14 +961,14 @@ export function CheckoutModal({
             </div>
 
             {/* ===== Sticky bottom pay bar (Zomato-style) ===== */}
-            <div className="border-t border-stone-200 bg-white px-4 sm:px-6 py-3.5 shrink-0">
+            <div className="border-t border-white/8 bg-[#0d140d]/80 backdrop-blur-xl px-4 sm:px-6 py-3.5 shrink-0">
               <div className="flex items-center gap-3 max-w-2xl mx-auto">
                 <div className="flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">To Pay</span>
-                    {savings > 0 && <span className="text-[10px] font-bold text-[#15803d]">Saving ₹{savings}</span>}
+                    {savings > 0 && <span className="text-[10px] font-bold text-[#a3c4a0]">Saving ₹{savings}</span>}
                   </div>
-                  <p className="text-xl font-black font-serif text-stone-900 leading-tight">₹{total}</p>
+                  <p className="text-xl font-black font-serif text-stone-100 leading-tight">₹{total}</p>
                 </div>
                 <motion.button
                   whileHover={canPlaceOrder ? hoverLift : undefined}
@@ -1000,7 +1000,7 @@ export function CheckoutModal({
 /* ============ Section Card (Zomato-style white card) ============ */
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm shadow-stone-200/50">
+    <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 backdrop-blur-xl">
       {children}
     </div>
   );
@@ -1009,8 +1009,8 @@ function SectionCard({ children }: { children: React.ReactNode }) {
 function SectionTitle({ icon: Icon, text }: { icon: typeof Mail; text: string }) {
   return (
     <div className="flex items-center gap-2">
-      <Icon className="h-4 w-4 text-[#1f431e]" strokeWidth={2.3} />
-      <h3 className="text-sm font-bold text-stone-900">{text}</h3>
+      <Icon className="h-4 w-4 text-[#a3c4a0]" strokeWidth={2.3} />
+      <h3 className="text-sm font-bold text-stone-100">{text}</h3>
     </div>
   );
 }
@@ -1020,12 +1020,12 @@ function ToggleRow({
 }: { checked: boolean; onChange: (b: boolean) => void; label: string; subtext?: string }) {
   return (
     <label className="flex items-center gap-2.5 cursor-pointer">
-      <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${checked ? "bg-[#1f431e] border-[#1f431e]" : "border-stone-300"}`}>
+      <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${checked ? "bg-[#1f431e] border-[#1f431e]" : "border-white/15"}`}>
         {checked && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
       </span>
       <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only" />
       <div>
-        <span className="text-[11px] font-semibold text-stone-700">{label}</span>
+        <span className="text-[11px] font-semibold text-stone-300">{label}</span>
         {subtext && <span className="text-[10px] text-stone-400 ml-1">· {subtext}</span>}
       </div>
     </label>
@@ -1055,16 +1055,16 @@ function BillCard({
   return (
     <div className="flex flex-col px-5 py-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-serif text-base font-bold text-stone-900">Bill Details</h3>
-        <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-bold text-stone-500">{count} {count === 1 ? "item" : "items"}</span>
+        <h3 className="font-serif text-base font-bold text-stone-100">Bill Details</h3>
+        <span className="rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-bold text-stone-400">{count} {count === 1 ? "item" : "items"}</span>
       </div>
 
       {/* Free shipping progress */}
-      <div className={`rounded-xl p-2.5 mb-3 ${freeShipMet ? "bg-[#15803d]/10" : "bg-[#d4a373]/10"}`}>
+      <div className={`rounded-xl p-2.5 mb-3 ${freeShipMet ? "bg-[#1f431e]/12" : "bg-[#d4a373]/10"}`}>
         {freeShipMet ? (
           <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="h-3.5 w-3.5 text-[#15803d] shrink-0" />
-            <p className="text-[10px] font-bold text-[#15803d]">FREE delivery unlocked!</p>
+            <CheckCircle2 className="h-3.5 w-3.5 text-[#a3c4a0] shrink-0" />
+            <p className="text-[10px] font-bold text-[#a3c4a0]">FREE delivery unlocked!</p>
           </div>
         ) : (
           <div>
@@ -1079,7 +1079,7 @@ function BillCard({
       {/* Items list — collapsible */}
       <div className="mb-3">
         <button onClick={() => setItemsExpanded(!itemsExpanded)} className="w-full flex items-center justify-between mb-2 cursor-pointer">
-          <span className="text-[11px] font-bold text-stone-700">{itemsExpanded ? "Hide items" : `Show ${count} items`}</span>
+          <span className="text-[11px] font-bold text-stone-300">{itemsExpanded ? "Hide items" : `Show ${count} items`}</span>
           <motion.span animate={{ rotate: itemsExpanded ? 180 : 0 }} transition={SPRING.snappy}>
             <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
           </motion.span>
@@ -1091,30 +1091,30 @@ function BillCard({
                 {items.map((i) => (
                   <div key={`${i.productId}-${i.selectedWeightKg}`} className="flex items-center gap-2.5">
                     {/* Organic marker — Zomato veg marker style */}
-                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.03]">
                       <SmartImage src={i.product.image} alt={i.product.name} className="h-full w-full" />
                       <span className="absolute -top-1 -right-1 z-10 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-[#1f431e] px-1 text-[9px] font-black text-white">{i.quantity}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         {/* Organic green square marker (like Zomato veg marker) */}
-                        <span className="flex h-3 w-3 shrink-0 items-center justify-center border-[1.5px] border-[#15803d] rounded-[2px]">
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#15803d]" />
+                        <span className="flex h-3 w-3 shrink-0 items-center justify-center border-[1.5px] border-[#d4a373] rounded-[2px]">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#d4a373]" />
                         </span>
-                        <p className="text-[11px] font-bold text-stone-900 truncate">{i.product.name}</p>
+                        <p className="text-[11px] font-bold text-stone-100 truncate">{i.product.name}</p>
                       </div>
                       <p className="text-[9px] text-stone-500">{i.selectedWeightKg}kg</p>
                       <div className="flex items-center gap-1 mt-0.5">
-                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer" aria-label="Decrease">
+                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-white/10 text-stone-500 hover:border-[#d4a373] hover:text-[#a3c4a0] transition-colors cursor-pointer" aria-label="Decrease">
                           <Minus className="h-2 w-2" strokeWidth={3} />
                         </button>
-                        <span className="text-[9px] font-bold text-stone-700 min-w-[12px] text-center">{i.quantity}</span>
-                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] transition-colors cursor-pointer" aria-label="Increase">
+                        <span className="text-[9px] font-bold text-stone-300 min-w-[12px] text-center">{i.quantity}</span>
+                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-white/10 text-stone-500 hover:border-[#d4a373] hover:text-[#a3c4a0] transition-colors cursor-pointer" aria-label="Increase">
                           <Plus className="h-2 w-2" strokeWidth={3} />
                         </button>
                       </div>
                     </div>
-                    <p className="text-[11px] font-black text-stone-900 shrink-0">₹{i.totalPrice}</p>
+                    <p className="text-[11px] font-black text-stone-100 shrink-0">₹{i.totalPrice}</p>
                   </div>
                 ))}
               </div>
@@ -1132,7 +1132,7 @@ function BillCard({
                 <Plus className="h-4 w-4" strokeWidth={2.5} />
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-stone-900 truncate">{ORDER_BUMP.name}</p>
+                <p className="text-[10px] font-bold text-stone-100 truncate">{ORDER_BUMP.name}</p>
                 <p className="text-[9px] text-stone-500">{ORDER_BUMP.weight} · {ORDER_BUMP.desc}</p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="text-[11px] font-black text-[#a06d3c]">₹{ORDER_BUMP.price}</span>
@@ -1150,19 +1150,19 @@ function BillCard({
         {appliedCoupon ? (
           <div className="flex items-center justify-between rounded-xl border border-[#15803d]/30 bg-[#15803d]/5 px-3 py-2.5">
             <div className="flex items-center gap-2">
-              <Tag className="h-3.5 w-3.5 text-[#15803d]" />
+              <Tag className="h-3.5 w-3.5 text-[#a3c4a0]" />
               <div>
-                <p className="text-[11px] font-bold text-[#15803d]">{appliedCoupon} applied</p>
-                <p className="text-[9px] text-[#15803d]/70">You saved ₹{discount}</p>
+                <p className="text-[11px] font-bold text-[#a3c4a0]">{appliedCoupon} applied</p>
+                <p className="text-[9px] text-[#a3c4a0]/70">You saved ₹{discount}</p>
               </div>
             </div>
             <button onClick={onRemove} className="text-[10px] font-bold text-stone-400 hover:text-red-500 cursor-pointer">Remove</button>
           </div>
         ) : (
           <>
-            <button onClick={() => setShowOffers(!showOffers)} className="w-full flex items-center gap-2 rounded-xl border border-dashed border-stone-300 bg-stone-50 px-3 py-2.5 cursor-pointer hover:border-[#1f431e] transition-colors">
-              <Tag className="h-4 w-4 text-[#1f431e]" />
-              <span className="flex-1 text-left text-[11px] font-bold text-stone-700">{couponInput || "Apply coupon / View offers"}</span>
+            <button onClick={() => setShowOffers(!showOffers)} className="w-full flex items-center gap-2 rounded-xl border border-dashed border-white/15 bg-white/[0.03] px-3 py-2.5 cursor-pointer hover:border-[#d4a373] transition-colors">
+              <Tag className="h-4 w-4 text-[#a3c4a0]" />
+              <span className="flex-1 text-left text-[11px] font-bold text-stone-300">{couponInput || "Apply coupon / View offers"}</span>
               <ChevronRightIcon className="h-3.5 w-3.5 text-stone-400" />
             </button>
             <AnimatePresence initial={false}>
@@ -1171,19 +1171,19 @@ function BillCard({
                   <div className="mt-2 space-y-1.5">
                     {/* Manual coupon input */}
                     <div className="flex gap-1.5">
-                      <input value={couponInput} onChange={(e) => setCouponInput(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && onApply()} placeholder="ENTER CODE" className="flex-1 px-2.5 py-2 bg-stone-50 border border-stone-200 rounded-lg text-[10px] font-bold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30 transition-all tracking-wider" />
+                      <input value={couponInput} onChange={(e) => setCouponInput(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && onApply()} placeholder="ENTER CODE" className="flex-1 px-2.5 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40 transition-all tracking-wider" />
                       <button onClick={onApply} className="rounded-lg bg-[#1f431e] px-3 py-2 text-[10px] font-bold text-white hover:bg-[#16321a] transition-colors cursor-pointer">Apply</button>
                     </div>
                     {/* Available offers */}
                     {COUPON_HINTS.map((c) => {
                       const eligible = subtotal >= c.minOrder;
                       return (
-                        <button key={c.code} onClick={() => eligible && onApplyCode(c.code)} disabled={!eligible} className={`w-full flex items-center gap-2.5 rounded-lg border p-2 text-left transition-all ${eligible ? "border-stone-200 hover:border-[#1f431e]/40 cursor-pointer" : "border-stone-100 opacity-50 cursor-not-allowed"}`}>
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#15803d]/10 text-[#15803d]">
+                        <button key={c.code} onClick={() => eligible && onApplyCode(c.code)} disabled={!eligible} className={`w-full flex items-center gap-2.5 rounded-lg border p-2 text-left transition-all ${eligible ? "border-white/10 hover:border-[#d4a373]/40 cursor-pointer" : "border-stone-100 opacity-50 cursor-not-allowed"}`}>
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#1f431e]/12 text-[#a3c4a0]">
                             <Sparkles className="h-3 w-3" />
                           </span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-bold text-stone-900">{c.code} · {c.off}</p>
+                            <p className="text-[10px] font-bold text-stone-100">{c.code} · {c.off}</p>
                             <p className="text-[9px] text-stone-500">{c.desc}</p>
                           </div>
                           {!eligible && <span className="text-[8px] font-bold text-stone-400">Min ₹{c.minOrder}</span>}
@@ -1199,7 +1199,7 @@ function BillCard({
       </div>
 
       {/* Bill breakdown — Zomato-style right-aligned */}
-      <div className="space-y-1.5 py-3 border-t border-dashed border-stone-200">
+      <div className="space-y-1.5 py-3 border-t border-dashed border-white/10">
         <BillRow label="Item Total" value={`₹${subtotal}`} />
         {discount > 0 && <BillRow label="Discount" value={`−₹${discount}`} green />}
         <BillRow label="Delivery Fee" value={deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`} green={deliveryFee === 0} />
@@ -1209,16 +1209,16 @@ function BillCard({
       </div>
 
       {/* To Pay — bold */}
-      <div className="flex items-center justify-between py-3 border-t border-stone-200">
-        <span className="text-sm font-bold text-stone-900">To Pay</span>
-        <span className="text-xl font-black font-serif text-stone-900">₹{total}</span>
+      <div className="flex items-center justify-between py-3 border-t border-white/10">
+        <span className="text-sm font-bold text-stone-100">To Pay</span>
+        <span className="text-xl font-black font-serif text-stone-100">₹{total}</span>
       </div>
 
       {/* Savings + Loyalty */}
       {savings > 0 && (
-        <div className="flex items-center justify-center gap-1.5 rounded-lg bg-[#15803d]/10 py-1.5 mb-2">
-          <Sparkles className="h-3 w-3 text-[#15803d]" />
-          <p className="text-[10px] font-bold text-[#15803d]">You save ₹{savings} on this order</p>
+        <div className="flex items-center justify-center gap-1.5 rounded-lg bg-[#1f431e]/12 py-1.5 mb-2">
+          <Sparkles className="h-3 w-3 text-[#a3c4a0]" />
+          <p className="text-[10px] font-bold text-[#a3c4a0]">You save ₹{savings} on this order</p>
         </div>
       )}
       <div className="flex items-center justify-center gap-1.5 rounded-lg border border-[#d4a373]/30 bg-[#d4a373]/5 py-1.5">
@@ -1227,11 +1227,11 @@ function BillCard({
       </div>
 
       {/* ETA */}
-      <div className="mt-2.5 flex items-center gap-2.5 rounded-lg bg-stone-50 p-2.5">
-        <Truck className="h-3.5 w-3.5 text-[#1f431e] shrink-0" />
+      <div className="mt-2.5 flex items-center gap-2.5 rounded-lg bg-white/[0.03] p-2.5">
+        <Truck className="h-3.5 w-3.5 text-[#a3c4a0] shrink-0" />
         <div>
           <p className="text-[9px] font-bold uppercase tracking-wider text-stone-500">Arrives by</p>
-          <p className="text-[11px] font-bold text-stone-900">{eta}</p>
+          <p className="text-[11px] font-bold text-stone-100">{eta}</p>
         </div>
       </div>
     </div>
@@ -1242,7 +1242,7 @@ function BillRow({ label, value, green }: { label: string; value: string; green?
   return (
     <div className="flex items-center justify-between">
       <span className="text-[11px] text-stone-500">{label}</span>
-      <span className={`text-[11px] font-bold ${green ? "text-[#15803d]" : "text-stone-900"}`}>{value}</span>
+      <span className={`text-[11px] font-bold ${green ? "text-[#a3c4a0]" : "text-stone-100"}`}>{value}</span>
     </div>
   );
 }
@@ -1268,20 +1268,20 @@ function MobileBillSummary({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="lg:hidden rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden">
+    <div className="lg:hidden rounded-2xl border border-white/8 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
       {/* Collapsed header — always visible */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-3 cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <Package className="h-4 w-4 text-[#1f431e]" strokeWidth={2.2} />
+          <Package className="h-4 w-4 text-[#a3c4a0]" strokeWidth={2.2} />
           <div className="text-left">
             <p className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
               {count} {count === 1 ? "item" : "items"}
-              {savings > 0 && <span className="text-[#15803d]"> · Save ₹{savings}</span>}
+              {savings > 0 && <span className="text-[#a3c4a0]"> · Save ₹{savings}</span>}
             </p>
-            <p className="text-sm font-black font-serif text-stone-900">₹{total}</p>
+            <p className="text-sm font-black font-serif text-stone-100">₹{total}</p>
           </div>
         </div>
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={SPRING.snappy}>
@@ -1300,9 +1300,9 @@ function MobileBillSummary({
           >
             <div className="px-3 pb-3 border-t border-stone-100">
               {/* Free ship progress */}
-              <div className={`rounded-lg p-2 my-2.5 ${freeShipMet ? "bg-[#15803d]/10" : "bg-[#d4a373]/10"}`}>
+              <div className={`rounded-lg p-2 my-2.5 ${freeShipMet ? "bg-[#1f431e]/12" : "bg-[#d4a373]/10"}`}>
                 {freeShipMet ? (
-                  <p className="text-[10px] font-bold text-[#15803d] flex items-center gap-1">
+                  <p className="text-[10px] font-bold text-[#a3c4a0] flex items-center gap-1">
                     <CheckCircle2 className="h-3 w-3" /> FREE delivery unlocked!
                   </p>
                 ) : (
@@ -1314,24 +1314,24 @@ function MobileBillSummary({
               <div className="space-y-2 max-h-[160px] overflow-y-auto">
                 {items.map((i) => (
                   <div key={`${i.productId}-${i.selectedWeightKg}`} className="flex items-center gap-2">
-                    <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+                    <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.03]">
                       <SmartImage src={i.product.image} alt={i.product.name} className="h-full w-full" />
                       <span className="absolute -top-1 -right-1 z-10 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#1f431e] px-1 text-[8px] font-black text-white">{i.quantity}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1">
-                        <span className="flex h-2.5 w-2.5 shrink-0 items-center justify-center border-[1.5px] border-[#15803d] rounded-[2px]">
-                          <span className="h-1 w-1 rounded-full bg-[#15803d]" />
+                        <span className="flex h-2.5 w-2.5 shrink-0 items-center justify-center border-[1.5px] border-[#d4a373] rounded-[2px]">
+                          <span className="h-1 w-1 rounded-full bg-[#d4a373]" />
                         </span>
-                        <p className="text-[10px] font-bold text-stone-900 truncate">{i.product.name}</p>
+                        <p className="text-[10px] font-bold text-stone-100 truncate">{i.product.name}</p>
                       </div>
                       <div className="flex items-center gap-1 mt-0.5">
-                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] cursor-pointer"><Minus className="h-2 w-2" strokeWidth={3} /></button>
-                        <span className="text-[9px] font-bold text-stone-700 min-w-[10px] text-center">{i.quantity}</span>
-                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-stone-200 text-stone-500 hover:border-[#1f431e] hover:text-[#1f431e] cursor-pointer"><Plus className="h-2 w-2" strokeWidth={3} /></button>
+                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity - 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-white/10 text-stone-500 hover:border-[#d4a373] hover:text-[#a3c4a0] cursor-pointer"><Minus className="h-2 w-2" strokeWidth={3} /></button>
+                        <span className="text-[9px] font-bold text-stone-300 min-w-[10px] text-center">{i.quantity}</span>
+                        <button onClick={() => onUpdateQty(i.productId, i.selectedWeightKg, i.quantity + 1)} className="flex h-4 w-4 items-center justify-center rounded-full border border-white/10 text-stone-500 hover:border-[#d4a373] hover:text-[#a3c4a0] cursor-pointer"><Plus className="h-2 w-2" strokeWidth={3} /></button>
                       </div>
                     </div>
-                    <p className="text-[10px] font-black text-stone-900">₹{i.totalPrice}</p>
+                    <p className="text-[10px] font-black text-stone-100">₹{i.totalPrice}</p>
                   </div>
                 ))}
               </div>
@@ -1347,7 +1347,7 @@ function MobileBillSummary({
                     <div className="flex items-center gap-2 rounded-lg border border-dashed border-[#d4a373] bg-[#d4a373]/5 p-2 text-left cursor-pointer">
                       <Plus className="h-3.5 w-3.5 text-[#d4a373] shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[9px] font-bold text-stone-900 truncate">{ORDER_BUMP.name}</p>
+                        <p className="text-[9px] font-bold text-stone-100 truncate">{ORDER_BUMP.name}</p>
                         <p className="text-[9px]"><span className="font-black text-[#a06d3c]">₹{ORDER_BUMP.price}</span> <span className="text-stone-400 line-through">₹{ORDER_BUMP.originalPrice}</span></p>
                       </div>
                     </div>
@@ -1360,16 +1360,16 @@ function MobileBillSummary({
                 {appliedCoupon ? (
                   <div className="flex items-center justify-between rounded-lg border border-[#15803d]/30 bg-[#15803d]/5 px-2.5 py-2">
                     <div className="flex items-center gap-1.5">
-                      <Tag className="h-3 w-3 text-[#15803d]" />
-                      <span className="text-[10px] font-bold text-[#15803d]">{appliedCoupon} · −₹{discount}</span>
+                      <Tag className="h-3 w-3 text-[#a3c4a0]" />
+                      <span className="text-[10px] font-bold text-[#a3c4a0]">{appliedCoupon} · −₹{discount}</span>
                     </div>
                     <button onClick={onRemove} className="text-[9px] font-bold text-stone-400 hover:text-red-500 cursor-pointer">Remove</button>
                   </div>
                 ) : (
                   <>
-                    <button onClick={() => setShowOffers(!showOffers)} className="w-full flex items-center gap-1.5 rounded-lg border border-dashed border-stone-300 bg-stone-50 px-2.5 py-2 cursor-pointer hover:border-[#1f431e]">
-                      <Tag className="h-3.5 w-3.5 text-[#1f431e]" />
-                      <span className="flex-1 text-left text-[10px] font-bold text-stone-700">Apply coupon / View offers</span>
+                    <button onClick={() => setShowOffers(!showOffers)} className="w-full flex items-center gap-1.5 rounded-lg border border-dashed border-white/15 bg-white/[0.03] px-2.5 py-2 cursor-pointer hover:border-[#d4a373]">
+                      <Tag className="h-3.5 w-3.5 text-[#a3c4a0]" />
+                      <span className="flex-1 text-left text-[10px] font-bold text-stone-300">Apply coupon / View offers</span>
                       <ChevronRightIcon className="h-3 w-3 text-stone-400" />
                     </button>
                     <AnimatePresence initial={false}>
@@ -1377,16 +1377,16 @@ function MobileBillSummary({
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
                           <div className="mt-1.5 space-y-1">
                             <div className="flex gap-1">
-                              <input value={couponInput} onChange={(e) => setCouponInput(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && onApply()} placeholder="ENTER CODE" className="flex-1 px-2 py-1.5 bg-stone-50 border border-stone-200 rounded-md text-[10px] font-bold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#1f431e]/20 transition-all tracking-wider" />
+                              <input value={couponInput} onChange={(e) => setCouponInput(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && onApply()} placeholder="ENTER CODE" className="flex-1 px-2 py-1.5 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-[#1f431e]/20 transition-all tracking-wider" />
                               <button onClick={onApply} className="rounded-md bg-[#1f431e] px-2.5 py-1.5 text-[10px] font-bold text-white cursor-pointer">Apply</button>
                             </div>
                             {COUPON_HINTS.map((c) => {
                               const eligible = subtotal >= c.minOrder;
                               return (
-                                <button key={c.code} onClick={() => eligible && onApplyCode(c.code)} disabled={!eligible} className={`w-full flex items-center gap-1.5 rounded-md border p-1.5 text-left ${eligible ? "border-stone-200 hover:border-[#1f431e]/40 cursor-pointer" : "border-stone-100 opacity-50 cursor-not-allowed"}`}>
-                                  <Sparkles className="h-2.5 w-2.5 text-[#15803d] shrink-0" />
+                                <button key={c.code} onClick={() => eligible && onApplyCode(c.code)} disabled={!eligible} className={`w-full flex items-center gap-1.5 rounded-md border p-1.5 text-left ${eligible ? "border-white/10 hover:border-[#d4a373]/40 cursor-pointer" : "border-stone-100 opacity-50 cursor-not-allowed"}`}>
+                                  <Sparkles className="h-2.5 w-2.5 text-[#a3c4a0] shrink-0" />
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-[9px] font-bold text-stone-900">{c.code} · {c.off}</p>
+                                    <p className="text-[9px] font-bold text-stone-100">{c.code} · {c.off}</p>
                                     <p className="text-[8px] text-stone-500">{c.desc}</p>
                                   </div>
                                 </button>
@@ -1401,7 +1401,7 @@ function MobileBillSummary({
               </div>
 
               {/* Breakdown */}
-              <div className="mt-2.5 pt-2.5 border-t border-dashed border-stone-200 space-y-1">
+              <div className="mt-2.5 pt-2.5 border-t border-dashed border-white/10 space-y-1">
                 <BillRow label="Item Total" value={`₹${subtotal}`} />
                 {discount > 0 && <BillRow label="Discount" value={`−₹${discount}`} green />}
                 <BillRow label="Delivery" value={deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`} green={deliveryFee === 0} />
@@ -1409,12 +1409,12 @@ function MobileBillSummary({
                 {tipFee > 0 && <BillRow label="Tip" value={`₹${tipFee}`} />}
                 {orderBumpFee > 0 && <BillRow label="Sample Pack" value={`₹${orderBumpFee}`} />}
               </div>
-              <div className="flex items-center justify-between pt-2 mt-1 border-t border-stone-200">
-                <span className="text-xs font-bold text-stone-900">To Pay</span>
-                <span className="text-base font-black font-serif text-stone-900">₹{total}</span>
+              <div className="flex items-center justify-between pt-2 mt-1 border-t border-white/10">
+                <span className="text-xs font-bold text-stone-100">To Pay</span>
+                <span className="text-base font-black font-serif text-stone-100">₹{total}</span>
               </div>
               {savings > 0 && (
-                <p className="text-center text-[10px] font-bold text-[#15803d] mt-1.5">You save ₹{savings}</p>
+                <p className="text-center text-[10px] font-bold text-[#a3c4a0] mt-1.5">You save ₹{savings}</p>
               )}
               <div className="flex items-center justify-center gap-1 mt-1.5">
                 <Star className="h-2.5 w-2.5 text-[#d4a373]" />
@@ -1433,9 +1433,9 @@ function EmptyCartState({ onClose }: { onClose: () => void }) {
   return (
     <div className="px-6 py-16 text-center">
       <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={SPRING.gentle} className="w-20 h-20 rounded-full bg-[#1f431e]/10 flex items-center justify-center mx-auto mb-5">
-        <ShoppingBag className="h-9 w-9 text-[#1f431e]" strokeWidth={1.8} />
+        <ShoppingBag className="h-9 w-9 text-[#a3c4a0]" strokeWidth={1.8} />
       </motion.div>
-      <h3 className="text-xl font-serif font-bold text-stone-900">Your cart is empty</h3>
+      <h3 className="text-xl font-serif font-bold text-stone-100">Your cart is empty</h3>
       <p className="text-sm text-stone-500 mt-2 max-w-xs mx-auto">Add some heritage grains to your basket before checking out.</p>
       <button onClick={onClose} className="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 bg-[#1f431e] hover:bg-[#16321a] text-white text-xs font-bold transition-colors cursor-pointer">
         <ArrowLeft className="h-4 w-4" /> Browse Grains
@@ -1459,24 +1459,24 @@ function SuccessScreen({
   const payLabel = PAYMENTS.find(p => p.id === paymentMethod)?.label || paymentMethod;
 
   return (
-    <div className="overflow-y-auto max-h-[94vh] bg-stone-50">
+    <div className="overflow-y-auto max-h-[94vh] bg-white/[0.03]">
       <div className="px-6 sm:px-10 py-8 sm:py-10 text-center max-w-lg mx-auto">
         <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 200, damping: 14 }} className="w-20 h-20 rounded-full bg-[#1f431e]/10 flex items-center justify-center mx-auto">
-          <CheckCircle2 className="w-11 h-11 text-[#1f431e]" strokeWidth={2.2} />
+          <CheckCircle2 className="w-11 h-11 text-[#a3c4a0]" strokeWidth={2.2} />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5, ease: EASE.out }} className="mt-5">
-          <h3 className="text-2xl font-serif font-bold text-stone-900">Order Confirmed!</h3>
+          <h3 className="text-2xl font-serif font-bold text-stone-100">Order Confirmed!</h3>
           <p className="text-sm text-stone-500 mt-1.5 max-w-sm mx-auto">Thank you for choosing heritage grains. A confirmation has been sent to your email{paymentMethod === "COD" ? "" : " and WhatsApp"}.</p>
         </motion.div>
 
         {/* Tracking ID card */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5, ease: EASE.out }} className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-stone-200 bg-white px-5 py-3.5 shadow-sm">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5, ease: EASE.out }} className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 backdrop-blur-xl">
           <div className="text-left">
             <p className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500">Tracking ID</p>
-            <p className="text-lg font-black font-mono text-[#1f431e] tracking-wider">{trackingId}</p>
+            <p className="text-lg font-black font-mono text-[#a3c4a0] tracking-wider">{trackingId}</p>
           </div>
-          <button onClick={onCopy} className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1f431e]/10 hover:bg-[#1f431e]/20 text-[#1f431e] transition-colors cursor-pointer" aria-label="Copy tracking ID">
+          <button onClick={onCopy} className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1f431e]/10 hover:bg-[#1f431e]/20 text-[#a3c4a0] transition-colors cursor-pointer" aria-label="Copy tracking ID">
             {copied ? <Check className="h-4 w-4" strokeWidth={2.5} /> : <Copy className="h-4 w-4" strokeWidth={2.2} />}
           </button>
         </motion.div>
@@ -1484,15 +1484,15 @@ function SuccessScreen({
         {/* Total + payment + ETA */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5, ease: EASE.out }} className="mt-6 flex items-center justify-center gap-4 sm:gap-6 text-xs flex-wrap">
           <div className="flex items-center gap-1.5">
-            <Wallet className="h-3.5 w-3.5 text-[#1f431e]" />
+            <Wallet className="h-3.5 w-3.5 text-[#a3c4a0]" />
             <span className="text-stone-400">Paid</span>
-            <span className="font-black text-stone-900">₹{total}</span>
+            <span className="font-black text-stone-100">₹{total}</span>
             <span className="text-stone-400">· {payLabel}</span>
           </div>
           <span className="hidden sm:inline h-3 w-px bg-stone-300" />
           <div className="flex items-center gap-1.5">
-            <Truck className="h-3.5 w-3.5 text-[#1f431e]" />
-            <span className="font-bold text-stone-700">Arrives {eta}</span>
+            <Truck className="h-3.5 w-3.5 text-[#a3c4a0]" />
+            <span className="font-bold text-stone-300">Arrives {eta}</span>
           </div>
         </motion.div>
 
@@ -1507,11 +1507,11 @@ function SuccessScreen({
           {steps.map((s, i) => {
             const Icon = s.icon;
             return (
-              <div key={i} className="rounded-2xl border border-stone-200 bg-white p-3.5 text-center shadow-sm">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#1f431e]/10 text-[#1f431e] mb-2">
+              <div key={i} className="rounded-2xl border border-white/8 bg-white/[0.03] p-3.5 text-center">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#d4a373]/12 text-[#d4a373] mb-2">
                   <Icon className="h-4 w-4" strokeWidth={2.2} />
                 </span>
-                <p className="text-[11px] font-bold text-stone-900">{s.title}</p>
+                <p className="text-[11px] font-bold text-stone-100">{s.title}</p>
                 <p className="text-[10px] text-stone-500 mt-0.5 leading-tight">{s.desc}</p>
               </div>
             );
@@ -1523,7 +1523,7 @@ function SuccessScreen({
           <motion.button whileHover={hoverLift} whileTap={tapPress} onClick={onTrack} className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1f431e] hover:bg-[#16321a] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-lg shadow-[#1f431e]/20">
             <Package className="w-4 h-4" /> Track My Order
           </motion.button>
-          <motion.button whileHover={hoverLift} whileTap={tapPress} onClick={onContinue} className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-stone-200 text-stone-700 rounded-xl text-xs font-bold hover:bg-stone-50 transition-colors cursor-pointer">
+          <motion.button whileHover={hoverLift} whileTap={tapPress} onClick={onContinue} className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-white/10 text-stone-300 rounded-xl text-xs font-bold hover:bg-white/[0.03] transition-colors cursor-pointer">
             Continue Shopping
           </motion.button>
         </motion.div>
@@ -1542,17 +1542,17 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-500 block mb-1 flex items-center gap-1.5">
+      <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone-400 block mb-1 flex items-center gap-1.5">
         {label}
-        {valid && <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#15803d]"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>}
+        {valid && <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#a3c4a0]"><Check className="h-2.5 w-2.5 text-white" strokeWidth={3} /></span>}
       </span>
       <div className="relative flex items-center">
-        {prefix && <span className="absolute left-3 text-xs font-bold text-stone-400 pointer-events-none">{prefix}</span>}
-        {Icon && <Icon className={`absolute ${prefix ? "left-11" : "left-3"} top-1/2 -translate-y-1/2 h-3.5 w-3.5 ${error ? "text-red-400" : valid ? "text-[#15803d]" : "text-stone-400"}`} strokeWidth={2.2} />}
-        <input type={type} value={value} onChange={onChange} placeholder={placeholder} className={`w-full ${prefix ? "pl-16" : Icon ? "pl-9" : "pl-3.5"} pr-3.5 py-2.5 bg-stone-50 border rounded-lg text-xs font-semibold text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 transition-all ${error ? "border-red-300 focus:ring-red-400/20 focus:border-red-400" : valid ? "border-[#15803d]/40 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/40" : "border-stone-200 focus:ring-[#1f431e]/15 focus:border-[#1f431e]/30"}`} />
+        {prefix && <span className="absolute left-3 text-xs font-bold text-stone-500 pointer-events-none">{prefix}</span>}
+        {Icon && <Icon className={`absolute ${prefix ? "left-11" : "left-3"} top-1/2 -translate-y-1/2 h-3.5 w-3.5 ${error ? "text-red-400" : valid ? "text-[#a3c4a0]" : "text-stone-400"}`} strokeWidth={2.2} />}
+        <input type={type} value={value} onChange={onChange} placeholder={placeholder} className={`w-full ${prefix ? "pl-16" : Icon ? "pl-9" : "pl-3.5"} pr-3.5 py-2.5 bg-white/[0.03] border rounded-lg text-xs font-semibold text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 transition-all ${error ? "border-red-300 focus:ring-red-500/20 focus:border-red-500" : valid ? "border-[#a3c4a0]/40 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40" : "border-white/10 focus:ring-[#d4a373]/20 focus:border-[#d4a373]/40"}`} />
       </div>
-      {error && errorText && <span className="mt-0.5 block text-[10px] font-semibold text-red-500">{errorText}</span>}
-      {hint && !error && <span className="mt-0.5 block text-[10px] font-semibold text-[#15803d]">{hint}</span>}
+      {error && errorText && <span className="mt-0.5 block text-[10px] font-semibold text-red-400">{errorText}</span>}
+      {hint && !error && <span className="mt-0.5 block text-[10px] font-semibold text-[#a3c4a0]">{hint}</span>}
     </label>
   );
 }
