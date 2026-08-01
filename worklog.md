@@ -1721,3 +1721,61 @@ Stage Summary:
 - Mobile navbar pill bigger: 64px height, 44px touch targets, 36px logo, blur(44px) glass.
 - Logo text: "Neer Rice Depo" (full brand name) on mobile.
 - Lint clean, full checkout flow verified end-to-end.
+
+---
+Task ID: terms-policy-modal-fix
+Agent: main (Z.ai Code)
+Task: Fix Terms of Service / Refund Policy box — clicking showed nothing useful (toast was too subtle).
+
+Work Log:
+- USER ISSUE: The Terms & Conditions box had "Terms of Service" and "Refund Policy" links that, when clicked, only showed a fleeting toast that was easy to miss — felt like "nothing happens" or "takes to another page".
+- ROOT CAUSE: Previous fix used toast.info() which auto-dismisses in ~3s and is easy to miss on mobile. Users expect a proper policy document to read.
+- FIX: Replaced the toast with a proper PolicyModal component:
+  - Added `policyModal` state (null | "terms" | "refund")
+  - "Terms of Service" button → setPolicyModal("terms") → opens full Terms modal
+  - "Refund Policy" button → setPolicyModal("refund") → opens full Refund modal
+  - Both buttons use e.preventDefault() + e.stopPropagation() so clicking them does NOT toggle the checkbox
+  - Modal renders as a nested overlay (absolute inset-0 z-50) inside the DialogContent
+
+- POLICY MODAL CONTENT (7 sections each):
+  Terms of Service:
+    1. Orders & Acceptance — order confirmation, pricing in ₹
+    2. Product Quality — organic sourcing, vacuum-sealed, pesticide-free guarantee
+    3. Packaging & Shelf Life — 6-month freshness, harvest/mill/best-before dates
+    4. Delivery — standard 4 days, express 2 days, farm pickup, liability limits
+    5. Pricing & Payment — final prices, accepted methods, 256-bit SSL
+    6. Privacy — data used for fulfilment only, no third-party sharing
+    7. Liability — limited to purchase price, non-returnable once opened
+
+  Refund & Return Policy:
+    1. 7-Day Return Window — damaged/incorrect items, unopened condition
+    2. How to Initiate a Return — email/call with tracking ID + photo
+    3. Refund Processing — 5-7 business days, UPI/card fastest
+    4. Non-Returnable Items — opened packs (food safety), gift sets as complete
+    5. Damaged at Delivery — refuse or notify within 24h, replacement or refund
+    6. Order Cancellation — free before dispatch (4h window)
+    7. Quality Guarantee — lab-tested, reach out if unsatisfied
+
+- MODAL DESIGN:
+  - Dark premium theme (bg #0a0f0a, border white/10) — matches app
+  - Header: icon badge (ShieldCheck for Terms, RefreshCw for Refund) + title + close X
+  - Body: scrollable (max-h-[85vh]), gold section headings, stone-400 body text
+  - "Need help?" footer card: care@neerricedepo.in + +91 98230 11022
+  - Bottom: "Got it" full-width close button
+  - Backdrop: click outside to close
+  - Spring entrance animation (scale + y + opacity)
+  - Added X icon import (was missing)
+
+- VERIFIED via Agent Browser:
+  - Click "Terms of Service" → modal opens with all 7 sections (Orders & Acceptance, Product Quality, Packaging & Shelf Life, Delivery, Pricing & Payment, Privacy, Liability) — checkbox stays unchecked ✓
+  - Click "Refund Policy" → modal opens with all 7 sections (7-Day Return Window, How to Initiate, Refund Processing, Non-Returnable, Damaged at Delivery, Order Cancellation, Quality Guarantee) — checkbox stays unchecked ✓
+  - Click "Got it" / X / backdrop → modal closes ✓
+  - Click the label/checkbox → still toggles checkbox normally ✓
+  - No dead clicks — every clickable element shows clear visible feedback ✓
+  - Lint clean, zero runtime errors.
+
+Stage Summary:
+- Terms of Service & Refund Policy now open proper readable modals with full policy content (7 sections each, rice-specific).
+- No more "nothing happens" — clicking links shows substantial content.
+- Checkbox toggle behavior preserved (label clicks toggle, link clicks don't).
+- Lint clean, verified end-to-end, zero errors.

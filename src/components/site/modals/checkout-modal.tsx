@@ -55,6 +55,7 @@ import {
   Edit3,
   ChevronRight as ChevronRightIcon,
   Info,
+  X,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { toast } from "sonner";
@@ -290,6 +291,7 @@ export function CheckoutModal({
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(coupon || null);
   const [showOffers, setShowOffers] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [policyModal, setPolicyModal] = useState<null | "terms" | "refund">(null);
   const [showSavedAddresses, setShowSavedAddresses] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedInstruction, setSelectedInstruction] = useState<string | null>(null);
@@ -938,14 +940,14 @@ export function CheckoutModal({
                       I agree to Neer Rice Depo&apos;s{" "}
                       <button
                         type="button"
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.info("Terms of Service — full terms will be emailed with your order confirmation."); }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPolicyModal("terms"); }}
                         className="font-bold text-[#a3c4a0] underline hover:text-[#d4a373] transition-colors cursor-pointer"
                       >
                         Terms of Service
                       </button>{" "}and{" "}
                       <button
                         type="button"
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.info("Refund Policy — 7-day returns on unopened packs. Full policy emailed post-order."); }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPolicyModal("refund"); }}
                         className="font-bold text-[#a3c4a0] underline hover:text-[#d4a373] transition-colors cursor-pointer"
                       >
                         Refund Policy
@@ -1004,8 +1006,177 @@ export function CheckoutModal({
             </div>
           </div>
         )}
+
+        {/* Policy modal — Terms of Service / Refund Policy */}
+        <PolicyModal type={policyModal} onClose={() => setPolicyModal(null)} />
       </DialogContent>
     </Dialog>
+  );
+}
+
+/* ============ Policy Modal ============ */
+function PolicyModal({
+  type,
+  onClose,
+}: {
+  type: null | "terms" | "refund";
+  onClose: () => void;
+}) {
+  const isTerms = type === "terms";
+  const content = isTerms
+    ? {
+        title: "Terms of Service",
+        icon: ShieldCheck,
+        sections: [
+          {
+            h: "1. Orders & Acceptance",
+            p: "All orders are subject to availability and confirmation of the product price. Neer Rice Depo reserves the right to refuse or cancel any order at any stage. Pricing on the site is in Indian Rupees (₹) and inclusive of applicable taxes unless stated otherwise.",
+          },
+          {
+            h: "2. Product Quality",
+            p: "Our grains are sourced directly from verified organic farming cooperatives. Each batch is cleaned, graded, and vacuum-sealed in food-grade kraft pouches with oxygen absorbers. We guarantee pesticide-free, single-origin heirloom grains as described per product.",
+          },
+          {
+            h: "3. Packaging & Shelf Life",
+            p: "Products are packaged to retain freshness for up to 6 months when stored in a cool, dry place. Aged basmati varieties may be stored longer. Each pack carries a harvest date, mill date, and best-before date on the seal.",
+          },
+          {
+            h: "4. Delivery",
+            p: "Standard delivery arrives within 4 business days; express within 2 business days. Farm pickup is available from our Pune depot. We are not liable for delays caused by courier partners, natural disasters, or events beyond our control.",
+          },
+          {
+            h: "5. Pricing & Payment",
+            p: "Prices listed at checkout are final. We accept UPI, Credit/Debit Cards, Net Banking, and Cash on Delivery. Payment authorizations are processed over 256-bit SSL encrypted channels. No hidden charges are added post-checkout.",
+          },
+          {
+            h: "6. Privacy",
+            p: "Your personal information (name, contact, address) is used solely for order fulfilment and delivery updates. We do not sell or share your data with third parties. WhatsApp updates are opt-in only.",
+          },
+          {
+            h: "7. Liability",
+            p: "Our maximum liability for any product is limited to the purchase price paid. We are not liable for indirect or consequential damages arising from product use. Grains are non-returnable once the seal is opened unless found damaged or incorrect at delivery.",
+          },
+        ],
+      }
+    : {
+        title: "Refund & Return Policy",
+        icon: RefreshCw,
+        sections: [
+          {
+            h: "1. 7-Day Return Window",
+            p: "If you receive a damaged, spoiled, or incorrect product, you may request a return within 7 days of delivery. The pack must be unopened and in its original packaging with the seal intact, except in cases of damage at delivery.",
+          },
+          {
+            h: "2. How to Initiate a Return",
+            p: "Email us at care@neerricedepo.in or call +91 98230 11022 with your tracking ID and a photo of the product. Our team will verify and arrange a reverse pickup within 48 hours. No return shipping fee is charged for verified quality issues.",
+          },
+          {
+            h: "3. Refund Processing",
+            p: "Approved refunds are processed within 5–7 business days to the original payment method. UPI and card refunds reflect fastest (3–5 days); COD orders are refunded via bank transfer or UPI. You will receive a confirmation email once the refund is initiated.",
+          },
+          {
+            h: "4. Non-Returnable Items",
+            p: "Opened packs of rice cannot be returned due to food safety regulations — unless the product was damaged, infested, or incorrect upon delivery. Gift-wrapped items and combo bundles are returnable only as complete sets.",
+          },
+          {
+            h: "5. Damaged at Delivery",
+            p: "If your package arrives torn, wet, or with a broken seal, please refuse acceptance from the courier or notify us within 24 hours with photos. We will ship a replacement at no cost or issue a full refund — your choice.",
+          },
+          {
+            h: "6. Order Cancellation",
+            p: "Orders can be cancelled free of charge before dispatch (usually within 4 hours of ordering). Once dispatched, cancellation is not possible, but the standard return policy applies after delivery.",
+          },
+          {
+            h: "7. Quality Guarantee",
+            p: "Every batch is lab-tested for purity and moisture. If you are unsatisfied with the grain quality (aroma, texture, taste), reach out — we stand behind our products and will make it right.",
+          },
+        ],
+      };
+
+  return (
+    <AnimatePresence>
+      {type && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label={content.title}
+        >
+          <motion.div
+            initial={{ scale: 0.95, y: 16, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.97, y: 8, opacity: 0 }}
+            transition={SPRING.snappy}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#0a0f0a] overflow-hidden"
+            style={{
+              boxShadow:
+                "0 24px 64px -16px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)",
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1f431e]/15 text-[#a3c4a0]">
+                  <content.icon className="h-4 w-4" strokeWidth={2.2} />
+                </span>
+                <div>
+                  <h3 className="font-serif text-base font-bold text-white leading-tight">
+                    {content.title}
+                  </h3>
+                  <p className="text-[10px] text-stone-500 uppercase tracking-wider">
+                    Neer Rice Depo
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-stone-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Body — scrollable */}
+            <div className="overflow-y-auto px-5 py-4 space-y-4">
+              {content.sections.map((s, i) => (
+                <div key={i}>
+                  <h4 className="text-xs font-bold text-[#d4a373] mb-1 tracking-tight">
+                    {s.h}
+                  </h4>
+                  <p className="text-[11px] text-stone-400 leading-relaxed">
+                    {s.p}
+                  </p>
+                </div>
+              ))}
+              <div className="rounded-xl border border-[#1f431e]/15 bg-[#1f431e]/6 px-3 py-2.5 mt-2">
+                <p className="text-[10px] text-stone-400 leading-relaxed">
+                  <strong className="text-[#a3c4a0]">Need help?</strong> Email{" "}
+                  <span className="text-[#d4a373]">care@neerricedepo.in</span> or call{" "}
+                  <span className="text-[#d4a373]">+91 98230 11022</span>. Our team responds within 24 hours.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 border-t border-white/8 shrink-0">
+              <button
+                onClick={onClose}
+                className="w-full rounded-xl bg-[#1f431e] hover:bg-[#16321a] text-white py-2.5 text-xs font-bold transition-colors cursor-pointer"
+              >
+                Got it
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
