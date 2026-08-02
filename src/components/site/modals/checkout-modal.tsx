@@ -107,7 +107,7 @@ export function CheckoutModal({
   return (
     <Dialog open={open} onOpenChange={(o) => !o && close()}>
       <DialogContent
-        className="max-w-5xl sm:max-w-5xl p-0 overflow-hidden max-h-[94vh] gap-0 sm:rounded-[24px] rounded-[20px] bg-[#080c08] text-stone-100 border-white/10"
+        className="max-w-5xl sm:max-w-5xl p-0 overflow-hidden max-h-[94vh] gap-0 sm:rounded-[24px] rounded-[20px] bg-[#0f1410] text-stone-100 border-white/10"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Secure Checkout</DialogTitle>
@@ -165,7 +165,7 @@ export function CheckoutModal({
               {/* Left: scrollable sections */}
               <div
                 ref={leftColRef}
-                className="overflow-y-auto bg-[#080c08] order-2 lg:order-1"
+                className="overflow-y-auto bg-[#0f1410] order-2 lg:order-1"
               >
                 <div className="px-4 sm:px-6 py-5 space-y-3 max-w-2xl mx-auto">
                   {/* Mobile bill summary */}

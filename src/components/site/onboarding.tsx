@@ -115,7 +115,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: DURATION.base, ease: EASE.soft }}
-      className="fixed inset-0 z-[100] bg-[#080c08] flex flex-col"
+      className="fixed inset-0 z-[100] bg-[#0f1410] flex flex-col"
     >
       {/* Skip ghost button (top-right) */}
       <button
@@ -144,8 +144,8 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 alt=""
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#080c08]/30 via-transparent to-[#080c08]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#080c08] via-[#080c08]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0f1410]/30 via-transparent to-[#0f1410]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1410] via-[#0f1410]/40 to-transparent" />
             </motion.div>
           </AnimatePresence>
 

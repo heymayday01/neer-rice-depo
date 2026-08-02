@@ -72,7 +72,7 @@ export function MobileDock({
           <div
             className="flex items-center justify-around rounded-[28px] px-4 py-2.5 pb-safe relative"
             style={{
-              background: "rgba(8, 12, 8, 0.72)",
+              background: "rgba(15, 20, 16, 0.72)",
               backdropFilter: "blur(40px) saturate(200%)",
               WebkitBackdropFilter: "blur(40px) saturate(200%)",
               boxShadow: [
@@ -169,9 +169,9 @@ export function MobileDock({
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#080c08] text-[9px] font-black min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center z-20"
+                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#0f1410] text-[9px] font-black min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center z-20"
                       style={{
-                        boxShadow: "0 0 0 1.5px #080c08, 0 2px 6px rgba(212,163,115,0.4)",
+                        boxShadow: "0 0 0 1.5px #0f1410, 0 2px 6px rgba(212,163,115,0.4)",
                       }}
                     >
                       {displayCount}

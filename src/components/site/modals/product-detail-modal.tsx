@@ -68,7 +68,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-[#080c08]/90 hover:bg-[#080c08] rounded-full border border-white/10 shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2 bg-[#0f1410]/90 hover:bg-[#0f1410] rounded-full border border-white/10 shadow-sm cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -76,7 +76,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Image side */}
-          <div className="relative h-64 md:h-full min-h-[320px] bg-[#080c08]">
+          <div className="relative h-64 md:h-full min-h-[320px] bg-[#0f1410]">
             <img
               src={product.image}
               alt={product.name}

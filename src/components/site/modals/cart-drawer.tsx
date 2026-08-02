@@ -68,7 +68,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
-      <DrawerContent className="bg-[#080c08] border-t border-white/10 max-h-[88vh] rounded-t-3xl">
+      <DrawerContent className="bg-[#0f1410] border-t border-white/10 max-h-[88vh] rounded-t-3xl">
         {/* Drag handle */}
         <div className="mx-auto mt-3 mb-1 w-10 h-1 rounded-full bg-white/15 shrink-0" />
 

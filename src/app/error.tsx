@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080c08] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#0f1410] px-4">
       <div className="max-w-md w-full text-center space-y-6">
         <div className="w-20 h-20 mx-auto rounded-full bg-[#1f431e]/15 flex items-center justify-center">
           <RefreshCw className="w-9 h-9 text-[#a3c4a0]" strokeWidth={1.8} />

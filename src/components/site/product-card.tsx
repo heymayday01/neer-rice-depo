@@ -116,7 +116,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
         {/* Image — tappable + long-press quick-add */}
         <div
           ref={imgRef}
-          className="relative h-48 overflow-hidden bg-[#080c08] cursor-pointer group/img"
+          className="relative h-48 overflow-hidden bg-[#0f1410] cursor-pointer group/img"
           onClick={() => onOpenDetail(product)}
         >
           <div className="w-full h-48 transition-transform duration-700 ease-out group-hover:scale-105">
@@ -126,7 +126,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
               className="w-full h-48"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080c08] via-[#080c08]/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0f1410] via-[#0f1410]/20 to-transparent pointer-events-none" />
 
           {/* Discount badge */}
           {discountPct > 0 && (
@@ -155,7 +155,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             initial={{ scale: 0, opacity: 0 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute bottom-3 right-3 w-11 h-11 rounded-full bg-[#d4a373] text-[#080c08] flex items-center justify-center shadow-lg cursor-pointer z-10 md:opacity-0 md:group-hover:opacity-100"
+            className="absolute bottom-3 right-3 w-11 h-11 rounded-full bg-[#d4a373] text-[#0f1410] flex items-center justify-center shadow-lg cursor-pointer z-10 md:opacity-0 md:group-hover:opacity-100"
             style={{ boxShadow: "0 4px 16px rgba(212,163,115,0.3)" }}
             aria-label={`Quick add ${product.name}`}
           >

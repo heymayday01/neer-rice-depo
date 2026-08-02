@@ -81,7 +81,7 @@ export function Header({
       className="sticky top-0 z-40 pt-safe"
     >
       {/* Top micro-banner (desktop only) — harvest info strip */}
-      <div className="hidden md:block bg-[#080c08] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
+      <div className="hidden md:block bg-[#0f1410] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2.5 mx-auto sm:mx-0">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a3c4a0] animate-pulse" />
@@ -106,7 +106,7 @@ export function Header({
         <div
           className="flex items-center justify-between rounded-full px-4 py-2.5 relative"
           style={{
-            background: "rgba(8, 12, 8, 0.72)",
+            background: "rgba(15, 20, 16, 0.72)",
             backdropFilter: "blur(40px) saturate(200%)",
             WebkitBackdropFilter: "blur(40px) saturate(200%)",
             boxShadow: [
@@ -168,9 +168,9 @@ export function Header({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={SPRING.bouncy}
-                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#080c08] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center z-20"
+                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0f1410] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center z-20"
                   style={{
-                    boxShadow: "0 0 0 1.5px #080c08, 0 2px 6px rgba(212,163,115,0.4)",
+                    boxShadow: "0 0 0 1.5px #0f1410, 0 2px 6px rgba(212,163,115,0.4)",
                   }}
                 >
                   {displayCount}
@@ -185,8 +185,8 @@ export function Header({
       <div
         className={`hidden sm:block border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#080c08]/80 border-white/8 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3)]"
-            : "bg-[#080c08]/60 border-white/5"
+            ? "bg-[#0f1410]/80 border-white/8 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3)]"
+            : "bg-[#0f1410]/60 border-white/5"
         }`}
         style={{
           backdropFilter: "blur(40px) saturate(180%)",
@@ -282,7 +282,7 @@ export function Header({
                 onClick={onOpenCart}
                 aria-label={`Cart with ${displayCount} items`}
                 data-cart-target="true"
-                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#080c08] rounded-full text-xs font-bold transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0f1410] rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />
                 <span className="hidden md:inline">Cart</span>
@@ -292,13 +292,13 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="bg-[#080c08] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    className="bg-[#0f1410] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
                     {displayCount}
                   </motion.span>
                 )}
                 {displaySubtotal > 0 && (
-                  <span className="text-[11px] font-bold text-[#080c08]/70 border-l border-[#080c08]/20 pl-1.5 ml-0.5 hidden xl:inline">
+                  <span className="text-[11px] font-bold text-[#0f1410]/70 border-l border-[#0f1410]/20 pl-1.5 ml-0.5 hidden xl:inline">
                     ₹{displaySubtotal}
                   </span>
                 )}

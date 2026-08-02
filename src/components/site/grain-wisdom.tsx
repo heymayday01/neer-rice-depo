@@ -119,7 +119,7 @@ export function GrainWisdomHub() {
   const TopicIcon = current.icon;
 
   return (
-    <section className="relative bg-[#080c08] border-t border-white/5 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative bg-[#0f1410] border-t border-white/5 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="absolute top-0 right-1/3 w-[28rem] h-[28rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto space-y-6 sm:space-y-10">
         <motion.div className="max-w-3xl space-y-4">

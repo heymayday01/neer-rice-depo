@@ -10,7 +10,7 @@ interface FooterProps {
 
 export function Footer({ onOpenAISommelier }: FooterProps) {
   return (
-    <footer className="relative bg-[#080c08] border-t border-white/8 overflow-hidden mt-auto" role="contentinfo" aria-label="Site footer">
+    <footer className="relative bg-[#0f1410] border-t border-white/8 overflow-hidden mt-auto" role="contentinfo" aria-label="Site footer">
       {/* Top hairline accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4a373]/40 to-transparent" />
       {/* Ambient glow */}
@@ -21,7 +21,7 @@ export function Footer({ onOpenAISommelier }: FooterProps) {
         <motion.div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pb-10 border-b border-white/8">
           <div className="lg:col-span-7 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0f1a0d] to-[#080c08] p-1.5 border border-[#d4a373]/20 overflow-hidden shrink-0 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0f1a0d] to-[#0f1410] p-1.5 border border-[#d4a373]/20 overflow-hidden shrink-0 shadow-sm">
                 <img
                   src="/neer-logo-premium.png"
                   alt="Neer Rice Depo"

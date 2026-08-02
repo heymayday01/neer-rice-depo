@@ -97,7 +97,7 @@ export function AISommelierModal({ open, onClose }: Props) {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-[24px]">
-        <DialogHeader className="px-6 pt-6 pb-3 bg-gradient-to-br from-[#1f431e] to-[#080c08] text-white">
+        <DialogHeader className="px-6 pt-6 pb-3 bg-gradient-to-br from-[#1f431e] to-[#0f1410] text-white">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
             <BrainCircuit className="w-5 h-5 text-[#d4a373]" strokeWidth={1.5} />
             AI Grain Sommelier
