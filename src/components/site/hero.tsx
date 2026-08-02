@@ -309,15 +309,16 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             </motion.div>
 
             {/* CTAs */}
-            <motion.div variants={fadeUpItem} className="flex flex-wrap items-center gap-3 pt-1">
+            <motion.div variants={fadeUpItem} className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 pt-1">
               <motion.button
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenAISommelier}
-                className="btn-primary-glow px-6 sm:px-7 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center gap-2.5 group cursor-pointer"
+                className="btn-primary-glow px-5 sm:px-7 py-3.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white font-bold rounded-full text-sm tracking-wide transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
               >
                 <BrainCircuit className="w-4 h-4 text-[#d4a373] group-hover:rotate-12 transition-transform duration-300" strokeWidth={1.5} />
-                Ask AI Grain Sommelier
+                <span className="sm:hidden">Ask AI Sommelier</span>
+                <span className="hidden sm:inline">Ask AI Grain Sommelier</span>
                 <ArrowRight className="w-4 h-4 text-[#d4a373] group-hover:translate-x-1 transition-transform" />
               </motion.button>
 
@@ -325,7 +326,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                 whileHover={hoverLift}
                 whileTap={tapPress}
                 onClick={onOpenComparison}
-                className="px-5 py-3.5 text-white font-bold rounded-full text-sm tracking-wide border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-3.5 text-white font-bold rounded-full text-sm tracking-wide border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Compass className="w-4 h-4" />
                 Compare Grains
@@ -344,7 +345,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           variants={staggerContainer(0.07, 0.8)}
           initial={reduced ? "visible" : "hidden"}
           animate="visible"
-          className="grid grid-cols-4 gap-4 sm:gap-8 mt-10 sm:mt-14 pt-6 border-t border-white/10"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 mt-8 sm:mt-14 pt-6 border-t border-white/10"
         >
           {PILLARS.map((p) => (
             <motion.div
