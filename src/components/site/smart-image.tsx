@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface SmartImageProps {
   src: string;
@@ -13,8 +13,8 @@ interface SmartImageProps {
 /**
  * SmartImage — premium image with:
  * - Lazy loading by default (eager only when priority=true)
- * - Smooth fade-in on load (opacity 0→1, 600ms ease-out)
- * - Subtle shimmer placeholder while loading
+ * - Smooth fade-in on load (opacity 0→1, 700ms ease-out)
+ * - Handles cached images that load before React hydrates
  * - Graceful error fallback with grain emoji
  */
 export function SmartImage({
@@ -23,13 +23,25 @@ export function SmartImage({
   className = "",
   priority = false,
 }: SmartImageProps) {
+  const imgRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
+  // Handle cached images: if the image already loaded before React hydrated,
+  // onLoad may have already fired. Check img.complete after mount.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (img.complete && img.naturalWidth > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoaded(true);
+    }
+  }, [src]);
+
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {/* Image — lazy by default, eager only for priority (above-fold) */}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
