@@ -12,10 +12,15 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * Global motion provider:
  * - MotionConfig reducedMotion="user" (accessibility — respects OS setting)
- * - Lenis smooth scroll (desktop only; mobile uses native momentum)
+ * - Lenis smooth scroll (DESKTOP ONLY — mobile uses native iOS momentum)
  * - GSAP ScrollTrigger synced with Lenis rAF
  * - Respects prefers-reduced-motion
  * - Locks scroll when body overflow is hidden (modals)
+ *
+ * Mobile: native -webkit-overflow-scrolling: touch + overscroll-behavior
+ * gives buttery smooth scroll without JS interference. Adding Lenis on
+ * mobile creates touch-event conflicts with pull-to-refresh and other
+ * touch handlers, causing jank.
  */
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   const reduced = usePrefersReducedMotion();
@@ -23,19 +28,19 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (reduced) return;
 
-    // Lenis on all devices — lighter settings for mobile
+    // Desktop only — mobile has native buttery smooth scroll
     const isMobile =
       window.innerWidth < 768 ||
       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    if (isMobile) return;
 
     const lenis = new Lenis({
-      duration: isMobile ? 0.7 : 0.9,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: isMobile ? 2 : 1.5,
-      syncTouch: isMobile, // enable touch smoothing on mobile
+      touchMultiplier: 1.5,
     });
 
     lenis.on("scroll", ScrollTrigger.update);

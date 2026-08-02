@@ -116,16 +116,12 @@
     @apply border-border outline-ring/50;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
-    touch-action: manipulation;
-  }
-  body {
-    touch-action: pan-y pan-x;
   }
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    overscroll-behavior: none;
     scroll-padding-top: 5rem;
+    /* Allow native overscroll on mobile — don't fight the OS */
   }
   body {
     background-color: #0f1410;
@@ -135,9 +131,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Native momentum scrolling — buttery smooth on iOS */
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
-    touch-action: pan-y pan-x;
   }
   h1, h2, h3, h4, .font-serif {
     font-family: var(--font-serif), Georgia, serif;
@@ -189,7 +184,6 @@
 html { -ms-overflow-style: none; }
 html, body {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
   scroll-behavior: smooth;
 }
 body { overflow-x: hidden; }
