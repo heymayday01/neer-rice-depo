@@ -249,7 +249,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                       onClick={() => setMeal(m.id)}
                       aria-pressed={selected}
                       aria-label={`Select ${m.label} grain type`}
-                      className={`relative py-2.5 px-4 rounded-full text-xs font-bold cursor-pointer transition-all min-h-[40px] ${
+                      className={`relative py-2.5 px-4 rounded-full text-xs font-bold cursor-pointer transition-all min-h-[44px] ${
                         selected
                           ? "text-white border border-[#d4a373]/60 bg-[#d4a373]/10"
                           : "text-stone-400 hover:text-white border border-white/12 hover:border-white/25"
@@ -298,7 +298,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                       whileHover={hoverLift}
                       whileTap={tapPress}
                       onClick={() => onSelectCategory(rec.catId)}
-                      className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#d4a373] transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#d4a373] transition-colors flex items-center gap-1.5 cursor-pointer min-h-[36px] py-1"
                     >
                       Explore
                       <ArrowRight className="w-3.5 h-3.5" />

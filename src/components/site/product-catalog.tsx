@@ -167,7 +167,7 @@ export function ProductCatalog({
         >
           <button
             onClick={onOpenComparison}
-            className="px-4 py-2 rounded-full text-xs font-bold text-stone-300 hover:text-white border border-white/12 hover:border-white/25 transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-full text-xs font-bold text-stone-300 hover:text-white border border-white/12 hover:border-white/25 transition-all flex items-center gap-1.5 cursor-pointer min-h-[44px]"
           >
             <BarChart2 className="w-3.5 h-3.5" />
             Compare
@@ -175,7 +175,7 @@ export function ProductCatalog({
           <button
             onClick={() => setGiFilter(giFilter === "low" ? "all" : "low")}
             aria-pressed={giFilter === "low"}
-            className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+            className={`px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all min-h-[44px] ${
               giFilter === "low"
                 ? "text-white border border-[#d4a373]/60 bg-[#d4a373]/10"
                 : "text-stone-300 hover:text-white border border-white/12 hover:border-white/25"
@@ -184,7 +184,7 @@ export function ProductCatalog({
             <Filter className="w-3.5 h-3.5" />
             Low GI
           </button>
-          <div className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-stone-300 border border-white/12">
+          <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-semibold text-stone-300 border border-white/12 min-h-[44px]">
             <ArrowUpDown className="w-3.5 h-3.5 text-[#d4a373]" />
             <select
               value={sortBy}
@@ -212,7 +212,7 @@ export function ProductCatalog({
             </p>
             <button
               onClick={reset}
-              className="px-5 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] text-white rounded-full text-xs font-bold hover:from-[#1f431e] cursor-pointer min-h-[40px]"
+              className="px-5 py-2.5 bg-gradient-to-br from-[#1f431e] to-[#1f431e] text-white rounded-full text-xs font-bold hover:from-[#1f431e] cursor-pointer min-h-[44px]"
             >
               Reset Filters
             </button>

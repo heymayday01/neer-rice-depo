@@ -101,6 +101,12 @@
     /* App feel: no tap highlight, optimized touch */
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
+    /* Remove 300ms tap delay on mobile — instant response */
+    touch-action: manipulation;
+  }
+  /* Allow scroll/pan on body but keep manipulation on buttons */
+  body {
+    touch-action: pan-y pan-x;
   }
   html {
     scroll-behavior: smooth;

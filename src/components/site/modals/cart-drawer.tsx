@@ -126,10 +126,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
                             onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity - 1)}
-                            className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+                            className="p-2 rounded-full hover:bg-white/10 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
                             aria-label="Decrease quantity"
                           >
-                            <Minus className="w-3 h-3 text-stone-400" />
+                            <Minus className="w-3.5 h-3.5 text-stone-400" />
                           </motion.button>
                           <motion.span
                             key={item.quantity}
@@ -144,10 +144,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
                             onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity + 1)}
-                            className="p-1.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+                            className="p-2 rounded-full hover:bg-white/10 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
                             aria-label="Increase quantity"
                           >
-                            <Plus className="w-3 h-3 text-stone-400" />
+                            <Plus className="w-3.5 h-3.5 text-stone-400" />
                           </motion.button>
                         </div>
                         <span className="text-sm font-black font-serif text-[#d4a373]">
@@ -189,7 +189,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                 </div>
                 <button
                   onClick={applyCoupon}
-                  className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
+                  className="px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors min-h-[44px]"
                 >
                   Apply
                 </button>

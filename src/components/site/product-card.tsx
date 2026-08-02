@@ -153,7 +153,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             initial={{ scale: 0, opacity: 0 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-[#d4a373] text-[#0a0f0a] flex items-center justify-center shadow-lg cursor-pointer z-10 md:opacity-0 md:group-hover:opacity-100"
+            className="absolute bottom-3 right-3 w-11 h-11 rounded-full bg-[#d4a373] text-[#0a0f0a] flex items-center justify-center shadow-lg cursor-pointer z-10 md:opacity-0 md:group-hover:opacity-100"
             style={{ boxShadow: "0 4px 16px rgba(212,163,115,0.3)" }}
             aria-label={`Quick add ${product.name}`}
           >
@@ -273,7 +273,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
                   <button
                     key={w}
                     onClick={() => handleWeightChange(w)}
-                    className={`relative h-10 rounded-xl text-[11px] font-bold transition-all cursor-pointer overflow-hidden border ${
+                    className={`relative h-11 rounded-xl text-[11px] font-bold transition-all cursor-pointer overflow-hidden border ${
                       selected
                         ? "text-white border-[#d4a373]/50 bg-[#d4a373]/10"
                         : "text-stone-500 hover:text-white border-white/10 hover:border-white/20"
@@ -313,7 +313,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             </span>
             <button
               onClick={() => onOpenDetail(product)}
-              className="flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#d4a373] transition-colors cursor-pointer shrink-0"
+              className="flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#d4a373] transition-colors cursor-pointer shrink-0 min-h-[36px] px-1"
             >
               Guide
               <ChevronRight className="w-3 h-3" strokeWidth={2} />
