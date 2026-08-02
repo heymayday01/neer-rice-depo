@@ -70,12 +70,12 @@ export function CheckoutModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          customer: s.form, items: s.items, subtotal: s.subtotal,
-          discount: s.discount, deliveryFee: s.deliveryFee, total: s.total,
+          customer: s.form, items: s.items,
           paymentMethod: s.payment, deliveryMethod: s.delivery, orderNote: s.orderNote,
           giftWrap: s.giftWrap, giftMessage: s.giftWrap ? s.giftMessage : "",
           tip: s.tip, whatsappUpdates: s.whatsappUpdates,
           addressLabel: s.addressLabel, eta: s.eta,
+          couponCode: s.appliedCoupon,
         }),
       });
       const data = await res.json();
