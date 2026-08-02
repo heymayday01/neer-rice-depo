@@ -104,18 +104,18 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           className="w-full h-full object-cover"
           loading="eager"
         />
-        {/* Soft gradient — lets photography breathe, only darkens bottom for text */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f1410]/30 via-transparent to-[#0f1410]/95" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1410]/40 via-transparent to-transparent" />
+        {/* Gradient — dark at top (for navbar + headline readability) and bottom (for card) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0f1410] via-[#0f1410]/50 to-[#0f1410]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1410]/70 via-transparent to-transparent" />
       </motion.div>
 
-      {/* ===== Content — editorial layout, bottom-anchored ===== */}
+      {/* ===== Content — editorial layout, top-anchored ===== */}
       <motion.div
         style={{ opacity: reduced ? 1 : contentOpacity }}
-        className="relative z-10 flex-1 flex flex-col justify-end max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8"
+        className="relative z-10 flex-1 flex flex-col justify-between max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8"
       >
         {/* Top section — headline + intro */}
-        <div className="flex-1 flex flex-col justify-center max-w-2xl">
+        <div className="flex flex-col max-w-2xl">
           {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
