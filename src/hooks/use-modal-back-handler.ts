@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId } from "react";
 
 /**
  * useModalBackHandler — intercepts the browser back button / mobile swipe-back
@@ -40,11 +40,7 @@ function ensureListener() {
 }
 
 export function useModalBackHandler(open: boolean, onClose: () => void) {
-  const idRef = useRef<string>();
-  if (!idRef.current) {
-    idRef.current = Math.random().toString(36).slice(2);
-  }
-  const id = idRef.current;
+  const id = useId(); // stable, pure ID — no Math.random
 
   useEffect(() => {
     if (onClose) listeners.set(id, onClose);
