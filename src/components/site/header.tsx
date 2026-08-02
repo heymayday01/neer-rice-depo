@@ -314,7 +314,15 @@ export function Header({
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    // Smooth scroll to catalog section
+                    const catalog = document.getElementById("catalog");
+                    if (catalog) {
+                      const top = catalog.getBoundingClientRect().top + window.scrollY - 80;
+                      window.scrollTo({ top, behavior: "smooth" });
+                    }
+                  }}
                   className={`relative px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                     selected
                       ? "text-[#d4a373]"

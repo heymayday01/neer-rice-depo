@@ -93,8 +93,11 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
       aria-label="Hero section"
       className="relative min-h-[100svh] flex flex-col overflow-hidden"
     >
-      {/* ===== Immersive photography — full-bleed, parallax + scale ===== */}
+      {/* ===== Immersive photography — full-bleed, parallax + scale + entrance ===== */}
       <motion.div
+        initial={{ scale: 1.08, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.2, ease: EASE.out as unknown as number[] }}
         style={{ y: reduced ? 0 : imageY, scale: reduced ? 1 : imageScale }}
         className="absolute inset-0 z-0"
       >
@@ -118,9 +121,9 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
         <div className="flex flex-col max-w-2xl">
           {/* Eyebrow */}
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE.out as unknown as number[], delay: 0.1 }}
+            initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.5, ease: EASE.out as unknown as number[], delay: 0.3 }}
             className="flex items-center gap-2.5 mb-4 sm:mb-6"
           >
             <span className="h-px w-6 bg-[#d4a373]/60" />
@@ -129,11 +132,11 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
             </span>
           </motion.div>
 
-          {/* Headline — bold + light italic contrast */}
+          {/* Headline — bold + light italic contrast, blur+rise entrance */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE.out as unknown as number[], delay: 0.2 }}
+            initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, ease: EASE.out as unknown as number[], delay: 0.4 }}
             className="font-serif font-bold leading-[1.08] tracking-tight text-white text-[2.25rem] sm:text-[3.5rem] lg:text-[4.5rem] mb-4 sm:mb-6"
           >
             Heritage grains,
@@ -143,9 +146,9 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
           {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE.out as unknown as number[], delay: 0.35 }}
+            initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, ease: EASE.out as unknown as number[], delay: 0.55 }}
             className="text-sm sm:text-lg text-stone-300/70 leading-relaxed max-w-md font-light mb-6 sm:mb-8"
           >
             Unpolished, single-origin rice from verified organic cooperatives.
@@ -154,9 +157,9 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
           {/* Stats row — trust signals inline */}
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE.out as unknown as number[], delay: 0.45 }}
+            initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.6, ease: EASE.out as unknown as number[], delay: 0.7 }}
             className="flex items-center gap-5 sm:gap-7 mb-8"
           >
             <div>
@@ -178,9 +181,9 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
 
         {/* ===== Bottom section — featured grain card + selector ===== */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE.out as unknown as number[], delay: 0.55 }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.7, ease: EASE.out as unknown as number[], delay: 0.85 }}
         >
           {/* Meal selector — minimal pills */}
           <div className="flex items-center gap-2 mb-4 overflow-x-auto no-scrollbar -mx-4 px-4">

@@ -23,20 +23,19 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (reduced) return;
 
-    // Mobile devices have native smooth momentum scroll — skip Lenis to avoid conflicts
+    // Lenis on all devices — lighter settings for mobile
     const isMobile =
       window.innerWidth < 768 ||
       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    if (isMobile) return;
 
-    // Snappier duration (0.9 vs 1.1 — less floaty, more responsive)
     const lenis = new Lenis({
-      duration: 0.9,
+      duration: isMobile ? 0.7 : 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: isMobile ? 2 : 1.5,
+      syncTouch: isMobile, // enable touch smoothing on mobile
     });
 
     lenis.on("scroll", ScrollTrigger.update);
