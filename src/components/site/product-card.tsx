@@ -116,14 +116,16 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
         {/* Image — tappable + long-press quick-add */}
         <div
           ref={imgRef}
-          className="relative h-48 overflow-hidden bg-[#0a0f0a] cursor-pointer"
+          className="relative h-48 overflow-hidden bg-[#0a0f0a] cursor-pointer group/img"
           onClick={() => onOpenDetail(product)}
         >
-          <SmartImage
-            src={product.image}
-            alt={product.name}
-            className="w-full h-48"
-          />
+          <div className="w-full h-48 transition-transform duration-700 ease-out group-hover:scale-105">
+            <SmartImage
+              src={product.image}
+              alt={product.name}
+              className="w-full h-48"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a] via-[#0a0f0a]/20 to-transparent pointer-events-none" />
 
           {/* Discount badge */}
@@ -328,8 +330,8 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
           onClick={handleAdd}
           className={`btn-primary-glow w-full h-12 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             added
-              ? "bg-[#1f431e] text-white"
-              : "bg-gradient-to-br from-[#1f431e] to-[#1f431e] hover:from-[#1f431e] hover:to-[#1f431e] text-white"
+              ? "bg-[#1f431e] text-white shadow-[0_0_20px_rgba(163,196,160,0.3)]"
+              : "bg-gradient-to-br from-[#1f431e] to-[#142a12] hover:from-[#1f431e] hover:to-[#1f431e] text-white hover:shadow-[0_8px_24px_-6px_rgba(31,67,30,0.5)]"
           }`}
         >
           <motion.span
