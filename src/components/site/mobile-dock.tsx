@@ -70,26 +70,25 @@ export function MobileDock({
           aria-label="Mobile navigation"
         >
           <div
-            className="flex items-center justify-around rounded-full px-4 py-2.5 pb-safe relative"
+            className="flex items-center justify-around rounded-[28px] px-4 py-2.5 pb-safe relative"
             style={{
-              background: "rgba(10, 15, 10, 0.78)",
-              backdropFilter: "blur(44px) saturate(180%)",
-              WebkitBackdropFilter: "blur(44px) saturate(180%)",
+              background: "rgba(8, 12, 8, 0.72)",
+              backdropFilter: "blur(40px) saturate(200%)",
+              WebkitBackdropFilter: "blur(40px) saturate(200%)",
               boxShadow: [
-                "inset 0 1px 0 0 rgba(255,255,255,0.09)",
-                "inset 0 -1px 0 0 rgba(0,0,0,0.3)",
-                "inset 1px 0 0 0 rgba(255,255,255,0.03)",
-                "0 1px 3px rgba(0,0,0,0.3)",
-                "0 14px 44px -6px rgba(0,0,0,0.65)",
-                "0 0 0 0.5px rgba(212,163,115,0.2)",
+                "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+                "inset 0 -0.5px 0 0 rgba(0,0,0,0.3)",
+                "0 1px 2px rgba(0,0,0,0.2)",
+                "0 12px 40px -4px rgba(0,0,0,0.4)",
+                "0 0 0 0.5px rgba(255,255,255,0.06)",
               ].join(", "),
             }}
           >
-            {/* Refractive top edge — light catch (rice-grain shaped) */}
+            {/* Specular top edge — light catch */}
             <div
               className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
               style={{
-                background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.35), transparent)",
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
               }}
             />
             {/* Fresh harvest pulse — subtle living indicator */}
@@ -170,9 +169,9 @@ export function MobileDock({
                       initial={{ scale: 0, rotate: -30 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={SPRING.bouncy}
-                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#0a0f0a] text-[9px] font-black min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center z-20"
+                      className="absolute top-0.5 right-1 bg-[#d4a373] text-[#080c08] text-[9px] font-black min-w-[16px] h-[16px] px-0.5 rounded-full flex items-center justify-center z-20"
                       style={{
-                        boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
+                        boxShadow: "0 0 0 1.5px #080c08, 0 2px 6px rgba(212,163,115,0.4)",
                       }}
                     >
                       {displayCount}

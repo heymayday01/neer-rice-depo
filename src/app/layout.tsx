@@ -63,7 +63,7 @@ export const viewport: Viewport = {
   maximumScale: 1, // prevent zoom for app feel
   userScalable: false, // app-like: no pinch zoom
   viewportFit: "cover", // safe-area insets
-  themeColor: "#0a0f0a",
+  themeColor: "#080c08",
 };
 
 export default function RootLayout({

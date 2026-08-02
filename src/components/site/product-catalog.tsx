@@ -99,7 +99,7 @@ export function ProductCatalog({
   };
 
   return (
-    <section className="relative bg-[#0a0f0a] py-10 sm:py-14">
+    <section className="relative bg-[#080c08] py-10 sm:py-14">
       {/* Ambient glow */}
       <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] bg-[#1f431e]/8 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[26rem] h-[26rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
@@ -192,17 +192,17 @@ export function ProductCatalog({
               className="bg-transparent font-bold text-white focus:outline-none cursor-pointer"
               aria-label="Sort products"
             >
-              <option value="featured" className="bg-[#0a0f0a]">Featured</option>
-              <option value="price-low" className="bg-[#0a0f0a]">Price: Low → High</option>
-              <option value="price-high" className="bg-[#0a0f0a]">Price: High → Low</option>
-              <option value="rating" className="bg-[#0a0f0a]">Customer Rating</option>
+              <option value="featured" className="bg-[#080c08]">Featured</option>
+              <option value="price-low" className="bg-[#080c08]">Price: Low → High</option>
+              <option value="price-high" className="bg-[#080c08]">Price: High → Low</option>
+              <option value="rating" className="bg-[#080c08]">Customer Rating</option>
             </select>
           </div>
         </motion.div>
 
         {/* Grid */}
         {sorted.length === 0 ? (
-          <div className="text-center py-20 rounded-3xl border border-white/10 p-8 space-y-4">
+          <div className="text-center py-20 rounded-[24px] border border-white/10 p-8 space-y-4">
             <div className="w-16 h-16 rounded-full border border-[#d4a373]/30 flex items-center justify-center mx-auto text-[#d4a373]">
               <Search className="w-7 h-7" strokeWidth={1.5} />
             </div>
@@ -242,7 +242,7 @@ export function ProductCatalog({
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-60px" }}
-              className="relative overflow-hidden rounded-3xl border border-white/10 text-white p-7 flex flex-col justify-between min-h-[420px] bg-gradient-to-br from-[#1f431e]/40 to-[#0a0f0a]"
+              className="relative overflow-hidden rounded-[24px] border border-white/10 text-white p-7 flex flex-col justify-between min-h-[420px] bg-gradient-to-br from-[#1f431e]/40 to-[#080c08]"
             >
               <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#d4a373]/12 rounded-full blur-3xl pointer-events-none" />
               <div className="relative z-10 space-y-4">

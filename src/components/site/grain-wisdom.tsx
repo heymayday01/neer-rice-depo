@@ -119,7 +119,7 @@ export function GrainWisdomHub() {
   const TopicIcon = current.icon;
 
   return (
-    <section className="relative bg-[#0a0f0a] border-t border-white/5 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative bg-[#080c08] border-t border-white/5 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="absolute top-0 right-1/3 w-[28rem] h-[28rem] bg-[#d4a373]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto space-y-6 sm:space-y-10">
         <motion.div className="max-w-3xl space-y-4">
@@ -191,7 +191,7 @@ export function GrainWisdomHub() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0, transition: SPRING.gentle }}
                 exit={{ opacity: 0, y: -14, transition: { duration: DURATION.fast, ease: EASE.io } }}
-                className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6 sm:p-9 space-y-6"
+                className="rounded-[24px] border border-white/8 bg-white/[0.025] p-6 sm:p-9 space-y-6"
               >
                 <div className="flex items-center gap-4 border-b border-white/8 pb-5">
                   <div className="p-3.5 rounded-2xl text-[#d4a373] flex items-center justify-center border border-[#d4a373]/30 bg-[#d4a373]/8 shrink-0">

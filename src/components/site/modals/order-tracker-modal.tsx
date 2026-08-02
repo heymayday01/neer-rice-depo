@@ -82,7 +82,7 @@ export function OrderTrackerModal({ open, onClose, pendingTrackingId }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-3xl">
+      <DialogContent className="max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto rounded-[24px]">
         <DialogHeader className="px-6 pt-6 pb-3">
           <DialogTitle className="font-serif text-xl flex items-center gap-2">
             <Package className="w-5 h-5 text-[#a3c4a0]" />

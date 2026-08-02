@@ -176,11 +176,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f0a] font-sans text-stone-100 antialiased">
+    <div className="min-h-screen flex flex-col bg-[#080c08] font-sans text-stone-100 antialiased">
       {/* Skip to content — keyboard accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-[#d4a373] focus:text-[#0a0f0a] focus:rounded-full focus:text-sm focus:font-bold"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-[#d4a373] focus:text-[#080c08] focus:rounded-full focus:text-sm focus:font-bold"
       >
         Skip to content
       </a>

@@ -60,7 +60,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
   return (
     <Dialog open={!!product} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden gap-0 max-h-[92vh] overflow-y-auto rounded-3xl">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden gap-0 max-h-[92vh] overflow-y-auto rounded-[24px]">
         <DialogHeader className="sr-only">
           <DialogTitle>{product.name}</DialogTitle>
           <DialogDescription>{product.tagline}</DialogDescription>
@@ -68,7 +68,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-[#0a0f0a]/90 hover:bg-[#0a0f0a] rounded-full border border-white/10 shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2 bg-[#080c08]/90 hover:bg-[#080c08] rounded-full border border-white/10 shadow-sm cursor-pointer"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -76,7 +76,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Image side */}
-          <div className="relative h-64 md:h-full min-h-[320px] bg-[#0a0f0a]">
+          <div className="relative h-64 md:h-full min-h-[320px] bg-[#080c08]">
             <img
               src={product.image}
               alt={product.name}

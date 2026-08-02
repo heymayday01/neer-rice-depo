@@ -96,7 +96,7 @@ export function SuccessScreen({
   const payLabel = PAYMENTS.find((p) => p.id === paymentMethod)?.label || paymentMethod;
 
   return (
-    <div className="overflow-y-auto max-h-[94vh] bg-[#0a0f0a]">
+    <div className="overflow-y-auto max-h-[94vh] bg-[#080c08]">
       <div className="px-6 sm:px-10 py-8 sm:py-10 text-center max-w-lg mx-auto">
         <motion.div
           initial={{ scale: 0, rotate: -20 }}
@@ -277,7 +277,7 @@ export function PolicyModal({
             exit={{ scale: 0.97, y: 8, opacity: 0 }}
             transition={SPRING.snappy}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#0a0f0a] overflow-hidden"
+            className="relative w-full max-w-lg max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#080c08] overflow-hidden"
             style={{ boxShadow: "0 24px 64px -16px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)" }}
           >
             {/* Header */}

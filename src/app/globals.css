@@ -37,46 +37,51 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 16px);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
 }
 
-:root {
-  --radius: 0.875rem;
+/* ============================================================
+   iOS 26 DESIGN SYSTEM — Liquid Glass · Depth · Spring Physics
+   ============================================================ */
 
-  /* Neer brand palette */
+:root {
+  --radius: 20px;
+
+  /* Brand palette — refined for iOS 26 depth */
   --forest: #1f431e;
-  --forest-deep: #1f431e;
-  --forest-dark: #1f431e;
-  --forest-ink: #0a0f0a;
+  --forest-deep: #142a12;
+  --forest-dark: #0d1c0c;
+  --forest-ink: #080c08;
   --gold: #d4a373;
-  --gold-warm: #d4a373;
-  --gold-light: #d4a373;
+  --gold-warm: #e9c89a;
+  --gold-light: #f0d4a8;
   --gold-glow: #d4a373;
   --bronze: #c59b27;
   --cream: #faf8f5;
   --cream-card: #fdfcfb;
   --cream-warm: #f5f2ed;
 
-  --background: #0a0f0a;
+  /* iOS 26 surfaces */
+  --background: #080c08;
   --foreground: #f5f5f4;
-  --card: #0f1a0d;
+  --card: #0d130d;
   --card-foreground: #f5f5f4;
-  --popover: #0f1a0d;
+  --popover: #0d130d;
   --popover-foreground: #f5f5f4;
   --primary: #1f431e;
   --primary-foreground: #ffffff;
-  --secondary: #0f1a0d;
+  --secondary: #0d130d;
   --secondary-foreground: #d4a373;
-  --muted: #0f1a0d;
+  --muted: #0d130d;
   --muted-foreground: #8a8275;
   --accent: #d4a373;
-  --accent-foreground: #0a0f0a;
-  --destructive: #b91c1c;
+  --accent-foreground: #080c08;
+  --destructive: #dc2626;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.08);
   --ring: #d4a373;
@@ -85,37 +90,45 @@
   --chart-3: #1f431e;
   --chart-4: #d4a373;
   --chart-5: #b45309;
-  --sidebar: #0f1a0d;
+  --sidebar: #0d130d;
   --sidebar-foreground: #f5f5f4;
   --sidebar-primary: #1f431e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #0f1a0d;
+  --sidebar-accent: #0d130d;
   --sidebar-accent-foreground: #d4a373;
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #d4a373;
+
+  /* iOS 26 spring easing — Apple's signature curve */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-ios-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* iOS 26 shadow tokens */
+  --shadow-contact: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-ambient: 0 8px 32px -4px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 12px 40px -8px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 24px 64px -16px rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    /* App feel: no tap highlight, optimized touch */
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
-    /* Remove 300ms tap delay on mobile — instant response */
     touch-action: manipulation;
   }
-  /* Allow scroll/pan on body but keep manipulation on buttons */
   body {
     touch-action: pan-y pan-x;
   }
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    /* App feel: prevent overscroll bounce */
     overscroll-behavior: none;
+    scroll-padding-top: 5rem;
   }
   body {
-    background-color: #0a0f0a;
+    background-color: #080c08;
     color: #e7e5e4;
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
@@ -129,10 +142,11 @@
   h1, h2, h3, h4, .font-serif {
     font-family: var(--font-serif), Georgia, serif;
     font-optical-sizing: auto;
+    letter-spacing: -0.02em;
   }
   .font-brand {
     font-family: var(--font-serif), Georgia, serif;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
   }
   .font-sans {
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -141,141 +155,103 @@
     background: rgba(212, 163, 115, 0.32);
     color: #1f431e;
   }
-  /* App feel: prevent text selection on buttons/nav (allow on content) */
-  button,
-  nav,
-  [role="button"],
-  .pill,
-  .no-select {
+  button, nav, [role="button"], .pill, .no-select {
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
   }
-  /* Accessible focus ring for keyboard users — WCAG 2.1 AA */
   :focus-visible {
     outline: 2px solid #d4a373;
     outline-offset: 3px;
     border-radius: 8px;
   }
-  /* Remove default outline only when focus-visible is supported */
   :focus:not(:focus-visible) {
     outline: none;
   }
-  /* App feel: smooth scroll restoration */
-  html {
-    scroll-padding-top: 5rem;
-  }
-
-  /* GPU promotion only for elements actively animating (opt-in, not blanket) */
-  .glass,
-  .glass-dark,
-  .pill {
+  .glass, .glass-dark, .pill {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
-
-  /* Prevent iOS auto-zoom on input focus (must be ≥16px on mobile) */
   @media (max-width: 640px) {
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    input[type="password"],
-    input[type="search"],
-    textarea,
-    select {
+    input[type="text"], input[type="email"], input[type="tel"],
+    input[type="number"], input[type="password"], input[type="search"],
+    textarea, select {
       font-size: 16px !important;
     }
   }
 }
 
-/* ---------- App-grade: no scrollbars anywhere (clean app feel) ---------- */
-/* WebKit / Chromium / Safari */
-*::-webkit-scrollbar,
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
-  -webkit-appearance: none;
-  appearance: none;
+/* ---------- No scrollbars (clean app feel) ---------- */
+*::-webkit-scrollbar, ::-webkit-scrollbar {
+  width: 0; height: 0; display: none; -webkit-appearance: none; appearance: none;
 }
-/* Firefox */
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-/* IE / Legacy Edge */
-html {
-  -ms-overflow-style: none;
-}
-
-/* Momentum scrolling — iOS app feel */
-html,
-body {
+* { scrollbar-width: none; -ms-overflow-style: none; }
+html { -ms-overflow-style: none; }
+html, body {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none; /* prevent bounce/chain scroll */
+  overscroll-behavior-y: none;
   scroll-behavior: smooth;
 }
-
-/* Prevent horizontal scroll from layout overflow */
-body {
-  overflow-x: hidden;
-}
-
-/* Utility kept for explicit opt-in (already global now) */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+body { overflow-x: hidden; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ============================================================
-   FROSTED REFRACTIVE GLASS SYSTEM (2026)
-   Light bends at the glass edge → layered inset highlights +
-   outer refraction glow. This is the signature material.
+   iOS 26 LIQUID GLASS SYSTEM
+   Multi-layered translucent surfaces with specular highlights,
+   edge refraction, and depth shadows. The signature material.
    ============================================================ */
 
-/* Base frosted glass — light surface */
+/* Liquid Glass — base dark surface (primary material) */
 .glass {
-  background: rgba(253, 252, 251, 0.66);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  /* Refractive edge: top-left light catch + bottom-right shadow bend */
+  background: rgba(18, 26, 18, 0.6);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -1px 1px 0 rgba(45, 90, 39, 0.06),
-    inset 1px 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 1px 2px rgba(28, 25, 23, 0.04),
-    0 12px 32px -12px rgba(45, 90, 39, 0.12);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    inset 0 -0.5px 0 0 rgba(0, 0, 0, 0.3),
+    var(--shadow-contact),
+    var(--shadow-ambient);
 }
 
-/* Frosted glass — deep/dark surface */
+/* Liquid Glass — deep dark surface (navigation, dock) */
 .glass-dark {
-  background: rgba(10, 18, 9, 0.72);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(212, 163, 115, 0.22);
+  background: rgba(8, 12, 8, 0.72);
+  backdrop-filter: blur(44px) saturate(200%);
+  -webkit-backdrop-filter: blur(44px) saturate(200%);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
   box-shadow:
-    inset 0 1px 1px 0 rgba(233, 196, 150, 0.18),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
-    0 20px 48px -16px rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    inset 0 -0.5px 0 0 rgba(0, 0, 0, 0.4),
+    var(--shadow-contact),
+    var(--shadow-ambient);
 }
 
-/* Frosted glass — gold tinted */
+/* Liquid Glass — gold tinted (accents, highlights) */
 .glass-gold {
   background: rgba(212, 163, 115, 0.12);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(212, 163, 115, 0.4);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 0.5px solid rgba(212, 163, 115, 0.3);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
-    0 8px 24px -8px rgba(212, 163, 115, 0.25);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 4px 16px -4px rgba(212, 163, 115, 0.15);
 }
 
-/* Refractive edge highlight — a thin prismatic top border */
+/* Floating glass — for cards that float in space (highest elevation) */
+.glass-float {
+  background: rgba(13, 19, 13, 0.55);
+  backdrop-filter: blur(36px) saturate(160%);
+  -webkit-backdrop-filter: blur(36px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    var(--shadow-contact),
+    var(--shadow-elevated);
+}
+
+/* Refractive edge — prismatic border (light bending at glass edge) */
 .refract-edge {
   position: relative;
 }
@@ -284,74 +260,76 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 0.5px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(212, 163, 115, 0.3) 30%,
-    rgba(255, 255, 255, 0.1) 55%,
-    rgba(45, 90, 39, 0.15) 80%,
-    rgba(255, 255, 255, 0.5) 100%
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(212, 163, 115, 0.15) 30%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(0, 0, 0, 0.1) 80%,
+    rgba(255, 255, 255, 0.08) 100%
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
-
-/* Refractive edge — gold prismatic variant */
 .refract-edge-gold::before {
   background: linear-gradient(
     135deg,
-    rgba(245, 217, 176, 0.9) 0%,
-    rgba(212, 163, 115, 0.5) 35%,
-    rgba(255, 255, 255, 0.15) 55%,
-    rgba(212, 163, 115, 0.4) 80%,
-    rgba(245, 217, 176, 0.7) 100%
+    rgba(240, 212, 168, 0.2) 0%,
+    rgba(212, 163, 115, 0.25) 35%,
+    rgba(255, 255, 255, 0.06) 55%,
+    rgba(212, 163, 115, 0.2) 80%,
+    rgba(240, 212, 168, 0.15) 100%
   );
 }
 
-/* Pill surface — for nav buttons, chips, selectors (mobile-first uniform) */
+/* ============================================================
+   iOS 26 PILL SYSTEM
+   Uniform pill-shaped controls with liquid glass material.
+   ============================================================ */
 .pill {
   position: relative;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(45, 90, 39, 0.1);
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    var(--shadow-contact);
+  transition: all 0.3s var(--ease-ios);
 }
 .pill:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
-    0 6px 18px -4px rgba(45, 90, 39, 0.16);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 4px 16px -4px rgba(0, 0, 0, 0.2);
 }
 .pill-active {
-  background: linear-gradient(135deg, #1f431e 0%, #1f431e 100%);
+  background: linear-gradient(135deg, #1f431e 0%, #142a12 100%);
   color: #fff;
-  border-color: rgba(233, 196, 150, 0.3);
+  border-color: rgba(212, 163, 115, 0.2);
   box-shadow:
-    inset 0 1px 1px 0 rgba(233, 196, 150, 0.25),
-    0 6px 18px -4px rgba(31, 67, 30, 0.4);
+    inset 0 1px 0 0 rgba(212, 163, 115, 0.15),
+    inset 0 -0.5px 0 0 rgba(0, 0, 0, 0.3),
+    0 4px 16px -4px rgba(31, 67, 30, 0.4);
 }
 
 /* ---------- Hover & card motion ---------- */
 .gold-glow-hover {
-  transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.45s var(--ease-ios);
 }
 .gold-glow-hover:hover {
-  box-shadow: 0 0 32px rgba(212, 163, 115, 0.45), 0 16px 32px -8px rgba(45, 90, 39, 0.2);
+  box-shadow: 0 0 32px rgba(212, 163, 115, 0.3), 0 16px 32px -8px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
 }
 
 /* ---------- Ambient backgrounds ---------- */
 .bg-dotgrid {
-  background-image: radial-gradient(#1f431e 1.1px, transparent 1.1px);
-  background-size: 30px 30px;
+  background-image: radial-gradient(rgba(31, 67, 30, 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 .bg-grain-paper {
   background-color: #faf8f5;
@@ -359,81 +337,63 @@ body {
     radial-gradient(at 20% 10%, rgba(212, 163, 115, 0.1) 0px, transparent 50%),
     radial-gradient(at 80% 90%, rgba(45, 90, 39, 0.08) 0px, transparent 50%);
 }
-/* Aurora mesh — soft moving color fields for hero/section depth */
 .bg-aurora {
   background:
-    radial-gradient(at 15% 20%, rgba(212, 163, 115, 0.16) 0px, transparent 45%),
-    radial-gradient(at 85% 15%, rgba(45, 90, 39, 0.1) 0px, transparent 45%),
-    radial-gradient(at 50% 85%, rgba(233, 196, 150, 0.12) 0px, transparent 45%);
+    radial-gradient(at 15% 20%, rgba(212, 163, 115, 0.12) 0px, transparent 45%),
+    radial-gradient(at 85% 15%, rgba(31, 67, 30, 0.08) 0px, transparent 45%),
+    radial-gradient(at 50% 85%, rgba(233, 196, 150, 0.1) 0px, transparent 45%);
 }
 
-/* ---------- Premium line clamp helpers ---------- */
+/* ---------- Line clamp ---------- */
 .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ---------- Soft elevated card shadow ---------- */
+/* ---------- iOS 26 Shadow System ---------- */
 .shadow-luxe {
-  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 8px 24px -8px rgba(45, 90, 39, 0.1);
+  box-shadow: var(--shadow-contact), 0 4px 16px -4px rgba(0, 0, 0, 0.15);
 }
 .shadow-luxe-lg {
-  box-shadow: 0 2px 6px rgba(28, 25, 23, 0.05), 0 24px 56px -16px rgba(45, 90, 39, 0.18);
+  box-shadow: var(--shadow-contact), var(--shadow-elevated);
 }
 .shadow-glow-gold {
-  box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.4), 0 16px 40px -12px rgba(212, 163, 115, 0.35);
+  box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.3), 0 12px 32px -8px rgba(212, 163, 115, 0.25);
 }
 
-/* ---------- SmartImage shimmer placeholder ---------- */
+/* ---------- SmartImage shimmer ---------- */
 @keyframes shimmerPlaceholder {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-/* ---------- Mobile bottom safe-area ---------- */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-.pt-safe {
-  padding-top: env(safe-area-inset-top, 0px);
-}
+/* ---------- Safe area ---------- */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 
-/* ---------- Primary button inner glow (2026 premium spec) ---------- */
+/* ---------- iOS 26 Primary Button ---------- */
 .btn-primary-glow {
   position: relative;
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.15),
-    0 6px 20px -6px rgba(31, 67, 30, 0.4);
-  transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
+    0 4px 16px -4px rgba(31, 67, 30, 0.4);
+  transition: box-shadow 0.3s var(--ease-ios), transform 0.3s var(--ease-ios);
 }
 .btn-primary-glow:hover {
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.15),
-    0 10px 28px -6px rgba(31, 67, 30, 0.5);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.2),
+    0 8px 24px -4px rgba(31, 67, 30, 0.5);
 }
 .btn-primary-glow:active {
   box-shadow:
-    inset 0 2px 6px 0 rgba(0, 0, 0, 0.3),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
-    0 2px 8px -2px rgba(31, 67, 30, 0.3);
+    inset 0 2px 8px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 1px 4px -1px rgba(31, 67, 30, 0.3);
+  transform: scale(0.98);
 }
 
-/* ---------- 2026 Atmospheric Depth Utilities ---------- */
-
-/* Multi-layer floating glass — for cards that float in space */
-.glass-float {
-  background: rgba(10, 18, 9, 0.55);
-  backdrop-filter: blur(32px) saturate(140%);
-  -webkit-backdrop-filter: blur(32px) saturate(140%);
-  border: 1px solid rgba(212, 163, 115, 0.12);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    0 12px 40px -8px rgba(0, 0, 0, 0.4);
-}
-
-/* Radial gauge container */
+/* ---------- Radial gauge ---------- */
 .radial-gauge {
   position: relative;
   display: inline-flex;
@@ -441,10 +401,10 @@ body {
   justify-content: center;
 }
 
-/* Live pulse indicator — for "freshness", "in stock", "harvest" */
+/* ---------- Live pulse indicator ---------- */
 @keyframes livePulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
+  50% { opacity: 0.4; transform: scale(0.8); }
 }
 .live-dot {
   width: 6px;
@@ -453,21 +413,21 @@ body {
   background: #d4a373;
   animation: livePulse 2s ease-in-out infinite;
   display: inline-block;
-  box-shadow: 0 0 8px rgba(212, 163, 115, 0.6);
+  box-shadow: 0 0 8px rgba(212, 163, 115, 0.5);
 }
 
-/* Monospace data label */
+/* ---------- Monospace ---------- */
 .data-mono {
   font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", monospace;
   font-feature-settings: "tnum" 1;
   letter-spacing: 0.02em;
 }
 
-/* Floating particle — for atmospheric grain dust */
+/* ---------- Floating grain particles ---------- */
 @keyframes floatParticle {
   0% { transform: translate(0, 0) scale(1); opacity: 0; }
-  10% { opacity: 0.4; }
-  90% { opacity: 0.3; }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.2; }
   100% { transform: translate(var(--dx, 20px), var(--dy, -60px)) scale(0.5); opacity: 0; }
 }
 .grain-particle {
@@ -475,21 +435,21 @@ body {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(212, 163, 115, 0.5);
+  background: rgba(212, 163, 115, 0.4);
   animation: floatParticle var(--dur, 8s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
   pointer-events: none;
 }
 
-/* Sustainability badge */
+/* ---------- Eco badge ---------- */
 .eco-badge {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
   border-radius: 9999px;
-  background: rgba(45, 90, 39, 0.15);
-  border: 1px solid rgba(45, 90, 39, 0.3);
+  background: rgba(31, 67, 30, 0.15);
+  border: 0.5px solid rgba(31, 67, 30, 0.3);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
@@ -497,18 +457,16 @@ body {
   color: #7ab46d;
 }
 
-/* Command palette backdrop */
+/* ---------- Command palette backdrop ---------- */
 .cmdk-backdrop {
-  background: rgba(10, 18, 9, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(8, 12, 8, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-/* ---------- Reduce motion: respect user preference ---------- */
+/* ---------- Reduce motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

@@ -146,8 +146,8 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
           className="w-full h-full object-cover"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0a]/85 via-[#0a0f0a]/65 to-[#0a0f0a]/97" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f0a]/90 via-[#0a0f0a]/50 to-[#0a0f0a]/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080c08]/85 via-[#080c08]/65 to-[#080c08]/97" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080c08]/90 via-[#080c08]/50 to-[#080c08]/70" />
       </div>
 
       {/* Rice-grain ambient particles — atmospheric depth */}
@@ -398,11 +398,11 @@ function HeroGlassPanel({
               className="absolute inset-0 w-full h-full object-cover"
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0a]/80 via-transparent to-[#0a0f0a]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080c08]/80 via-transparent to-[#080c08]/20" />
 
           {/* Seal */}
-          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#0a0f0a]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#0f1a0d] to-[#0a0f0a] border border-[#d4a373]/15">
+          <div className="absolute top-5 left-5 flex items-center gap-2.5 bg-[#080c08]/80 backdrop-blur-md rounded-full pl-1.5 pr-4 py-1.5 border border-[#d4a373]/20 shadow-lg">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#0f1a0d] to-[#080c08] border border-[#d4a373]/15">
               <img
                 src="/neer-logo-premium.png"
                 alt="Neer Rice Depo certified seal"
@@ -436,7 +436,7 @@ function HeroGlassPanel({
       <motion.div
         animate={reduced ? {} : { rotate: [0, 8, 0], y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -bottom-5 -right-3 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#1f431e] text-white flex items-center justify-center shadow-xl border-4 border-[#0a0f0a] z-20"
+        className="absolute -bottom-5 -right-3 w-14 h-14 rounded-full bg-gradient-to-br from-[#1f431e] to-[#1f431e] text-white flex items-center justify-center shadow-xl border-4 border-[#080c08] z-20"
       >
         <Leaf className="w-6 h-6 text-[#d4a373]" />
       </motion.div>

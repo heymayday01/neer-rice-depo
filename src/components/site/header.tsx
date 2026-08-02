@@ -81,7 +81,7 @@ export function Header({
       className="sticky top-0 z-40 pt-safe"
     >
       {/* Top micro-banner (desktop only) — harvest info strip */}
-      <div className="hidden md:block bg-[#0a0f0a] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
+      <div className="hidden md:block bg-[#080c08] text-stone-400 text-[11px] py-1.5 px-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2.5 mx-auto sm:mx-0">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#a3c4a0] animate-pulse" />
@@ -106,16 +106,15 @@ export function Header({
         <div
           className="flex items-center justify-between rounded-full px-4 py-2.5 relative"
           style={{
-            background: "rgba(10, 15, 10, 0.74)",
-            backdropFilter: "blur(44px) saturate(180%)",
-            WebkitBackdropFilter: "blur(44px) saturate(180%)",
+            background: "rgba(8, 12, 8, 0.72)",
+            backdropFilter: "blur(40px) saturate(200%)",
+            WebkitBackdropFilter: "blur(40px) saturate(200%)",
             boxShadow: [
-              "inset 0 1px 0 0 rgba(255,255,255,0.09)",
-              "inset 0 -1px 0 0 rgba(0,0,0,0.2)",
-              "inset 1px 0 0 0 rgba(255,255,255,0.03)",
-              "0 1px 3px rgba(0,0,0,0.3)",
-              "0 10px 32px -4px rgba(0,0,0,0.55)",
-              "0 0 0 0.5px rgba(212,163,115,0.18)",
+              "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+              "inset 0 -0.5px 0 0 rgba(0,0,0,0.3)",
+              "0 1px 2px rgba(0,0,0,0.2)",
+              "0 8px 32px -4px rgba(0,0,0,0.3)",
+              "0 0 0 0.5px rgba(255,255,255,0.06)",
             ].join(", "),
           }}
         >
@@ -123,7 +122,7 @@ export function Header({
           <div
             className="absolute top-0 left-1/4 right-1/4 h-px rounded-full pointer-events-none"
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(212,163,115,0.35), transparent)",
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
             }}
           />
 
@@ -169,9 +168,9 @@ export function Header({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={SPRING.bouncy}
-                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#0a0f0a] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center z-20"
+                  className="absolute -top-0.5 -right-0.5 bg-[#d4a373] text-[#080c08] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center z-20"
                   style={{
-                    boxShadow: "0 0 0 1.5px #0a0f0a, 0 2px 6px rgba(212,163,115,0.4)",
+                    boxShadow: "0 0 0 1.5px #080c08, 0 2px 6px rgba(212,163,115,0.4)",
                   }}
                 >
                   {displayCount}
@@ -186,12 +185,12 @@ export function Header({
       <div
         className={`hidden sm:block border-b transition-all duration-300 ${
           scrolled
-            ? "bg-[#0a0f0a]/92 border-white/8 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
-            : "bg-[#0a0f0a]/75 border-white/5"
+            ? "bg-[#080c08]/80 border-white/8 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3)]"
+            : "bg-[#080c08]/60 border-white/5"
         }`}
         style={{
-          backdropFilter: "blur(28px) saturate(160%)",
-          WebkitBackdropFilter: "blur(28px) saturate(160%)",
+          backdropFilter: "blur(40px) saturate(180%)",
+          WebkitBackdropFilter: "blur(40px) saturate(180%)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -283,7 +282,7 @@ export function Header({
                 onClick={onOpenCart}
                 aria-label={`Cart with ${displayCount} items`}
                 data-cart-target="true"
-                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#0a0f0a] rounded-full text-xs font-bold transition-all cursor-pointer"
+                className="relative flex items-center gap-2 px-3.5 h-10 bg-[#d4a373] hover:bg-[#c4956a] text-[#080c08] rounded-full text-xs font-bold transition-all cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" strokeWidth={2} />
                 <span className="hidden md:inline">Cart</span>
@@ -293,13 +292,13 @@ export function Header({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={SPRING.bouncy}
-                    className="bg-[#0a0f0a] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                    className="bg-[#080c08] text-[#d4a373] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
                   >
                     {displayCount}
                   </motion.span>
                 )}
                 {displaySubtotal > 0 && (
-                  <span className="text-[11px] font-bold text-[#0a0f0a]/70 border-l border-[#0a0f0a]/20 pl-1.5 ml-0.5 hidden xl:inline">
+                  <span className="text-[11px] font-bold text-[#080c08]/70 border-l border-[#080c08]/20 pl-1.5 ml-0.5 hidden xl:inline">
                     ₹{displaySubtotal}
                   </span>
                 )}
