@@ -290,7 +290,7 @@ export function Hero({ onOpenAISommelier, onSelectCategory, onOpenComparison }: 
                   whileHover={{ x: 3 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => onSelectCategory(rec.catId)}
-                  className="flex items-center gap-1 text-xs font-bold text-white hover:text-[#d4a373] transition-colors cursor-pointer mt-2 min-h-[32px]"
+                  className="flex items-center gap-1 text-xs font-bold text-white hover:text-[#d4a373] transition-colors cursor-pointer mt-2 min-h-[40px] py-1.5"
                 >
                   Explore this grain
                   <ArrowRight className="w-3.5 h-3.5" />

@@ -68,7 +68,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-[#0f1410]/90 hover:bg-[#0f1410] rounded-full border border-white/10 shadow-sm cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center bg-[#0f1410]/90 hover:bg-[#0f1410] rounded-full border border-white/10 shadow-sm cursor-pointer transition-colors"
           aria-label="Close"
         >
           <X className="w-4 h-4" />
@@ -238,7 +238,7 @@ export function ProductDetailModal({ product, onClose }: Props) {
                     <button
                       key={w}
                       onClick={() => setWeight(w)}
-                      className={`relative py-2 rounded-lg text-xs font-bold transition-colors border cursor-pointer overflow-hidden ${
+                      className={`relative py-2.5 rounded-xl text-xs font-bold transition-colors border cursor-pointer overflow-hidden min-h-[44px] ${
                         selected
                           ? "text-white border-[#1f431e]"
                           : "bg-white/5 text-stone-400 border-white/10 hover:bg-white/10"

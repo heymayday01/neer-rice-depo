@@ -126,10 +126,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
                             onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity - 1)}
-                            className="p-2 rounded-full hover:bg-white/10 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                            className="p-2.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
                             aria-label="Decrease quantity"
                           >
-                            <Minus className="w-3.5 h-3.5 text-stone-400" />
+                            <Minus className="w-4 h-4 text-stone-400" />
                           </motion.button>
                           <motion.span
                             key={item.quantity}
@@ -144,10 +144,10 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                             whileTap={{ scale: 0.85 }}
                             transition={SPRING.dock}
                             onClick={() => handleUpdateQty(item.productId, item.selectedWeightKg, item.quantity + 1)}
-                            className="p-2 rounded-full hover:bg-white/10 cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                            className="p-2.5 rounded-full hover:bg-white/10 cursor-pointer min-h-[40px] min-w-[40px] flex items-center justify-center"
                             aria-label="Increase quantity"
                           >
-                            <Plus className="w-3.5 h-3.5 text-stone-400" />
+                            <Plus className="w-4 h-4 text-stone-400" />
                           </motion.button>
                         </div>
                         <span className="text-sm font-black font-serif text-[#d4a373]">
@@ -159,7 +159,7 @@ export function CartDrawer({ open, onClose, onCheckout }: Props) {
                       whileTap={{ scale: 0.85 }}
                       transition={SPRING.dock}
                       onClick={() => handleRemove(item.productId, item.selectedWeightKg)}
-                      className="self-start p-1.5 text-stone-400 hover:text-red-400 transition-colors cursor-pointer"
+                      className="self-start p-2 min-h-[40px] min-w-[40px] flex items-center justify-center text-stone-400 hover:text-red-400 transition-colors cursor-pointer"
                       aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" />

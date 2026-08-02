@@ -315,7 +315,7 @@ function ProductCardImpl({ product, onOpenDetail }: ProductCardProps) {
             </span>
             <button
               onClick={() => onOpenDetail(product)}
-              className="flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#d4a373] transition-colors cursor-pointer shrink-0 min-h-[36px] px-1"
+              className="flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-[#d4a373] transition-colors cursor-pointer shrink-0 min-h-[40px] px-1"
             >
               Guide
               <ChevronRight className="w-3 h-3" strokeWidth={2} />
